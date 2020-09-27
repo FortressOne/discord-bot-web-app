@@ -1,11 +1,24 @@
 class Api::V1::MatchesController < ActionController::API
   def create
-    render json: {}.to_json, status: :ok
-  end
+    match = Match.create
 
-  private
+    params[:match][:teams].each do |name, attrs|
+      team = match.teams.new
 
-  def match_params
-    params.require(:match).permit(:teams)
+      attrs[:players].each do |discord_id|
+        player = Player.find_or_create_by(discord_id: discord_id)
+        team.players << player
+      end
+
+      team.save
+    end
+
+    if params[:match][:map]
+      match.game_map = GameMap.find_or_create_by(name: params[:match][:map])
+    end
+
+    match.save
+
+    render json: match.to_json, status: :ok
   end
 end
