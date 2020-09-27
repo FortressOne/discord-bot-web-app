@@ -1,0 +1,16 @@
+<% @matches.each do |match| %>
+  <% if match.game_map %>
+    <p><%= match.game_map.name %></p>
+  <% else %>
+    <p><%= "Unknown map" %></p>
+  <% end %>
+  <table>
+    <% match.teams.each do |team| %>
+      <tr>
+        <% team.players.each do |player| %>
+          <td><%= player.discord_id.to_i %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
