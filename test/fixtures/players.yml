@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  discord_id: 9.99
+  email: MyString
+  username: MyString
+
+two:
+  discord_id: 9.99
+  email: MyString
+  username: MyString
