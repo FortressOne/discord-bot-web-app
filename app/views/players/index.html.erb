@@ -1,10 +1,12 @@
 <table>
   <tr>
     <th>Discord ID</th>
+    <th>Name</th>
   </tr>
   <% @players.each do |player| %>
     <tr>
       <td><%= player.discord_id.to_i %></td>
+      <th><%= player.name %></th>
     </tr>
   <% end %>
 </table>

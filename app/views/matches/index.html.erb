@@ -1,16 +1,28 @@
 <% @matches.each do |match| %>
-  <% if match.game_map %>
-    <p><%= match.game_map.name %></p>
-  <% else %>
-    <p><%= "Unknown map" %></p>
-  <% end %>
   <table>
+    <tr>
+      <th>ID</th>
+      <th>Date</th>
+      <th>Map</th>
+    </tr>
+    <tr>
+      <td><%= match.id %></td>
+      <td><%= match.game_map && match.game_map.name %></td>
+      <td><%= match.created_at %></td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <th>Result</th>
+      <th>Players</th>
+    </tr>
     <% match.teams.each do |team| %>
       <tr>
-        <% team.players.each do |player| %>
-          <td><%= player.discord_id.to_i %></td>
-        <% end %>
+        <td><%= result(team.result) %></td>
+        <td><%= team.players.map(&:name).join(", ") %></td>
       </tr>
     <% end %>
   </table>
+  <hr>
 <% end %>
