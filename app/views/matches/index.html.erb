@@ -9,7 +9,7 @@
       <tr>
         <td><%= match.id %></td>
         <td><%= match.game_map && match.game_map.name || "Unknown" %></td>
-        <td><%= match.created_at %></td>
+        <td><%= local_time(match.created_at) %></td>
       </tr>
     </table>
     <div>
