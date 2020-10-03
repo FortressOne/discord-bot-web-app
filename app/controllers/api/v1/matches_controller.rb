@@ -4,6 +4,8 @@ class Api::V1::MatchesController < ActionController::API
 
     match_params[:teams].each do |name, attrs|
       team = match.teams.new
+      team.name = name
+      team.result = attrs[:result].to_i
 
       attrs[:players].each do |discord_id, display_name|
         player = Player.find_or_create_by(discord_id: discord_id)
@@ -12,7 +14,6 @@ class Api::V1::MatchesController < ActionController::API
         team.players << player
       end
 
-      team.result = attrs[:result].to_i
       team.save
     end
 

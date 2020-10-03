@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 2020_10_03_050611) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "result"
     t.bigint "match_id", null: false
-    t.string "number"
+    t.string "name"
     t.index ["match_id"], name: "index_teams_on_match_id"
   end
 

@@ -1,28 +1,33 @@
 <% @matches.each do |match| %>
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Date</th>
-      <th>Map</th>
-    </tr>
-    <tr>
-      <td><%= match.id %></td>
-      <td><%= match.game_map && match.game_map.name %></td>
-      <td><%= match.created_at %></td>
-    </tr>
-  </table>
-
-  <table>
-    <tr>
-      <th>Result</th>
-      <th>Players</th>
-    </tr>
-    <% match.teams.each do |team| %>
+  <div>
+    <table class="table-auto">
       <tr>
-        <td><%= result(team.result) %></td>
-        <td><%= team.players.map(&:name).join(", ") %></td>
+        <th>ID</th>
+        <th>Map</th>
+        <th>Date</th>
       </tr>
-    <% end %>
-  </table>
+      <tr>
+        <td><%= match.id %></td>
+        <td><%= match.game_map && match.game_map.name || "Unknown" %></td>
+        <td><%= match.created_at %></td>
+      </tr>
+    </table>
+    <div>
+    </div>
+    <table>
+      <tr>
+        <th>Result</th>
+        <th>Number</th>
+        <th>Players</th>
+      </tr>
+      <% match.teams.each do |team| %>
+        <tr>
+          <td><%= result(team.result) %></td>
+          <td><%= team.name %></td>
+          <td><%= team.players.map(&:name).join(", ") %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
   <hr>
 <% end %>
