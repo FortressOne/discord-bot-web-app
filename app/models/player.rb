@@ -15,14 +15,20 @@ class Player < ApplicationRecord
   end
 
   def win_count
-    teams.where(result: 1).count
+    result_count(1)
   end
 
   def loss_count
-    teams.where(result: -1).count
+    result_count(-1)
   end
 
   def draw_count
-    teams.where(result: 0).count
+    result_count(0)
+  end
+
+  private
+
+  def result_count(int)
+    teams.where(result: int).count
   end
 end
