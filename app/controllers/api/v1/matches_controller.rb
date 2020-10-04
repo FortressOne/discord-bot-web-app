@@ -1,4 +1,8 @@
+require 'saulabs/trueskill'
+
 class Api::V1::MatchesController < ActionController::API
+  include Saulabs::TrueSkill
+
   def create
     match = Match.create
 
@@ -13,6 +17,8 @@ class Api::V1::MatchesController < ActionController::API
         player.save
         team.players << player
       end
+
+      binding.pry
 
       team.save
     end

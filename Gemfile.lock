@@ -1,3 +1,9 @@
+GIT
+  remote: git@github.com:glenbray/trueskill.git
+  revision: 50d07b5f36708558c7324a4e571d796f9f31f3f7
+  specs:
+    trueskill (1.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -217,6 +223,7 @@ DEPENDENCIES
   selenium-webdriver
   spring
   spring-watcher-listen (~> 2.0.0)
+  trueskill!
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)
