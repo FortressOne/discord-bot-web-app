@@ -1,12 +1,20 @@
 <table>
   <tr>
-    <th>Discord ID</th>
     <th>Name</th>
+    <th>Last Match</th>
+    <th>Played</th>
+    <th>Wins</th>
+    <th>Losses</th>
+    <th>Draws</th>
   </tr>
   <% @players.each do |player| %>
     <tr>
-      <td><%= player.discord_id.to_i %></td>
-      <th><%= player.name %></th>
+      <td><%= player.name %></td>
+      <td><%= local_time(player.last_match_date) %></td>
+      <td><%= player.match_count %></td>
+      <td><%= player.win_count %></td>
+      <td><%= player.loss_count %></td>
+      <td><%= player.draw_count %></td>
     </tr>
   <% end %>
 </table>
