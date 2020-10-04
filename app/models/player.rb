@@ -2,6 +2,10 @@ class Player < ApplicationRecord
   has_and_belongs_to_many :teams
   has_many :matches, through: :teams
 
+  scope :match_count_order, lambda {
+    left_joins(:matches).group(:id).order('COUNT(matches.id) DESC')
+  }
+
   def match_count
     matches.count
   end
