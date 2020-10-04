@@ -7,7 +7,7 @@ class Player < ApplicationRecord
   }
 
   def last_match_date
-    matches.last.created_at
+    matches.any? && matches.last.created_at
   end
 
   def match_count
