@@ -1,5 +1,5 @@
 class PlayersController < ApplicationController
   def index
-    @players = Player.match_count_order
+    @players = Player.last_match_order
   end
 end
