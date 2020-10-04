@@ -1,6 +1,6 @@
 GIT
-  remote: git@github.com:glenbray/trueskill.git
-  revision: 50d07b5f36708558c7324a4e571d796f9f31f3f7
+  remote: git@github.com:FortressOne/trueskill.git
+  revision: 5c02cac6b4671a05b4782d65938e2798e9a99644
   specs:
     trueskill (1.0.0)
 
