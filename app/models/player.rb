@@ -2,10 +2,6 @@ class Player < ApplicationRecord
   has_and_belongs_to_many :teams
   has_many :matches, through: :teams
 
-  scope :last_match_order, lambda {
-    left_joins(:matches).group(:id).order('created_at DESC')
-  }
-
   def last_match_date
     matches.any? && matches.last.created_at
   end
