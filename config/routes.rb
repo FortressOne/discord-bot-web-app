@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'ratings#index'
+  root 'players#index'
 
   resources :players, only: [:index]
   resources :matches, only: [:index]
