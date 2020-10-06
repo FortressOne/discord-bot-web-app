@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_03_050611) do
+ActiveRecord::Schema.define(version: 2020_10_05_020050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,16 @@ ActiveRecord::Schema.define(version: 2020_10_03_050611) do
     t.index ["match_id"], name: "index_teams_on_match_id"
   end
 
+  create_table "trueskill_ratings", force: :cascade do |t|
+    t.float "skill", default: 25.0
+    t.float "deviation", default: 8.333333333333334
+    t.bigint "player_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["player_id"], name: "index_trueskill_ratings_on_player_id"
+  end
+
   add_foreign_key "matches", "game_maps"
   add_foreign_key "teams", "matches"
+  add_foreign_key "trueskill_ratings", "players"
 end

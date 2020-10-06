@@ -2,6 +2,7 @@
 <table>
   <tr>
     <th>Name</th>
+    <th>Rating</th>
     <th>Last Match</th>
     <th>Played</th>
     <th>Wins</th>
@@ -11,6 +12,7 @@
   <% @players.each do |player| %>
     <tr>
       <td><%= player.name %></td>
+      <td><%= player.trueskill_rating.skill %></td>
       <td><%= player.last_match_date && local_time(player.last_match_date) %></td>
       <td style="text-align:right;"><%= player.match_count %></td>
       <td style="text-align:right;"><%= player.win_count %></td>

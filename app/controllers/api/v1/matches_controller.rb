@@ -18,8 +18,6 @@ class Api::V1::MatchesController < ActionController::API
         team.players << player
       end
 
-      binding.pry
-
       team.save
     end
 
