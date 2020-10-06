@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_05_020050) do
+ActiveRecord::Schema.define(version: 2020_10_06_142552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 2020_10_05_020050) do
     t.bigint "game_map_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "ratings_processed"
     t.index ["game_map_id"], name: "index_matches_on_game_map_id"
   end
 

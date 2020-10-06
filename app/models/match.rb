@@ -3,6 +3,8 @@ class Match < ApplicationRecord
   has_many :teams
   has_many :players, through: :teams
 
+  scope :ratings_not_processed, -> { where(ratings_processed: nil) }
+
   def winning_team
     teams.find { |team| team.result == 1 }
   end

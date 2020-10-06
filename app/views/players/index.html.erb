@@ -12,7 +12,7 @@
   <% @players.each do |player| %>
     <tr>
       <td><%= player.name %></td>
-      <td><%= player.trueskill_rating.skill %></td>
+      <td><%= number_with_precision(player.trueskill_rating.skill, precision: 3) %></td>
       <td><%= player.last_match_date && local_time(player.last_match_date) %></td>
       <td style="text-align:right;"><%= player.match_count %></td>
       <td style="text-align:right;"><%= player.win_count %></td>

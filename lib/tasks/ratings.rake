@@ -6,10 +6,10 @@ namespace :ratings do
     include Saulabs::TrueSkill
 
     Player.all.each do |player|
-      TrueskillRating.create(player_id: player.id)
+      TrueskillRating.first_or_create(player_id: player.id)
     end
 
-    Match.all.each do |match|
+    Match.ratings_not_processed.each do |match|
       team1 = Team.find_by(match_id: match.id, name: 1)
       team2 = Team.find_by(match_id: match.id, name: 2)
 
@@ -62,6 +62,9 @@ namespace :ratings do
         puts player.name
         puts player.trueskill_rating.skill
       end
+
+      match.ratings_processed = true
+      match.save
     end
   end
 end
