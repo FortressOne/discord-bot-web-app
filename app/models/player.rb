@@ -1,7 +1,7 @@
 class Player < ApplicationRecord
   has_and_belongs_to_many :teams
   has_many :matches, through: :teams
-  has_one :trueskill_rating
+  has_one :trueskill_rating, dependent: :destroy
 
   before_create :build_default_trueskill_rating
 
