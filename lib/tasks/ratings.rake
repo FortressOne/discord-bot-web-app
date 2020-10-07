@@ -5,8 +5,10 @@ namespace :ratings do
   task build: :environment do
     include Saulabs::TrueSkill
 
+    TrueskillRating.destroy_all
+
     Player.all.each do |player|
-      TrueskillRating.first_or_create(player_id: player.id)
+      player.create_trueskill_rating
     end
 
     Match.ratings_not_processed.each do |match|
