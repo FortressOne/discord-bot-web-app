@@ -21,6 +21,7 @@ class Api::V1::MatchesController < ActionController::API
       team.save
     end
 
+    match.create_discord_channel(match_params[:discord_channel])
     match.game_map = map_params && GameMap.find_or_create_by(name: map_params)
 
     match.save
@@ -85,6 +86,13 @@ class Api::V1::MatchesController < ActionController::API
   end
 
   def match_params
-    params.require(:match).permit(:winner, :map, { teams: {} })
+    params
+      .require(:match)
+      .permit(
+        :winner,
+        :map,
+        teams: {},
+        discord_channel: {}
+      )
   end
 end

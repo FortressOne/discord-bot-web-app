@@ -1,0 +1,36 @@
+<h2>Matches</h2>
+<% @dashboard_items[:matches].each do |match| %>
+  <hr>
+  <div>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Discord</th>
+        <th>Map</th>
+        <th>Date</th>
+      </tr>
+      <tr>
+        <td><%= match.id %></td>
+        <td><%= match.discord_channel.name %></td>
+        <td><%= match.game_map && match.game_map.name || "Unknown" %></td>
+        <td><%= local_time(match.created_at) %></td>
+      </tr>
+    </table>
+    <div>
+    </div>
+    <table>
+      <tr>
+        <th>Result</th>
+        <th>Number</th>
+        <th>Players</th>
+      </tr>
+      <% match.teams.each do |team| %>
+        <tr>
+          <td><%= result(team.result) %></td>
+          <td><%= team.name %></td>
+          <td><%= team.players.map(&:name).join(", ") %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+<% end %>

@@ -6,6 +6,8 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+dc = DiscordChannel.create(channel_id: 744913000523366410, name: "Backtick #bot")
+
 16.times do
   Player.create(
     discord_id: Faker::Number.number(digits: 18),
@@ -20,6 +22,9 @@ end
   match.game_map = GameMap.create(
     name: ["2fort5r", "mbasesr", "bam5", "well6"].sample
   )
+
+  match.discord_channel = dc
+  match.save
 
   result = [[1,-1], [0, 0], [-1, 1]].sample
 
