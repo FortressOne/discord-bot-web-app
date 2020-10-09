@@ -11,7 +11,7 @@
       </tr>
       <tr>
         <td><%= match.id %></td>
-        <td><%= match.discord_channel.name %></td>
+        <td><%= match.discord_channel && match.discord_channel.name %></td>
         <td><%= match.game_map && match.game_map.name || "Unknown" %></td>
         <td><%= local_time(match.created_at) %></td>
       </tr>
