@@ -10,7 +10,7 @@
     <th>Losses</th>
     <th>Draws</th>
   </tr>
-  <% @dashboard_items[:players].each do |player| %>
+  <% players.each do |player| %>
     <tr>
       <td><%= player.name %></td>
       <td><%= number_with_precision(player.trueskill_rating.skill, precision: 3) %></td>

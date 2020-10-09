@@ -1,2 +1,2 @@
-<%= render partial: 'players_index' %>
-<%= render partial: 'matches_index' %>
+<%= render partial: 'players_index', locals: { players: @dashboard_items[:players] } %>
+<%= render partial: 'matches_index', locals: { matches: @dashboard_items[:matches] } %>
