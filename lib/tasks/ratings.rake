@@ -11,7 +11,7 @@ namespace :ratings do
       player.create_trueskill_rating
     end
 
-    Match.ratings_not_processed.each do |match|
+    Match.all.each do |match|
       team1 = Team.find_by(match_id: match.id, name: 1)
       team2 = Team.find_by(match_id: match.id, name: 2)
 
