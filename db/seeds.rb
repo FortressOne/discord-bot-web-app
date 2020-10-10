@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-dc = DiscordChannel.create(channel_id: 744913000523366410, name: "Backtick #bot")
+dc = DiscordChannel.create(channel_id: 744913000523366410, name: "Backtick #pugbot")
 
 16.times do
   Player.create(
