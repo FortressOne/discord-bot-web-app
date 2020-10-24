@@ -4,12 +4,14 @@ class Api::V1::FairTeamsController < ApplicationController
   include Saulabs::TrueSkill
 
   def new
-    players = player_params.map do |discord_id|
+    players = players_params.map do |discord_id|
       Player.includes(:trueskill_rating).find_or_create_by(discord_id: discord_id)
     end
 
+    teamsize = players.size / 2
+
     player1 = players.shift
-    team1_combinations = players.combination(3)
+    team1_combinations = players.combination(teamsize - 1)
 
     matchups = []
 
@@ -45,7 +47,7 @@ class Api::V1::FairTeamsController < ApplicationController
 
   private
 
-  def player_params
+  def players_params
     params.require(:players)
   end
 end
