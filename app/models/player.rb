@@ -10,7 +10,7 @@ class Player < ApplicationRecord
   end
 
   def last_discord_channel
-    matches.last.discord_channel
+    matches.any? && matches.last.discord_channel
   end
 
   def match_count
