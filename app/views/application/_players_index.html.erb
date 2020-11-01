@@ -2,8 +2,9 @@
 <table>
   <tr>
     <th>Name</th>
-    <th>Rating</th>
+    <th>Skill</th>
     <th>Deviation</th>
+    <th>Rating</th>
     <th>Last Match Date</th>
     <th>Last Match Discord</th>
     <th>Played</th>
@@ -16,6 +17,7 @@
       <td><%= player.name %></td>
       <td><%= number_with_precision(player.trueskill_rating.skill, precision: 3) %></td>
       <td><%= number_with_precision(player.trueskill_rating.deviation, precision: 3) %></td>
+      <td><%= number_with_precision(player.trueskill_rating.rating, precision: 0) %></td>
       <td><%= player.last_match_date && local_time(player.last_match_date) %></td>
       <td><%= player.last_discord_channel && player.last_discord_channel.name %></td>
       <td style="text-align:right;"><%= player.match_count %></td>
