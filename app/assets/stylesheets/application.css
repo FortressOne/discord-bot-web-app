@@ -26,6 +26,7 @@ h2 {
 }
 
 table {
+  background: #444;
   border-collapse: collapse;
   border: 1px solid #708090;
   border-bottom: 2px solid #708090;
