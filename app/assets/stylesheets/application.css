@@ -16,39 +16,39 @@
 
 body {
   font-family: sans;
+  background: #555;
+  color: #ddd;
 }
 
-div {
-  margin-bottom: 5px;
+h2 {
+  margin-top: 20px;
+  text-align: center;
 }
 
 table {
-  background: #555;
-  font-family: 'Arial';
-  margin: 25px auto;
   border-collapse: collapse;
   border: 1px solid #708090;
   border-bottom: 2px solid #708090;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1), 0px 10px 20px rgba(0, 0, 0, 0.05), 0px 20px 20px rgba(0, 0, 0, 0.05), 0px 30px 20px rgba(0, 0, 0, 0.05);
+  margin: 0px auto 5px auto;
 }
+
 table tr:hover {
   background: #555;
 }
+
 table tr:hover td {
-  color: #fff;
+  color: #eee;
 }
+
 table th, table td {
-  color: #A9A9A9;
   border: 1px solid #708090;
-  padding: 12px 35px;
   border-collapse: collapse;
 }
+
 table th {
   background: #708090;
-  color: #fff;
+  color: #eee;
   text-transform: uppercase;
   font-size: 12px;
-}
-table th.last {
-  border-right: none;
 }
