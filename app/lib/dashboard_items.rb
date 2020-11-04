@@ -1,7 +1,7 @@
 class DashboardItems
   def self.all
     {
-      players: Player.all.sort_by { |player| player.trueskill_rating.skill * -1 },
+      players: Player.leaderboard,
       matches: Match.order('id DESC')
     }
   end
