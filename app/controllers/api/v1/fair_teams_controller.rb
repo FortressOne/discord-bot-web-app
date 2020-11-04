@@ -32,7 +32,7 @@ class Api::V1::FairTeamsController < ApplicationController
       matchups << teams
     end
 
-    sorted_matchups = matchups.soft_by do |matchup|
+    sorted_matchups = matchups.sort_by do |matchup|
       Matchup.new(matchup).difference
     end
 
