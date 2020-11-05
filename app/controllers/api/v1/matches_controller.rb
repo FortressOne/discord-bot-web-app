@@ -46,11 +46,11 @@ class Api::V1::MatchesController < ActionController::API
     team2_players = team2.players
 
     team1_player_ratings = team1_players.map do |player|
-      Rating.new(player.trueskill_rating.skill, player.trueskill_rating.deviation)
+      Rating.new(player.trueskill_rating.mean, player.trueskill_rating.deviation)
     end
 
     team2_player_ratings = team2_players.map do |player|
-      Rating.new(player.trueskill_rating.skill, player.trueskill_rating.deviation)
+      Rating.new(player.trueskill_rating.mean, player.trueskill_rating.deviation)
     end
 
     FactorGraph.new(
@@ -60,7 +60,7 @@ class Api::V1::MatchesController < ActionController::API
 
     team1_players.each_with_index do |player, i|
       rating = team1_player_ratings[i]
-      player.trueskill_rating.skill = rating.mean
+      player.trueskill_rating.mean = rating.mean
       player.trueskill_rating.deviation = rating.deviation
       player.trueskill_rating.save
       player.save
@@ -68,7 +68,7 @@ class Api::V1::MatchesController < ActionController::API
 
     team2_players.each_with_index do |player, i|
       rating = team2_player_ratings[i]
-      player.trueskill_rating.skill = rating.mean
+      player.trueskill_rating.mean = rating.mean
       player.trueskill_rating.deviation = rating.deviation
       player.trueskill_rating.save
       player.save

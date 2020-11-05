@@ -31,11 +31,11 @@ namespace :ratings do
       team2_players = team2.players
 
       team1_player_ratings = team1_players.map do |player|
-        Rating.new(player.trueskill_rating.skill, player.trueskill_rating.deviation)
+        Rating.new(player.trueskill_rating.mean, player.trueskill_rating.deviation)
       end
 
       team2_player_ratings = team2_players.map do |player|
-        Rating.new(player.trueskill_rating.skill, player.trueskill_rating.deviation)
+        Rating.new(player.trueskill_rating.mean, player.trueskill_rating.deviation)
       end
 
       FactorGraph.new(
@@ -45,24 +45,24 @@ namespace :ratings do
 
       team1_players.each_with_index do |player, i|
         rating = team1_player_ratings[i]
-        player.trueskill_rating.skill = rating.mean
+        player.trueskill_rating.mean = rating.mean
         player.trueskill_rating.deviation = rating.deviation
         player.trueskill_rating.save
         player.save
         puts '===='
         puts player.name
-        puts player.trueskill_rating.skill
+        puts player.trueskill_rating.mean
       end
 
       team2_players.each_with_index do |player, i|
         rating = team2_player_ratings[i]
-        player.trueskill_rating.skill = rating.mean
+        player.trueskill_rating.mean = rating.mean
         player.trueskill_rating.deviation = rating.deviation
         player.trueskill_rating.save
         player.save
         puts '===='
         puts player.name
-        puts player.trueskill_rating.skill
+        puts player.trueskill_rating.mean
       end
 
       match.ratings_processed = true
