@@ -22,11 +22,11 @@ class Api::V1::FairTeamsController < ApplicationController
       teams = {}
 
       teams[team1] = team1.inject(0) do |sum, player|
-        sum + player.trueskill_rating.skill
+        sum + player.trueskill_rating.mean
       end
 
       teams[team2] = team2.inject(0) do |sum, player|
-        sum + player.trueskill_rating.skill
+        sum + player.trueskill_rating.mean
       end
 
       matchups << teams
