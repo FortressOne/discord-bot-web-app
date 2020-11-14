@@ -7,7 +7,7 @@
     "@rails/ujs": "^6.0.0",
     "@rails/webpacker": "4.3.0",
     "local-time": "^2.1.0",
-    "tablesort": "ssh://git@github.com:drzel/tablesort.git#master",
+    "tablesort": "https://github.com/drzel/tablesort.git#master",
     "turbolinks": "^5.2.0"
   },
   "version": "0.1.0",

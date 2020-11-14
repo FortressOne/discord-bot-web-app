@@ -6964,9 +6964,9 @@ svgo@^1.0.0:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
-"tablesort@ssh://git@github.com:drzel/tablesort.git#master":
+"tablesort@https://github.com/drzel/tablesort.git#master":
   version "5.2.1"
-  resolved "ssh://git@github.com:drzel/tablesort.git#7a0a88c76395622c32f63f126b5fd28ed8f5b196"
+  resolved "https://github.com/drzel/tablesort.git#7a0a88c76395622c32f63f126b5fd28ed8f5b196"
 
 tapable@^1.0.0, tapable@^1.1.3:
   version "1.1.3"
