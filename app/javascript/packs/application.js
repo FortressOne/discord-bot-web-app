@@ -24,3 +24,5 @@ var Tablesort = require("tablesort")
 document.addEventListener("turbolinks:load", function() {
   new Tablesort(document.getElementById('players_table'));
 })
+
+import "tablesort/tablesort"
