@@ -1,29 +1,33 @@
 <h2>Players</h2>
-<table>
-  <tr>
-    <th>Name</th>
-    <th>CSE</th>
-    <th>Mean (μ)</th>
-    <th>SD (σ)</th>
-    <th>Played</th>
-    <th>Wins</th>
-    <th>Losses</th>
-    <th>Draws</th>
-    <th>Last Match Date</th>
-    <th>Last Match Discord</th>
-  </tr>
-  <% players.each do |player| %>
+<table id="players_table">
+  <thead>
     <tr>
-      <td><%= player.name %></td>
-      <td><%= number_with_precision(player.trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
-      <td><%= number_with_precision(player.trueskill_rating.mean, precision: 2) %></td>
-      <td><%= number_with_precision(player.trueskill_rating.deviation, precision: 2) %></td>
-      <td style="text-align:right;"><%= player.match_count %></td>
-      <td style="text-align:right;"><%= player.win_count %></td>
-      <td style="text-align:right;"><%= player.loss_count %></td>
-      <td style="text-align:right;"><%= player.draw_count %></td>
-      <td><%= player.last_match_date && local_time_ago(player.last_match_date) %></td>
-      <td><%= player.last_discord_channel && player.last_discord_channel.name %></td>
+      <th>Name</th>
+      <th>CSE</th>
+      <th>Mean (μ)</th>
+      <th>SD (σ)</th>
+      <th>Played</th>
+      <th>Wins</th>
+      <th>Losses</th>
+      <th>Draws</th>
+      <th>Last Match Date</th>
+      <th>Last Match Discord</th>
     </tr>
-  <% end %>
+  </thead>
+  <tbody>
+    <% players.each do |player| %>
+      <tr>
+        <td><%= player.name %></td>
+        <td><%= number_with_precision(player.trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
+        <td><%= number_with_precision(player.trueskill_rating.mean, precision: 2) %></td>
+        <td><%= number_with_precision(player.trueskill_rating.deviation, precision: 2) %></td>
+        <td style="text-align:right;"><%= player.match_count %></td>
+        <td style="text-align:right;"><%= player.win_count %></td>
+        <td style="text-align:right;"><%= player.loss_count %></td>
+        <td style="text-align:right;"><%= player.draw_count %></td>
+        <td><%= player.last_match_date && local_time_ago(player.last_match_date) %></td>
+        <td><%= player.last_discord_channel && player.last_discord_channel.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
