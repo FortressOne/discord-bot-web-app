@@ -2,6 +2,7 @@
 <table id="players_table">
   <thead>
     <tr>
+      <th>Rank</th>
       <th>Name</th>
       <th data-sort-method='dotsep'>CSE</th>
       <th data-sort-method='dotsep'>Mean (μ)</th>
@@ -15,8 +16,9 @@
     </tr>
   </thead>
   <tbody>
-    <% players.each do |player| %>
+    <% players.each_with_index do |player, index| %>
       <tr>
+        <td><%= index + 1 %></td>
         <td><%= player.name %></td>
         <td><%= number_with_precision(player.trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
         <td><%= number_with_precision(player.trueskill_rating.mean, precision: 2) %></td>
