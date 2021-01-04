@@ -2,7 +2,7 @@ class DashboardItems
   def self.all
     {
       players: Player.leaderboard,
-      matches: Match.order('id DESC')
+      matches: Match.history
     }
   end
 end
