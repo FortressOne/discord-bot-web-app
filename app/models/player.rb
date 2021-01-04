@@ -20,7 +20,7 @@ class Player < ApplicationRecord
   end
 
   def match_count
-    matches.count
+    matches.size
   end
 
   def win_count
@@ -38,7 +38,7 @@ class Player < ApplicationRecord
   private
 
   def result_count(int)
-    teams.where(result: int).count
+    teams.where(result: int).size
   end
 
   def build_default_trueskill_rating
