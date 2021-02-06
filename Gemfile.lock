@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/FortressOne/trueskill.git
+  remote: https://github.com/FortressOne/trueskill.git
   revision: 5c02cac6b4671a05b4782d65938e2798e9a99644
   specs:
     trueskill (1.0.0)
