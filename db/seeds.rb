@@ -6,7 +6,10 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-dc = DiscordChannel.create(channel_id: 744913000523366410, name: "Backtick #pugbot")
+discord_channels = [
+  DiscordChannel.create(channel_id: 744913000523366410, name: "Backtick #pugbot"),
+  DiscordChannel.create(channel_id: 811577745686659083, name: "Backtick #pugbot2")
+]
 
 16.times do
   Player.create(
@@ -23,7 +26,7 @@ end
     name: ["2fort5r", "mbasesr", "bam5", "well6"].sample
   )
 
-  match.discord_channel = dc
+  match.discord_channel = discord_channels.sample
   match.save
 
   result = [[1,-1], [0, 0], [-1, 1]].sample
