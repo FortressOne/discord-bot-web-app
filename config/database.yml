@@ -76,8 +76,8 @@ test:
 # You can use this database configuration with:
 #
 #   production:
-#     url: <%= ENV['DATABASE_URL'] %>
+#     url: 
 #
 production:
   <<: *default
-  url: <%= `heroku config:get DATABASE_URL`.chomp %>
+  url: <%= ENV['DATABASE_URL'] || `heroku config:get DATABASE_URL`.chomp %>
