@@ -1,12 +1,22 @@
 class Player < ApplicationRecord
   has_and_belongs_to_many :teams
   has_many :matches, through: :teams
-  has_one :trueskill_rating, dependent: :destroy
+  has_many :trueskill_ratings, dependent: :destroy
 
-  before_create :build_default_trueskill_rating
+  scope :global_leaderboard, -> do
+    joins(:trueskill_ratings).merge(TrueskillRating.global)
+      .sort_by do |player|
+        player
+          .trueskill_ratings
+          .find_by(discord_channel_id: nil)
+          .conservative_skill_estimate * -1
+      end
+  end
 
-  scope :leaderboard, -> do
-    includes(:trueskill_rating).includes(:matches).sort_by do |player|
+  scope :discord_channel_leaderboard, ->(discord_channel_id) do
+    joins(:trueskill_ratings).where(
+      trueskill_ratings: { discord_channel_id: discord_channel_id }
+    ).sort_by do |player|
       player.trueskill_rating.conservative_skill_estimate * -1
     end
   end
@@ -39,10 +49,5 @@ class Player < ApplicationRecord
 
   def result_count(int)
     teams.where(result: int).size
-  end
-
-  def build_default_trueskill_rating
-    build_trueskill_rating
-    true
   end
 end
