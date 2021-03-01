@@ -17,8 +17,11 @@ class Player < ApplicationRecord
     joins(:trueskill_ratings).where(
       trueskill_ratings: { discord_channel_id: discord_channel_id }
     ).sort_by do |player|
-      player.trueskill_rating.conservative_skill_estimate * -1
-    end
+        player
+          .trueskill_ratings
+          .find_by(discord_channel_id: discord_channel_id)
+          .conservative_skill_estimate * -1
+      end
   end
 
   def last_match_date
