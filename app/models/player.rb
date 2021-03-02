@@ -6,9 +6,12 @@ class Player < ApplicationRecord
   before_create :build_default_trueskill_rating
 
   scope :leaderboard, -> do
-    includes(:trueskill_rating).includes(:matches).sort_by do |player|
-      player.trueskill_rating.conservative_skill_estimate * -1
-    end
+    where.not(invisible: true)
+      .includes(:trueskill_rating)
+      .includes(:matches)
+      .sort_by do |player|
+        player.trueskill_rating.conservative_skill_estimate * -1
+      end
   end
 
   def last_match_date
