@@ -1,4 +1,8 @@
 class Player < ApplicationRecord
+  WIN = 1
+  LOSS = -1
+  DRAW = 0
+
   has_and_belongs_to_many :teams
   has_many :matches, through: :teams
   has_many :trueskill_ratings, dependent: :destroy
@@ -42,15 +46,15 @@ class Player < ApplicationRecord
   end
 
   def win_count
-    result_count(1)
+    result_count(WIN)
   end
 
   def loss_count
-    result_count(-1)
+    result_count(LOSS)
   end
 
   def draw_count
-    result_count(0)
+    result_count(DRAW)
   end
 
   private
