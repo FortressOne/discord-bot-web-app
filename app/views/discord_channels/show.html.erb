@@ -16,14 +16,14 @@
     </tr>
   </thead>
   <tbody>
-    <% @players.each_with_index do |player, index| %>
-      <% player_discord_channel = player.discord_channel_players.find_or_create_by(discord_channel_id: @discord_channel_id) %>
+    <% @discord_channel.players.each_with_index do |player, index| %>
+      <% player_discord_channel = player.discord_channel_players.find_or_create_by(discord_channel_id: @discord_channel.id) %>
       <tr>
         <td><%= index + 1 %></td>
         <td><%= player.name %></td>
-        <td><%= number_with_precision(player.trueskill_ratings.find_by(discord_channel_id: @discord_channel_id).conservative_skill_estimate, precision: 2) %></td>
-        <td><%= number_with_precision(player.trueskill_ratings.find_by(discord_channel_id: @discord_channel_id).mean, precision: 2) %></td>
-        <td><%= number_with_precision(player.trueskill_ratings.find_by(discord_channel_id: @discord_channel_id).deviation, precision: 2) %></td>
+        <td><%= number_with_precision(player.trueskill_ratings.find_by(discord_channel_id: @discord_channel.id).conservative_skill_estimate, precision: 2) %></td>
+        <td><%= number_with_precision(player.trueskill_ratings.find_by(discord_channel_id: @discord_channel.id).mean, precision: 2) %></td>
+        <td><%= number_with_precision(player.trueskill_ratings.find_by(discord_channel_id: @discord_channel.id).deviation, precision: 2) %></td>
         <td style="text-align:right;"><%= player_discord_channel.match_count %></td>
         <td style="text-align:right;"><%= player_discord_channel.win_count %></td>
         <td style="text-align:right;"><%= player_discord_channel.loss_count %></td>

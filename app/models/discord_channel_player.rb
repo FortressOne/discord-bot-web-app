@@ -7,7 +7,7 @@ class DiscordChannelPlayer < ApplicationRecord
   belongs_to :player
 
   def match_count
-    100
+    result_count
   end
 
   def win_count
@@ -24,9 +24,18 @@ class DiscordChannelPlayer < ApplicationRecord
 
   private
 
-  def result_count(int)
-    matches = player.matches.select do |match|
-      match.discord_channel_id = discord_channel.id
+  def result_count(result_int = nil)
+    matches = player.matches.where(discord_channel_id: discord_channel.id)
+
+    if result_int
+      matches = matches
+        .joins(teams: :players)
+        .where(
+          teams: {
+            result: result_int,
+            players: { id: player.id }
+          }
+        )
     end
 
     matches.count
