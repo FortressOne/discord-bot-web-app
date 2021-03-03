@@ -29,28 +29,10 @@ class Match < ApplicationRecord
       team2_player_ratings => team2.rank
     ).update_skills
 
-    team1.players.each_with_index do |player, i|
-      rating = team1_player_ratings[i]
-      player.trueskill_rating.mean = rating.mean
-      player.trueskill_rating.deviation = rating.deviation
-      player.trueskill_rating.save
-      player.save
-      puts '===='
-      puts player.name
-      puts player.trueskill_rating.mean
-    end
+    team1.update_ratings(team1_player_ratings)
+    team2.update_ratings(team2_player_ratings)
 
-    team2.players.each_with_index do |player, i|
-      rating = team2_player_ratings[i]
-      player.trueskill_rating.mean = rating.mean
-      player.trueskill_rating.deviation = rating.deviation
-      player.trueskill_rating.save
-      player.save
-      puts '===='
-      puts player.name
-      puts player.trueskill_rating.mean
-    end
-
-
+    ratings_processed = true
+    save
   end
 end

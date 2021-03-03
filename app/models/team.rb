@@ -14,11 +14,31 @@ class Team < ApplicationRecord
 
   def player_ratings(discord_channel_id)
     players.map do |player|
-      trueskill_rating = player.trueskill_ratings.find_by(
+      trueskill_rating = player.trueskill_ratings.find_or_create_by(
         discord_channel_id: discord_channel_id
       )
 
-      Rating.new(trueskill_rating.mean, trueskill_rating.deviation
+      Rating.new(trueskill_rating.mean, trueskill_rating.deviation)
+    end
+  end
+
+  def update_ratings(player_ratings)
+    players.each_with_index do |player, i|
+      rating = player_ratings[i]
+
+      trueskill_rating = player.trueskill_ratings.find_by(
+        discord_channel_id: match.discord_channel_id
+      )
+
+      trueskill_rating.mean = rating.mean
+      trueskill_rating.deviation = rating.deviation
+      trueskill_rating.save
+
+      player.save
+
+      puts '===='
+      puts player.name
+      puts trueskill_rating.mean
     end
   end
 end
