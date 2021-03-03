@@ -4,19 +4,24 @@ class Player < ApplicationRecord
   has_many :trueskill_ratings, dependent: :destroy
 
   scope :global_leaderboard, -> do
-    joins(:trueskill_ratings).merge(TrueskillRating.global)
+    where
+      .not(invisible: true)
+      .joins(:trueskill_ratings)
+      .where(trueskill_ratings: { discord_channel_id: nil })
       .sort_by do |player|
         player
           .trueskill_ratings
-          .find_by(discord_channel_id: nil)
+          .find_by(discord_channel_id: discord_channel_id)
           .conservative_skill_estimate * -1
       end
   end
 
   scope :discord_channel_leaderboard, ->(discord_channel_id) do
-    joins(:trueskill_ratings).where(
-      trueskill_ratings: { discord_channel_id: discord_channel_id }
-    ).sort_by do |player|
+    where
+      .not(invisible: true)
+      .joins(:trueskill_ratings)
+      .where(trueskill_ratings: { discord_channel_id: discord_channel_id })
+      .sort_by do |player|
         player
           .trueskill_ratings
           .find_by(discord_channel_id: discord_channel_id)
