@@ -17,17 +17,18 @@
   </thead>
   <tbody>
     <% @discord_channel.players.each_with_index do |player, index| %>
-      <% player_discord_channel = player.discord_channel_players.find_or_create_by(discord_channel_id: @discord_channel.id) %>
+      <% discord_channel_player = player.discord_channel_players.find_or_create_by(discord_channel_id: @discord_channel.id) %>
+      <% trueskill_rating = discord_channel_player.trueskill_rating %>
       <tr>
         <td><%= index + 1 %></td>
         <td><%= player.name %></td>
-        <td><%= number_with_precision(player.trueskill_ratings.find_by(discord_channel_id: @discord_channel.id).conservative_skill_estimate, precision: 2) %></td>
-        <td><%= number_with_precision(player.trueskill_ratings.find_by(discord_channel_id: @discord_channel.id).mean, precision: 2) %></td>
-        <td><%= number_with_precision(player.trueskill_ratings.find_by(discord_channel_id: @discord_channel.id).deviation, precision: 2) %></td>
-        <td style="text-align:right;"><%= player_discord_channel.match_count %></td>
-        <td style="text-align:right;"><%= player_discord_channel.win_count %></td>
-        <td style="text-align:right;"><%= player_discord_channel.loss_count %></td>
-        <td style="text-align:right;"><%= player_discord_channel.draw_count %></td>
+        <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
+        <td><%= number_with_precision(trueskill_rating.mean, precision: 2) %></td>
+        <td><%= number_with_precision(trueskill_rating.deviation, precision: 2) %></td>
+        <td style="text-align:right;"><%= discord_channel_player.match_count %></td>
+        <td style="text-align:right;"><%= discord_channel_player.win_count %></td>
+        <td style="text-align:right;"><%= discord_channel_player.loss_count %></td>
+        <td style="text-align:right;"><%= discord_channel_player.draw_count %></td>
         <td data-sort="<%= player.last_match_date && player.last_match_date.to_i %>"><%= player.last_match_date && local_time_ago(player.last_match_date) %></td>
         <td><%= player.last_discord_channel && player.last_discord_channel.name %></td>
       </tr>

@@ -3,6 +3,7 @@ class DiscordChannelPlayer < ApplicationRecord
   LOSS = -1
   DRAW = 0
 
+  has_one :trueskill_rating
   belongs_to :discord_channel
   belongs_to :player
 
