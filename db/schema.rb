@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_02_103759) do
+ActiveRecord::Schema.define(version: 2021_03_03_084711) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "discord_channel_players", force: :cascade do |t|
+    t.bigint "discord_channel_id", null: false
+    t.bigint "player_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["discord_channel_id"], name: "index_discord_channel_players_on_discord_channel_id"
+    t.index ["player_id"], name: "index_discord_channel_players_on_player_id"
+  end
 
   create_table "discord_channels", force: :cascade do |t|
     t.string "channel_id"
@@ -72,6 +81,8 @@ ActiveRecord::Schema.define(version: 2021_03_02_103759) do
     t.index ["player_id"], name: "index_trueskill_ratings_on_player_id"
   end
 
+  add_foreign_key "discord_channel_players", "discord_channels"
+  add_foreign_key "discord_channel_players", "players"
   add_foreign_key "matches", "discord_channels"
   add_foreign_key "matches", "game_maps"
   add_foreign_key "teams", "matches"
