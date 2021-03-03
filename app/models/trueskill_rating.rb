@@ -1,6 +1,5 @@
 class TrueskillRating < ApplicationRecord
-  belongs_to :player
-  belongs_to :discord_channel, optional: true
+  belongs_to :discord_channel_player
 
   scope :global, ->{ where(discord_channel: nil) }
 

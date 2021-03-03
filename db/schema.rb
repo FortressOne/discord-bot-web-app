@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_03_084711) do
+ActiveRecord::Schema.define(version: 2021_03_03_215359) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,12 +73,10 @@ ActiveRecord::Schema.define(version: 2021_03_03_084711) do
   create_table "trueskill_ratings", force: :cascade do |t|
     t.float "mean", default: 25.0
     t.float "deviation", default: 8.333333333333334
-    t.bigint "player_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "discord_channel_id"
-    t.index ["discord_channel_id"], name: "index_trueskill_ratings_on_discord_channel_id"
-    t.index ["player_id"], name: "index_trueskill_ratings_on_player_id"
+    t.bigint "discord_channel_player_id"
+    t.index ["discord_channel_player_id"], name: "index_trueskill_ratings_on_discord_channel_player_id"
   end
 
   add_foreign_key "discord_channel_players", "discord_channels"
@@ -86,6 +84,5 @@ ActiveRecord::Schema.define(version: 2021_03_03_084711) do
   add_foreign_key "matches", "discord_channels"
   add_foreign_key "matches", "game_maps"
   add_foreign_key "teams", "matches"
-  add_foreign_key "trueskill_ratings", "discord_channels"
-  add_foreign_key "trueskill_ratings", "players"
+  add_foreign_key "trueskill_ratings", "discord_channel_players"
 end
