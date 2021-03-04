@@ -5,8 +5,6 @@
       <th>Rank</th>
       <th>Name</th>
       <th data-sort-method='dotsep'>CSE</th>
-      <th data-sort-method='dotsep'>Mean (μ)</th>
-      <th data-sort-method='dotsep'>SD (σ)</th>
       <th data-sort-method='number'>Played</th>
       <th data-sort-method='number'>Wins</th>
       <th data-sort-method='number'>Losses</th>
@@ -22,8 +20,6 @@
         <td><%= index + 1 %></td>
         <td><%= player.name %></td>
         <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
-        <td><%= number_with_precision(trueskill_rating.mean, precision: 2) %></td>
-        <td><%= number_with_precision(trueskill_rating.deviation, precision: 2) %></td>
         <td style="text-align:right;"><%= discord_channel_player.match_count %></td>
         <td style="text-align:right;"><%= discord_channel_player.win_count %></td>
         <td style="text-align:right;"><%= discord_channel_player.loss_count %></td>
