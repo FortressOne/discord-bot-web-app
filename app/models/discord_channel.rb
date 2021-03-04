@@ -5,5 +5,6 @@ class DiscordChannel < ApplicationRecord
 
   scope :leaderboard, -> do
     includes(players: { matches: :discord_channel })
+      .where.not(players: { name: nil })
   end
 end
