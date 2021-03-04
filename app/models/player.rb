@@ -38,10 +38,6 @@ class Player < ApplicationRecord
     matches.any? && matches.last.created_at
   end
 
-  def last_discord_channel
-    matches.any? && matches.last.discord_channel
-  end
-
   def match_count
     matches.size
   end
