@@ -34,10 +34,6 @@ class Player < ApplicationRecord
       end
   end
 
-  def last_match_date
-    matches.any? && matches.last.created_at
-  end
-
   def match_count
     matches.size
   end
