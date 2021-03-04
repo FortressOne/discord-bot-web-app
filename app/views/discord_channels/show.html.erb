@@ -12,7 +12,6 @@
       <th data-sort-method='number'>Losses</th>
       <th data-sort-method='number'>Draws</th>
       <th data-sort-method='number'>Last Match Date</th>
-      <th>Last Match Discord</th>
     </tr>
   </thead>
   <tbody>
@@ -30,7 +29,6 @@
         <td style="text-align:right;"><%= discord_channel_player.loss_count %></td>
         <td style="text-align:right;"><%= discord_channel_player.draw_count %></td>
         <td data-sort="<%= player.last_match_date && player.last_match_date.to_i %>"><%= player.last_match_date && local_time_ago(player.last_match_date) %></td>
-        <td><%= player.last_discord_channel && player.last_discord_channel.name %></td>
       </tr>
     <% end %>
   </tbody>
