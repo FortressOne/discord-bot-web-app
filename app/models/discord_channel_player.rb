@@ -11,39 +11,22 @@ class DiscordChannelPlayer < ApplicationRecord
   before_create :build_default_trueskill_rating
 
   def match_count
-    result_count
+    teams.count
   end
 
   def win_count
-    result_count(WIN)
+    teams.where(result: WIN).count
   end
 
   def loss_count
-    result_count(LOSS)
+    teams.where(result: LOSS).count
   end
 
   def draw_count
-    result_count(DRAW)
+    teams.where(result: DRAW).count
   end
 
   private
-
-  def result_count(result_int = nil)
-    matches = player.matches.where(discord_channel_id: discord_channel.id)
-
-    if result_int
-      matches = matches
-        .joins(teams: :players)
-        .where(
-          teams: {
-            result: result_int,
-            players: { id: player.id }
-          }
-        )
-    end
-
-    matches.count
-  end
 
   def build_default_trueskill_rating
     build_trueskill_rating
