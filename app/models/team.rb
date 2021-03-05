@@ -2,6 +2,7 @@ class Team < ApplicationRecord
   belongs_to :match
   has_and_belongs_to_many :players
   has_and_belongs_to_many :discord_channel_players
+  has_many :trueskill_ratings, through: :discord_channel_players
 
   default_scope { order(created_at: :asc) }
 
@@ -13,14 +14,12 @@ class Team < ApplicationRecord
     end
   end
 
-  def player_ratings
-    discord_channel_players.map do |dcp|
-      dcp.trueskill_rating.to_rating
-    end
+  def trueskill_ratings_rating_objs
+    trueskill_ratings.map(&:to_rating)
   end
 
   def update_ratings(player_ratings)
-    players.each_with_index do |player, i|
+    discord_channel_players.each_with_index do |dcp, i|
       rating = player_ratings[i]
 
       trueskill_rating = trueskill_rating(player)

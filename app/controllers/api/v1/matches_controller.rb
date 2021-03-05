@@ -29,7 +29,6 @@ class Api::V1::MatchesController < ActionController::API
     end
 
     match.game_map = map_params && GameMap.find_or_create_by(name: map_params)
-
     match.update_trueskill_ratings
 
     render json: match.id.to_json, status: :ok

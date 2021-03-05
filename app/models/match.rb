@@ -25,8 +25,8 @@ class Match < ApplicationRecord
     team1 = teams.find_by(name: 1)
     team2 = teams.find_by(name: 2)
 
-    team1_player_ratings = team1.player_ratings
-    team2_player_ratings = team2.player_ratings
+    team1_player_ratings = team1.trueskill_ratings_ratings_objs
+    team2_player_ratings = team2.trueskill_ratings_ratings_objs
 
     FactorGraph.new(
       team1_player_ratings => team1.rank,
