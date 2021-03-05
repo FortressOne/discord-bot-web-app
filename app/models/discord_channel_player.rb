@@ -8,8 +8,6 @@ class DiscordChannelPlayer < ApplicationRecord
   belongs_to :player
   has_and_belongs_to_many :teams
 
-  before_create :build_default_trueskill_rating
-
   def match_count
     teams.count
   end
@@ -24,12 +22,5 @@ class DiscordChannelPlayer < ApplicationRecord
 
   def draw_count
     teams.where(result: DRAW).count
-  end
-
-  private
-
-  def build_default_trueskill_rating
-    build_trueskill_rating
-    true
   end
 end
