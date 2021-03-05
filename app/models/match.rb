@@ -1,4 +1,8 @@
+require 'saulabs/trueskill'
+
 class Match < ApplicationRecord
+  include Saulabs::TrueSkill
+
   belongs_to :game_map, optional: true
   belongs_to :discord_channel
   has_many :teams, dependent: :destroy
@@ -21,8 +25,8 @@ class Match < ApplicationRecord
     team1 = teams.find_by(name: 1)
     team2 = teams.find_by(name: 2)
 
-    team1_player_ratings = team1.player_ratings(discord_channel.id)
-    team2_player_ratings = team2.player_ratings(discord_channel.id)
+    team1_player_ratings = team1.player_ratings
+    team2_player_ratings = team2.player_ratings
 
     FactorGraph.new(
       team1_player_ratings => team1.rank,

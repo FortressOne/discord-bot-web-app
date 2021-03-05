@@ -6,6 +6,9 @@ class DiscordChannelPlayer < ApplicationRecord
   has_one :trueskill_rating
   belongs_to :discord_channel
   belongs_to :player
+  has_and_belongs_to_many :teams
+
+  before_create :build_default_trueskill_rating
 
   def match_count
     result_count
@@ -40,5 +43,10 @@ class DiscordChannelPlayer < ApplicationRecord
     end
 
     matches.count
+  end
+
+  def build_default_trueskill_rating
+    build_trueskill_rating
+    true
   end
 end
