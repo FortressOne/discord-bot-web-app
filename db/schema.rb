@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_03_215359) do
+ActiveRecord::Schema.define(version: 2021_03_04_155900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,11 @@ ActiveRecord::Schema.define(version: 2021_03_03_215359) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["discord_channel_id"], name: "index_discord_channel_players_on_discord_channel_id"
     t.index ["player_id"], name: "index_discord_channel_players_on_player_id"
+  end
+
+  create_table "discord_channel_players_teams", id: false, force: :cascade do |t|
+    t.bigint "discord_channel_player_id", null: false
+    t.bigint "team_id", null: false
   end
 
   create_table "discord_channels", force: :cascade do |t|

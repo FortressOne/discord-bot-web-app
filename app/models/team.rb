@@ -1,6 +1,7 @@
 class Team < ApplicationRecord
   belongs_to :match
   has_and_belongs_to_many :players
+  has_and_belongs_to_many :discord_channel_players
 
   default_scope { order(created_at: :asc) }
 
@@ -12,10 +13,9 @@ class Team < ApplicationRecord
     end
   end
 
-  def player_ratings(discord_channel_id)
-    players.map do |player|
-      trueskill_rating = trueskill_rating(player)
-      Rating.new(trueskill_rating.mean, trueskill_rating.deviation)
+  def player_ratings
+    discord_channel_players.map do |dcp|
+      dcp.trueskill_rating.to_rating
     end
   end
 
@@ -34,15 +34,5 @@ class Team < ApplicationRecord
       puts player.name
       puts trueskill_rating.mean
     end
-  end
-
-  private
-
-  def trueskill_rating(player)
-    discord_channel_player = player.discord_channel_players.find_or_create_by(
-      discord_channel_id: match.discord_channel_id
-    )
-
-    TrueskillRating.find_or_create_by(discord_channel_player_id: discord_channel_player.id)
   end
 end
