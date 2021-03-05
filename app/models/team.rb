@@ -1,4 +1,9 @@
 class Team < ApplicationRecord
+  WIN = 1
+  DRAW = 0
+  LOSS = -1
+  RANKS = { WIN => 1, DRAW => 1, LOSS => 0 }.freeze
+
   belongs_to :match
   has_and_belongs_to_many :players
   has_and_belongs_to_many :discord_channel_players
@@ -7,11 +12,7 @@ class Team < ApplicationRecord
   default_scope { order(created_at: :asc) }
 
   def rank
-    case result
-    when 1 then 1
-    when 0 then 1
-    when -1 then 2
-    end
+    RANKS[result]
   end
 
   def trueskill_ratings_rating_objs
@@ -19,19 +20,11 @@ class Team < ApplicationRecord
   end
 
   def update_ratings(player_ratings)
-    discord_channel_players.each_with_index do |dcp, i|
+    trueskill_ratings.each_with_index do |tr, i|
       rating = player_ratings[i]
-
-      trueskill_rating = trueskill_rating(player)
-      trueskill_rating.mean = rating.mean
-      trueskill_rating.deviation = rating.deviation
-      trueskill_rating.save
-
-      player.save
-
-      puts '===='
-      puts player.name
-      puts trueskill_rating.mean
+      tr.mean = rating.mean
+      tr.deviation = rating.deviation
+      tr.save
     end
   end
 end
