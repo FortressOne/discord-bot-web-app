@@ -2,7 +2,7 @@ class Team < ApplicationRecord
   WIN = 1
   DRAW = 0
   LOSS = -1
-  RANKS = { WIN => 1, DRAW => 1, LOSS => 0 }.freeze
+  RANKS = { WIN => 1, DRAW => 1, LOSS => 2 }.freeze
 
   belongs_to :match
   has_and_belongs_to_many :players
