@@ -38,7 +38,7 @@ namespace :data_migration do
         )
 
         dcp.teams << team
-        binding.pry unless dcp.save
+        dcp.save
       end
     end
   end
