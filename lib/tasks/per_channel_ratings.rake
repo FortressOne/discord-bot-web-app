@@ -1,6 +1,6 @@
 namespace :data_migration do
-  desc 'create discord channel players'
-  task create_discord_channel_players: :environment do
+  desc 'migration for per-channel ratings'
+  task per_channel_ratings: :environment do
 
     TrueskillRating.destroy_all
     DiscordChannelPlayer.destroy_all

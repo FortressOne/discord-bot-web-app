@@ -15,6 +15,8 @@ class DiscordChannelPlayer < ApplicationRecord
       end
   end
 
+  before_create :build_trueskill_rating
+
   def match_count
     teams.count
   end
