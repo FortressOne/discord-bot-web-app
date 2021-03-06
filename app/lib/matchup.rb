@@ -1,11 +1,11 @@
 class Matchup
   def initialize(teams)
     @team1_players = teams.keys[0].map do |i|
-      i.discord_id.to_i.to_s
+      i.player.discord_id.to_i.to_s
     end
 
     @team2_players = teams.keys[1].map do |i|
-      i.discord_id.to_i.to_s
+      i.player.discord_id.to_i.to_s
     end
 
     @team1_score, @team2_score = *teams.values
