@@ -12,17 +12,16 @@
     </tr>
   </thead>
   <tbody>
-    <% @discord_channel.players.each_with_index do |player, index| %>
-      <% discord_channel_player = player.discord_channel_players.find_or_create_by(discord_channel_id: @discord_channel.id) %>
-      <% trueskill_rating = discord_channel_player.trueskill_rating %>
+    <% @discord_channel_players.each_with_index do |dcp, index| %>
+      <% trueskill_rating = dcp.trueskill_rating %>
       <tr>
         <td><%= index + 1 %></td>
-        <td><%= player.name %></td>
+        <td><%= dcp.player.name %></td>
         <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
-        <td style="text-align:right;"><%= discord_channel_player.match_count %></td>
-        <td style="text-align:right;"><%= discord_channel_player.win_count %></td>
-        <td style="text-align:right;"><%= discord_channel_player.loss_count %></td>
-        <td style="text-align:right;"><%= discord_channel_player.draw_count %></td>
+        <td style="text-align:right;"><%= dcp.match_count %></td>
+        <td style="text-align:right;"><%= dcp.win_count %></td>
+        <td style="text-align:right;"><%= dcp.loss_count %></td>
+        <td style="text-align:right;"><%= dcp.draw_count %></td>
       </tr>
     <% end %>
   </tbody>
