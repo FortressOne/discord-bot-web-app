@@ -34,11 +34,11 @@ namespace :data_migration do
       team.players.each do |player|
         dcp = DiscordChannelPlayer.find_or_create_by(
           discord_channel_id: discord_channel_id,
-          player_id: player.id,
+          player_id: player.id
         )
 
         dcp.teams << team
-        dcp.save
+        binding.pry unless dcp.save
       end
     end
   end
