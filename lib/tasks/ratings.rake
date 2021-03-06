@@ -7,12 +7,6 @@ namespace :ratings do
 
     TrueskillRating.destroy_all
 
-    DiscordChannelPlayer.all.each do |dcp|
-      TrueskillRating.create(
-        discord_channel_player_id: dcp.id
-      )
-    end
-
     Match.all.each do |match|
       match.update_trueskill_ratings
     end
