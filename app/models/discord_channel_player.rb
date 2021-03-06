@@ -1,7 +1,5 @@
 class DiscordChannelPlayer < ApplicationRecord
-  WIN = 1
-  LOSS = -1
-  DRAW = 0
+  include ResultConstants
 
   has_one :trueskill_rating
   belongs_to :discord_channel
