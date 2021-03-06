@@ -8,6 +8,15 @@ class DiscordChannelPlayer < ApplicationRecord
   belongs_to :player
   has_and_belongs_to_many :teams
 
+  scope :leaderboard, -> do
+    joins(:player)
+      .merge(Player.visible)
+      .includes(:player, :trueskill_rating)
+      .sort_by do |dcp|
+        dcp.trueskill_rating.conservative_skill_estimate * -1
+      end
+  end
+
   def match_count
     teams.count
   end

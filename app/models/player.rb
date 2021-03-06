@@ -8,6 +8,8 @@ class Player < ApplicationRecord
   has_many :discord_channel_players, dependent: :destroy
   has_many :discord_channels, through: :discord_channel_players
 
+  scope :visible, ->{ where(invisible: false) }
+
   scope :global_leaderboard, -> do
     where
       .not(invisible: true)
