@@ -1,7 +1,5 @@
 class Player < ApplicationRecord
-  WIN = 1
-  LOSS = -1
-  DRAW = 0
+  include ResultConstants
 
   has_and_belongs_to_many :teams
   has_many :matches, through: :teams
@@ -9,32 +7,6 @@ class Player < ApplicationRecord
   has_many :discord_channels, through: :discord_channel_players
 
   scope :visible, ->{ where(invisible: false) }
-
-  scope :global_leaderboard, -> do
-    where
-      .not(invisible: true)
-      .joins(:trueskill_ratings)
-      .where(trueskill_ratings: { discord_channel_id: nil })
-      .sort_by do |player|
-        player
-          .trueskill_ratings
-          .find_by(discord_channel_id: discord_channel_id)
-          .conservative_skill_estimate * -1
-      end
-  end
-
-  scope :discord_channel_leaderboard, ->(discord_channel_id) do
-    where
-      .not(invisible: true)
-      .joins(:trueskill_ratings)
-      .where(trueskill_ratings: { discord_channel_id: discord_channel_id })
-      .sort_by do |player|
-        player
-          .trueskill_ratings
-          .find_by(discord_channel_id: discord_channel_id)
-          .conservative_skill_estimate * -1
-      end
-  end
 
   def match_count
     matches.size
