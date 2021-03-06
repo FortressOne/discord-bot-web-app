@@ -1,10 +1,9 @@
 Rails.application.routes.draw do
-  get 'discord_channels/show'
-  root 'dashboard_items#index'
+  root 'discord_channels#index'
 
   resources :players, only: [:index]
   resources :matches, only: [:index]
-  resources :discord_channels, only: [:show]
+  resources :discord_channels, only: [:index, :show]
   resources :dashboard_items, only: [:index]
 
   namespace :api, defaults: { format: :json } do
