@@ -5,7 +5,7 @@ class Api::V1::MatchesController < ActionController::API
 
   def create
     discord_channel = DiscordChannel.find_or_create_by(match_params[:discord_channel])
-    match = Match.create(discord_channel: discord_channel)
+    match = Match.create(discord_channel_id: discord_channel.id)
 
     match_params[:teams].each do |name, attrs|
       team = match.teams.new
@@ -16,66 +16,20 @@ class Api::V1::MatchesController < ActionController::API
         player = Player.find_or_create_by(discord_id: discord_id)
         player.name = display_name
         player.save
-        team.players << player
+
+        discord_channel_players = player.discord_channel_players.find_or_create_by(
+          discord_channel_id: discord_channel.id,
+          player_id: player.id
+        )
+
+        team.discord_channel_players << discord_channel_players
       end
 
       team.save
     end
 
-    match.create_discord_channel(match_params[:discord_channel])
     match.game_map = map_params && GameMap.find_or_create_by(name: map_params)
-
-    match.save
-
-    team1 = match.teams.find_by(name: 1)
-    team2 = match.teams.find_by(name: 2)
-
-    team1_rank = case team1.result
-                 when 1 then 1
-                 when 0 then 1
-                 when -1 then 2
-                 end
-
-    team2_rank = case team2.result
-                 when 1 then 1
-                 when 0 then 1
-                 when -1 then 2
-                 end
-
-    team1_players = team1.players
-    team2_players = team2.players
-
-    team1_player_ratings = team1_players.map do |player|
-      Rating.new(player.trueskill_rating.mean, player.trueskill_rating.deviation)
-    end
-
-    team2_player_ratings = team2_players.map do |player|
-      Rating.new(player.trueskill_rating.mean, player.trueskill_rating.deviation)
-    end
-
-    FactorGraph.new(
-      team1_player_ratings => team1_rank,
-      team2_player_ratings => team2_rank
-    ).update_skills
-
-    team1_players.each_with_index do |player, i|
-      rating = team1_player_ratings[i]
-      player.trueskill_rating.mean = rating.mean
-      player.trueskill_rating.deviation = rating.deviation
-      player.trueskill_rating.save
-      player.save
-    end
-
-    team2_players.each_with_index do |player, i|
-      rating = team2_player_ratings[i]
-      player.trueskill_rating.mean = rating.mean
-      player.trueskill_rating.deviation = rating.deviation
-      player.trueskill_rating.save
-      player.save
-    end
-
-    match.ratings_processed = true
-    match.save
+    match.update_trueskill_ratings
 
     render json: match.id.to_json, status: :ok
   end
