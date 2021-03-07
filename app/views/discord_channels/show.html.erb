@@ -9,6 +9,7 @@
       <th data-sort-method='number'>Wins</th>
       <th data-sort-method='number'>Losses</th>
       <th data-sort-method='number'>Draws</th>
+      <th data-sort-method='number'>Last Match Date</th>
     </tr>
   </thead>
   <tbody>
@@ -22,6 +23,7 @@
         <td style="text-align:right;"><%= dcp.win_count %></td>
         <td style="text-align:right;"><%= dcp.loss_count %></td>
         <td style="text-align:right;"><%= dcp.draw_count %></td>
+        <td data-sort="<%= dcp.last_match_date && dcp.last_match_date.to_i %>"><%= dcp.last_match_date && local_time_ago(dcp.last_match_date) %></td>
       </tr>
     <% end %>
   </tbody>
