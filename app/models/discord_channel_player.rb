@@ -17,6 +17,10 @@ class DiscordChannelPlayer < ApplicationRecord
 
   before_create :build_trueskill_rating
 
+  def last_match_date
+    teams && teams.last.created_at
+  end
+
   def match_count
     teams.count
   end
