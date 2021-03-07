@@ -13,7 +13,6 @@ class Match < ApplicationRecord
   scope :history, -> do
     order(created_at: :desc)
       .includes(:game_map)
-      .includes(:discord_channel)
       .includes(teams: :players)
   end
 

@@ -8,8 +8,6 @@ class Team < ApplicationRecord
   has_and_belongs_to_many :discord_channel_players
   has_many :trueskill_ratings, through: :discord_channel_players
 
-  default_scope { order(created_at: :asc) }
-
   def rank
     RANKS[result]
   end
