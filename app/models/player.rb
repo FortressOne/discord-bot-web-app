@@ -1,10 +1,9 @@
 class Player < ApplicationRecord
   include ResultConstants
 
-  has_and_belongs_to_many :teams
-  has_many :matches, through: :teams
   has_many :discord_channel_players, dependent: :destroy
   has_many :discord_channels, through: :discord_channel_players
+  has_many :teams, through: :discord_channel_players
 
   scope :visible, ->{ where(invisible: false) }
 

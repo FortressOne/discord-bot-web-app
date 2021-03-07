@@ -4,8 +4,8 @@ class Team < ApplicationRecord
   RANKS = { WIN => 1, DRAW => 1, LOSS => 2 }.freeze
 
   belongs_to :match
-  has_and_belongs_to_many :players
   has_and_belongs_to_many :discord_channel_players
+  has_many :players, through: :discord_channel_players
   has_many :trueskill_ratings, through: :discord_channel_players
 
   def rank
