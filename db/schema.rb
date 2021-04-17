@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_07_105042) do
+ActiveRecord::Schema.define(version: 2021_04_17_075134) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 2021_03_07_105042) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["channel_id"], name: "index_discord_channels_on_channel_id", unique: true
   end
 
   create_table "game_maps", force: :cascade do |t|
