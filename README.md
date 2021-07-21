@@ -1,24 +1,35 @@
-# README
+# Discord Bot Web App
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Has a leaderboard web app, and API endpoints for choosing fair teams and reporting match results.
 
-Things you may want to cover:
+https://ratings.fortressone.org/
 
-* Ruby version
+Hosted on Heroku.
 
-* System dependencies
+To run app locally:
+```
+bundle exec rails server
+```
 
-* Configuration
+To access production console:
+- Log into heroku.
+- Run:
+		```
+		bundle exec rails console -e production
+		```
 
-* Database creation
+To change result of match with id 333 to red win:
+```
+match = Match.find(333)
+blue = match.teams.first
+blue.result = 1
+blue.save
+red = match.teams.last
+red.result = -1
+red.save
+```
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+To recalculate all ratings from the beginning of time:
+```
+heroku run bundle exec rake ratings:build
+```
