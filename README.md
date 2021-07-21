@@ -18,7 +18,7 @@ To access production console:
 		bundle exec rails console -e production
 		```
 
-To change result of match with id 333 to red win:
+To change result of match with id 333 to blue win:
 ```
 match = Match.find(333)
 blue = match.teams.first
