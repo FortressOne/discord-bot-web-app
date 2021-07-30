@@ -4,21 +4,23 @@ class Api::V1::FairTeamsController < ApplicationController
   include Saulabs::TrueSkill
 
   def new
+    discord_channel = DiscordChannel.find_or_create_by(
+      channel_id: discord_channel_id_params
+    )
+
     discord_channel_players = players_params.map do |discord_id|
       player = Player.find_or_create_by(discord_id: discord_id)
 
-      discord_channel = DiscordChannel.find_or_create_by(
-        channel_id: discord_channel_id_params
-      )
-
-      foo = DiscordChannelPlayer.find_or_create_by(
+      discord_channel_player = DiscordChannelPlayer.find_or_create_by(
         player_id: player.id,
         discord_channel_id: discord_channel.id
-      ).tap do |discord_channel_player|
-        TrueskillRating.find_or_create_by(
-          discord_channel_player_id: discord_channel_player.id
-        )
-      end
+      )
+
+      TrueskillRating.find_or_create_by(
+        discord_channel_player_id: discord_channel_player.id
+      )
+
+      discord_channel_player
     end
 
     teamsize = discord_channel_players.size / 2
@@ -26,9 +28,7 @@ class Api::V1::FairTeamsController < ApplicationController
     player1 = discord_channel_players.shift
     team1_combinations = discord_channel_players.combination(teamsize - 1)
 
-    matchups = []
-
-    team1_combinations.each do |combo|
+    matchups = team1_combinations.inject([]) do |matchups, combo|
       team1 = combo + [player1]
       team2 = discord_channel_players - combo
 
@@ -42,6 +42,10 @@ class Api::V1::FairTeamsController < ApplicationController
         sum + discord_channel_player.trueskill_rating.conservative_skill_estimate
       end
 
+      if discord_channel.matches.count.odd?
+        teams = teams.to_a.reverse.to_h
+      end
+
       matchups << teams
     end
 
@@ -49,9 +53,7 @@ class Api::V1::FairTeamsController < ApplicationController
       Matchup.new(matchup).difference
     end
 
-    results = []
-
-    sorted_matchups.each do |matchup|
+    results = sorted_matchups.inject([]) do |results, matchup|
       results << Matchup.new(matchup).teams
     end
 
