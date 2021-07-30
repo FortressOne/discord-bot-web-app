@@ -18,6 +18,11 @@ To access production console:
 		bundle exec rails console -e production
 		```
 
+To deploy:
+```
+git push heroku master
+```
+
 To change result of match with id 333 to blue win:
 ```
 match = Match.find(333)
