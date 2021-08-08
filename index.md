@@ -15,29 +15,13 @@ and evolved gameplay.
 Join us on [Discord][] or check out the [FortressOne category on Twitch][].
 
 
-## Install
+## Download
 
-### Windows
+Latest release date: 9th August 2021<br>
+Version: 1.1.1-beta.1
 
-Download and run the [FortressOne for Windows installer][].
-
-> You might get a notification that Windows prevented and unknown app from
-> running. You can click 'More info' > 'Run anyway'.
-
-
-### Linux
-
-Download the [FortressOne for Linux installer][].
-
-```bash
-$ sh fortressone-linux-installer-1.0.4.run
-```
-
-> Has been tested for Ubuntu 18.04 and 18.10. It might work on other distros and
-> versions, but if it doesn't, please [raise an issue][] on GitHub.
-
-
-Alternatively get FortressOne on [Lutris][] or [itch.io][].
+- [Windows](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-windows-1.1.1-beta.1-portable.zip)
+- [Linux](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-windows-1.1.1-beta.1-portable.zip)
 
 
 ## Community
@@ -177,17 +161,22 @@ Join the [Discord][] or fork us on [GitHub](https://github.com/FortressOne).
 FortressOne is built on or inspired by ID Software's Quake, Team Fortress
 Software's Team Fortress, FTE Quake, zQuake, fuhQuake, ezQuake, ozTF, hueTF,
 Classic Fortress, Team Fortress Classic, Fortress Forever and Team Fortress 2.
-It includes assets from the [Quake Revitalisation Project][], [dox's models][],
-[Plagues pak][], Ruohis and PrimeviL.
+It includes assets from the [LibreQuake][], [OpenQuartz][], [Quake
+Revitalisation Project][], [dox's models][], [Plagues pak][], [Ruohis][] and
+[PrimeviL][].
 
 
 [Quake]:                             https://www.idsoftware.com/en-gb##section-games
 [QuakeWorld]:                        https://www.idsoftware.com/en-gb##section-games
 [Team Fortress]:                     https://web.archive.org/web/20131005123834/http://www.planetfortress.com/teamfortress/
 [ezQuake]:                           https://ezquake.github.io/
+[LibreQuake]:                        https://github.com/MissLav/LibreQuake
+[OpenQuartz]:                        http://openquartz.sourceforge.net/index.html
 [Quake Revitalisation Project]:      https://qrp.quakeone.com/
 [dox's models]:                      https://www.quaddicted.com/webarchive/www.planetfortress.com/tfdone_easy/dox/index.html
 [Plagues pak]:                       http://members.optusnet.com.au/~plaguespak/
+[PrimeviL]:                          https://gfx.quakeworld.nu/user/148/primevil/
+[Ruohis]:                            https://web.archive.org/web/20131029220657/http://ruohis.com/home.htm
 [FortressOne for Windows installer]: https://github.com/FortressOne/windows-installer/releases/latest
 [FortressOne for Linux installer]:   https://github.com/FortressOne/linux-installer/releases/latest
 [raise an issue]:                    https://github.com/FortressOne/linux-installer/issues/new
