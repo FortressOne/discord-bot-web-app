@@ -21,7 +21,7 @@ Latest release date: 9th August 2021<br>
 Version: 1.1.1-beta.1
 
 - [Windows](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-windows-1.1.1-beta.1-portable.zip)
-- [Linux](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-windows-1.1.1-beta.1-portable.zip)
+- [Linux](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-linux-1.1.1-beta.1-portable.zip)
 
 
 ## Community
