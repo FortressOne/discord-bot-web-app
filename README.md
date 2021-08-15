@@ -38,3 +38,10 @@ To recalculate all ratings from the beginning of time:
 ```
 heroku run bundle exec rake ratings:build
 ```
+
+To dump production data and import locally:
+```
+heroku pg:backups:capture
+heroku pg:backups:download
+pg_restore --verbose --clean --no-acl --no-owner -h localhost -U $USER -d discord_bot_web_app_development latest.dump
+```
