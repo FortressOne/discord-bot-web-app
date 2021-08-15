@@ -1,7 +1,7 @@
 class DiscordChannelPlayer < ApplicationRecord
   include ResultConstants
 
-  has_one :trueskill_rating
+  has_one :trueskill_rating, dependent: :destroy
   belongs_to :discord_channel
   belongs_to :player
   has_and_belongs_to_many :teams
