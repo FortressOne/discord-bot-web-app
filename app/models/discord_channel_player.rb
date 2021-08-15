@@ -15,6 +15,14 @@ class DiscordChannelPlayer < ApplicationRecord
       end
   end
 
+  scope :order_by_last_match, -> do
+    joins(:player)
+      .merge(Player.visible)
+      .includes(:player)
+      .sort_by(&:last_match_date)
+      .reverse
+  end
+
   before_create :build_trueskill_rating
 
   def last_match_date
