@@ -7,7 +7,7 @@ description: Community developed, open source, stand-alone fork of QuakeWorld Te
 ---
 
 FortressOne is a community developed, open source, stand-alone fork of the
-original 1996 QuakeWorld mod [Team Fortress][]. It is a fast-paced, class
+original 1996 [QuakeWorld][] mod [Team Fortress][]. It is a fast-paced, class
 based, arena first person shooter remastered with refined graphics, new
 mechanics and evolved gameplay.
 
