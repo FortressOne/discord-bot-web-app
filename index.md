@@ -29,6 +29,7 @@ Version: 1.1.1-beta.1
 
 
 ### Stores
+
 - [itch.io](https://drzel.itch.io/fortressone)
 
 
@@ -81,11 +82,16 @@ Version: 1.1.1-beta.1
             <td>Concussion</td>
             <td>Dash, Scanner, Undisguise enemy, Disarm Detpack</td>
         </tr>
-        <!-- <tr> -->
-        <!--     <td><img src="https://raw.githubusercontent.com/FortressOne/qwtf-discord-bot/master/emoji/red_sniper.png" /></td> -->
-        <!--     <td>Sniper</td> -->
-        <!--     <td colspan=7></td> -->
-        <!-- </tr> -->
+        <tr>
+            <td><img src="https://raw.githubusercontent.com/FortressOne/qwtf-discord-bot/master/emoji/blue_sniper.png" /></td>
+            <td>Sniper</td>
+            <td>300</td>
+            <td>40 Green</td>
+            <td>Sniper Rifle, Nailgun, Axe</td>
+            <td>Frag</td>
+            <td>Flare</td>
+            <td>Zoom</td>
+        </tr>
         <tr>
             <td><img src="https://raw.githubusercontent.com/FortressOne/qwtf-discord-bot/master/emoji/blue_soldier.png" /></td>
             <td>Soldier</td>
