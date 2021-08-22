@@ -49,7 +49,7 @@ Version: 1.1.1-beta.1
 
 ## Links
 
-- [igdb](https://www.igdb.com/games/fortressone)
+- [IGDB](https://www.igdb.com/games/fortressone)
 - [Wiki](https://github.com/FortressOne/fortressone.github.io/wiki)<br>
 - [Ratings](https://ratings.fortressone.org)<br>
 - [Demos](https://demos.fortressone.org)<br>
