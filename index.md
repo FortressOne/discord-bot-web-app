@@ -14,13 +14,22 @@ mechanics and evolved gameplay.
 Join us on [Discord][] or check out the [FortressOne category on Twitch][].
 
 
-## Download
+## Get the game
 
-Latest release date: 9th August 2021<br>
+FortressOne is a stand-alone game. Download the zip file, extract and run.
+
+
+### Download
+
+<small>9th August 2021</small><br>
 Version: 1.1.1-beta.1
 
 - [Windows](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-windows-1.1.1-beta.1-portable.zip)
 - [Linux](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-linux-1.1.1-beta.1-portable.zip)
+
+
+### Stores
+- [itch.io](https://drzel.itch.io/fortressone)
 
 
 ## Community
@@ -39,6 +48,7 @@ Version: 1.1.1-beta.1
 
 ## Links
 
+- [igdb](https://www.igdb.com/games/fortressone)
 - [Wiki](https://github.com/FortressOne/fortressone.github.io/wiki)<br>
 - [Ratings](https://ratings.fortressone.org)<br>
 - [Demos](https://demos.fortressone.org)<br>
