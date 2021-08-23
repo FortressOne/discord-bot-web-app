@@ -150,7 +150,7 @@ Version: 1.1.1-beta.1
             <td>Nailgun, Super Shotgun, Tranq Gun, Knife</td>
             <td>Frag</td>
             <td>Hallucinogenic Gas</td>
-            <td>Disguise / invisibility, Feign, Undisguise enemy</td>
+            <td>Disguise, Feign, Undisguise enemy</td>
         </tr>
         <tr>
             <td><img src="https://raw.githubusercontent.com/FortressOne/qwtf-discord-bot/master/emoji/blue_engineer.png" /></td>
