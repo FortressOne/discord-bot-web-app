@@ -3,13 +3,13 @@
 ## To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: default
-description: Community developed, open source, stand-alone fork of QuakeWorld Team Fortress
+description: Remastered fork of the original 1996 QuakeWorld mod Team Fortress
 ---
 
-FortressOne is a community developed, open source, stand-alone fork of the
-original 1996 [QuakeWorld][] mod [Team Fortress][]. It is a fast-paced, class
-based, arena first person shooter remastered with refined graphics, new
-mechanics and evolved gameplay.
+FortressOne is a community developed, open source, fork of the original 1996
+[QuakeWorld][] mod [Team Fortress][]. It is a fast-paced, class based, arena
+first person shooter remastered with refined graphics, new mechanics and
+evolved gameplay.
 
 Join us on [Discord][] or check out the [FortressOne category on Twitch][].
 
