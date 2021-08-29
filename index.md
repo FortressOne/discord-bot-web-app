@@ -8,22 +8,22 @@ description: Free, remastered fork of the original 1996 QuakeWorld mod Team Fort
 
 FortressOne is a free, open source fork of the original 1996 [QuakeWorld][] mod
 [Team Fortress][]. It is a fast-paced, class based, arena first person shooter
-remastered with refined graphics, new mechanics and evolved gameplay. Join us
-on [Discord][] or check it out on [YouTube][] or [Twitch][].
+remastered with refined graphics, new mechanics and evolved gameplay.
+
+Join us on [Discord][] or check it out on [YouTube][] or [Twitch][].
 
 
-## Get the game
+## Play
 
 FortressOne is a stand-alone game. Download the zip file, extract and run.
 
 
 ### Download
 
-Version: 1.1.1-beta.1<br>
-<small>9th August 2021</small>
+Latest release: 9th August 2021
 
-- [Windows](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-windows-1.1.1-beta.1-portable.zip)
-- [Linux](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-linux-1.1.1-beta.1-portable.zip)
+- [Windows v1.1.1-beta.1](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-windows-1.1.1-beta.1-portable.zip)
+- [Linux v1.1.1-beta.1](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-linux-1.1.1-beta.1-portable.zip)
 
 
 ### Stores
@@ -33,24 +33,24 @@ Version: 1.1.1-beta.1<br>
 
 ## Community
 
-- [Discord][]<br>
-- [Reddit](https://www.reddit.com/r/FortressOne)<br>
-- [Hacker News](https://news.ycombinator.com/item?id=22777321)<br>
+- [Discord](https://discord.fortressone.org)
+- [Reddit](https://www.reddit.com/r/FortressOne)
+- [Hacker News](https://news.ycombinator.com/item?id=22777321)
 
 
 ## Watch
 
-- [FortressOne category on Twitch](https://www.twitch.tv/directory/game/FortressOne)<br>
-- [Official Twitch channel](https://www.twitch.tv/fortressone)<br>
-- [Official YouTube account](https://www.youtube.com/channel/UCgYzKaEyTNoVfRLwlpfKzFQ)<br>
+- [FortressOne category on Twitch](https://www.twitch.tv/directory/game/FortressOne)
+- [Official Twitch channel](https://www.twitch.tv/fortressone)
+- [Official YouTube account](https://www.youtube.com/channel/UCgYzKaEyTNoVfRLwlpfKzFQ)
 
 
 ## Links
 
 - [IGDB](https://www.igdb.com/games/fortressone)
-- [Wiki](https://github.com/FortressOne/fortressone.github.io/wiki)<br>
-- [Ratings](https://ratings.fortressone.org)<br>
-- [Demos](https://demos.fortressone.org)<br>
+- [Wiki](https://github.com/FortressOne/fortressone.github.io/wiki)
+- [Ratings](https://ratings.fortressone.org)
+- [Demos](https://demos.fortressone.org)
 - [Stats](http://fortressone-stats.s3-website-ap-southeast-2.amazonaws.com/)
 
 
@@ -171,15 +171,18 @@ Join the [Discord][] or fork us on [GitHub][].
 
 ## Acknowledgements
 
-FortressOne is built on or inspired by ID Software's Quake, Team Fortress
-Software's Team Fortress, FTE Quake, zQuake, fuhQuake, ezQuake, ozTF, hueTF,
-Classic Fortress, Team Fortress Classic, Fortress Forever and Team Fortress 2.
-It includes assets from [LibreQuake][], [OpenQuartz][], [Quake Revitalisation
-Project][], [dox's models][], [Plagues pak][], [Ruohis][] and [PrimeviL][].
+FortressOne is built on or inspired by [id Software][]'s [Quake][], Team
+Fortress Software's [Team Fortress][], [FTE Quake][], zQuake, fuhQuake,
+[ezQuake][], [ozTF][], hueTF, [Classic Fortress][], [Team Fortress Classic][],
+[Fortress Forever][] and [Team Fortress 2][].  It includes assets from
+[LibreQuake][], [OpenQuartz][], [Quake Revitalisation Project][], [dox's
+models][], [Plagues pak][], [Ruohis][] and [PrimeviL][].
 
 
 [Classic Fortress]:                  http://classicfortress.net/
 [Discord]:                           https://discord.fortressone.org
+[FTE Quake]:                         https://fte.triptohell.info/
+[Fortress Forever]:                  http://www.fortress-forever.com/
 [FortressOne Discord]:               https://discord.fortressone.org
 [FortressOne Server for Linux]:      https://github.com/FortressOne/linux-server-installer/releases/latest
 [FortressOne for Linux installer]:   https://github.com/FortressOne/linux-installer/releases/latest
@@ -197,14 +200,19 @@ Project][], [dox's models][], [Plagues pak][], [Ruohis][] and [PrimeviL][].
 [Quadclub Brasil Discord]:           https://discord.gg/Ew3NY2Z
 [Quake Revitalisation Project]:      https://qrp.quakeone.com/
 [QuakeWorld]:                        https://www.idsoftware.com/en-gb##section-games
-[Quake]:                             https://www.idsoftware.com/en-gb##section-games
+[Quake]:                             https://bethesda.net/en/game/quake
 [Ruohis]:                            https://web.archive.org/web/20131029220657/http://ruohis.com/home.htm
 [TF2003]:                            https://github.com/angeld29/TF2003-qvm
+[Team Fortress 2]:                   https://www.teamfortress.com/
+[Team Fortress Classic]:             https://store.steampowered.com/app/20/Team_Fortress_Classic/
 [Team Fortress]:                     https://web.archive.org/web/20131005123834/http://www.planetfortress.com/teamfortress/
 [Twitch]:                            https://www.twitch.tv/directory/game/FortressOne
 [YouTube]:                           https://www.youtube.com/channel/UCgYzKaEyTNoVfRLwlpfKzFQ
 [dox's models]:                      https://www.quaddicted.com/webarchive/www.planetfortress.com/tfdone_easy/dox/index.html
 [ezQuake]:                           https://ezquake.github.io/
+[ezQuake]:                           https://www.ezquake.com/
 [hueTF]:                             https://github.com/gmtandi/huetf
+[id Software]:                       https://www.idsoftware.com
 [itch.io]:                           https://drzel.itch.io/fortressone
+[ozTF]:                              https://web.archive.org/web/20050627020628/http://ap.qgl.org/mercury/
 [raise an issue]:                    https://github.com/FortressOne/linux-installer/issues/new
