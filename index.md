@@ -8,9 +8,8 @@ description: Free, remastered fork of the original 1996 QuakeWorld mod Team Fort
 
 FortressOne is a free, open source fork of the original 1996 [QuakeWorld][] mod
 [Team Fortress][]. It is a fast-paced, class based, arena first person shooter
-remastered with refined graphics, new mechanics and evolved gameplay.
-
-Join us on [Discord][] or check it out on [YouTube][] or [Twitch][].
+remastered with refined graphics, new mechanics and evolved gameplay. Join us
+on [Discord][] or check it out on [YouTube][] or [Twitch][].
 
 
 ## Get the game
@@ -20,8 +19,8 @@ FortressOne is a stand-alone game. Download the zip file, extract and run.
 
 ### Download
 
-Version: 1.1.1-beta.1
-<small>9th August 2021</small><br>
+Version: 1.1.1-beta.1<br>
+<small>9th August 2021</small>
 
 - [Windows](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-windows-1.1.1-beta.1-portable.zip)
 - [Linux](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-linux-1.1.1-beta.1-portable.zip)
