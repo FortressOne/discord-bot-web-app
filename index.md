@@ -40,7 +40,7 @@ Version: 1.1.1-beta.1<br>
 
 ## Watch
 
-- [FortressOne category on Twitch][]
+- [FortressOne category on Twitch](https://www.twitch.tv/directory/game/FortressOne)<br>
 - [Official Twitch channel](https://www.twitch.tv/fortressone)<br>
 - [Official YouTube account](https://www.youtube.com/channel/UCgYzKaEyTNoVfRLwlpfKzFQ)<br>
 
