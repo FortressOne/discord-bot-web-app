@@ -8,6 +8,7 @@ class DiscordChannelPlayer < ApplicationRecord
 
   scope :leaderboard, -> do
     joins(:player)
+      .joins(:teams)
       .merge(Player.visible)
       .includes(:player, :trueskill_rating)
       .sort_by do |dcp|
@@ -17,13 +18,21 @@ class DiscordChannelPlayer < ApplicationRecord
 
   scope :order_by_last_match, -> do
     joins(:player)
+      .joins(:teams)
       .merge(Player.visible)
-      .includes(:player)
-      .sort_by(&:last_match_date)
-      .reverse
+      .includes(:player, :trueskill_rating)
+      .sort_by(&:leaderboard_sort_order)
   end
 
   before_create :build_trueskill_rating
+
+  def leaderboard_sort_order
+    if discord_channel.rated?
+      trueskill_rating.conservative_skill_estimate * -1
+    else
+      Time.zone.now - last_match_date
+    end
+  end
 
   def last_match_date
     teams.last && teams.last.created_at
