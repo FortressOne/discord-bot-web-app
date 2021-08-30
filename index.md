@@ -25,6 +25,8 @@ Latest release: 9th August 2021
 - [Windows v1.1.1-beta.1](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-windows-1.1.1-beta.1-portable.zip)
 - [Linux v1.1.1-beta.1](https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-linux-1.1.1-beta.1-portable.zip)
 
+If you like Fortressone, donate to server costs at our [GoFundMe][] or review it on [IGDB][].
+
 
 ### Stores
 
@@ -47,7 +49,7 @@ Latest release: 9th August 2021
 
 ## Links
 
-- [IGDB](https://www.igdb.com/games/fortressone)
+- [IGDB][]
 - [Wiki](https://github.com/FortressOne/fortressone.github.io/wiki)
 - [Ratings](https://ratings.fortressone.org)
 - [Demos](https://demos.fortressone.org)
@@ -189,6 +191,8 @@ models][], [Plagues pak][], [Ruohis][] and [PrimeviL][].
 [FortressOne for Windows installer]: https://github.com/FortressOne/windows-installer/releases/latest
 [FortressOne mod]:                   https://github.com/FortressOne/server-qwprogs
 [GitHub]:                            https://github.com/FortressOne
+[GoFundME]:                          https://www.gofundme.com/f/fortressone-expenses-2021-and-2022
+[IGDB]:                              https://www.igdb.com/games/fortressone
 [LibreQuake]:                        https://github.com/MissLav/LibreQuake
 [Lutris]:                            https://lutris.net/games/fortressone/
 [MegaTF]:                            https://github.com/alissa0/MegaTFCE
