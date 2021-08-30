@@ -49,6 +49,7 @@ If you like Fortressone, donate to server costs at our [GoFundMe][] or review it
 
 ## Links
 
+- [Linktree][]
 - [IGDB][]
 - [Wiki](https://github.com/FortressOne/fortressone.github.io/wiki)
 - [Ratings](https://ratings.fortressone.org)
@@ -194,6 +195,7 @@ models][], [Plagues pak][], [Ruohis][] and [PrimeviL][].
 [GoFundME]:                          https://www.gofundme.com/f/fortressone-expenses-2021-and-2022
 [IGDB]:                              https://www.igdb.com/games/fortressone
 [LibreQuake]:                        https://github.com/MissLav/LibreQuake
+[Linktree]:                          https://linktr.ee/fortressone
 [Lutris]:                            https://lutris.net/games/fortressone/
 [MegaTF]:                            https://github.com/alissa0/MegaTFCE
 [OpenQuartz]:                        http://openquartz.sourceforge.net/index.html
