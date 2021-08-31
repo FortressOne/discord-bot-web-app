@@ -59,7 +59,7 @@ If you like Fortressone, donate to server costs at our [GoFundMe][] or review it
 
 ## Classes
 
-<table>
+<table data-nosnippet>
     <thead>
         <tr>
             <th></th>
@@ -174,12 +174,13 @@ Join the [Discord][] or fork us on [GitHub][].
 
 ## Acknowledgements
 
-FortressOne is built on or inspired by [id Software][]'s [Quake][], Team
-Fortress Software's [Team Fortress][], [FTE Quake][], zQuake, fuhQuake,
-[ezQuake][], [ozTF][], hueTF, [Classic Fortress][], [Team Fortress Classic][],
-[Fortress Forever][] and [Team Fortress 2][].  It includes assets from
-[LibreQuake][], [OpenQuartz][], [Quake Revitalisation Project][], [dox's
-models][], [Plagues pak][], [Ruohis][] and [PrimeviL][].
+FortressOne is built with [id Software][]'s [Quake][], [Team Fortress
+Software][]'s [Team Fortress][] and [FTE Quake][]. It takes inspiration from
+[zQuake][], [FuhQuake][], [ezQuake][], [ozTF][], [hueTF][], [Classic
+Fortress][], [Team Fortress Classic][], [Fortress Forever][] and [Team Fortress
+2][]. It includes assets from [LibreQuake][], [OpenQuartz][], [Quake
+Revitalisation Project][], [dox's models][], [Plagues pak][], [Ruohis][] and
+[PrimeviL][].
 
 
 [Classic Fortress]:                  http://classicfortress.net/
@@ -191,8 +192,10 @@ models][], [Plagues pak][], [Ruohis][] and [PrimeviL][].
 [FortressOne for Linux installer]:   https://github.com/FortressOne/linux-installer/releases/latest
 [FortressOne for Windows installer]: https://github.com/FortressOne/windows-installer/releases/latest
 [FortressOne mod]:                   https://github.com/FortressOne/server-qwprogs
+[FuhQuake]:                          https://web.archive.org/web/20060820054509/http://www.fuhquake.net/
 [GitHub]:                            https://github.com/FortressOne
 [GoFundME]:                          https://www.gofundme.com/f/fortressone-expenses-2021-and-2022
+[hueTF]:                             https://github.com/gmtandi/huetf
 [IGDB]:                              https://www.igdb.com/games/fortressone
 [LibreQuake]:                        https://github.com/MissLav/LibreQuake
 [Linktree]:                          https://linktr.ee/fortressone
@@ -212,6 +215,7 @@ models][], [Plagues pak][], [Ruohis][] and [PrimeviL][].
 [Team Fortress 2]:                   https://www.teamfortress.com/
 [Team Fortress Classic]:             https://store.steampowered.com/app/20/Team_Fortress_Classic/
 [Team Fortress]:                     https://web.archive.org/web/20131005123834/http://www.planetfortress.com/teamfortress/
+[Team Fortress Software]:            https://web.archive.org/web/20000815110841/http://www.teamfortress.com/
 [Twitch]:                            https://www.twitch.tv/directory/game/FortressOne
 [YouTube]:                           https://www.youtube.com/channel/UCgYzKaEyTNoVfRLwlpfKzFQ
 [dox's models]:                      https://www.quaddicted.com/webarchive/www.planetfortress.com/tfdone_easy/dox/index.html
@@ -222,3 +226,4 @@ models][], [Plagues pak][], [Ruohis][] and [PrimeviL][].
 [itch.io]:                           https://drzel.itch.io/fortressone
 [ozTF]:                              https://web.archive.org/web/20050627020628/http://ap.qgl.org/mercury/
 [raise an issue]:                    https://github.com/FortressOne/linux-installer/issues/new
+[zQuake]:                            https://web.archive.org/web/20120210172357/http://zquake.frag.ru/eng/news/index.shtml
