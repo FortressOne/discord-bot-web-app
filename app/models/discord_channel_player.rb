@@ -11,16 +11,6 @@ class DiscordChannelPlayer < ApplicationRecord
       .joins(:teams)
       .merge(Player.visible)
       .includes(:player, :trueskill_rating)
-      .sort_by do |dcp|
-        dcp.trueskill_rating.conservative_skill_estimate * -1
-      end
-  end
-
-  scope :order_by_last_match, -> do
-    joins(:player)
-      .joins(:teams)
-      .merge(Player.visible)
-      .includes(:player, :trueskill_rating)
       .sort_by(&:leaderboard_sort_order)
   end
 

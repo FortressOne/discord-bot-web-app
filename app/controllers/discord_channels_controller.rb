@@ -8,7 +8,7 @@ class DiscordChannelsController < ApplicationController
 
     @discord_channel_players = @discord_channel
       .discord_channel_players
-      .order_by_last_match
+      .leaderboard
 
     @matches = @discord_channel.matches.history
   end
