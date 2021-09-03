@@ -3,11 +3,10 @@
 ## To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: default
-description: Free, remastered fork of the original 1996 QuakeWorld mod Team Fortress
 ---
 
-FortressOne is a free, open source fork of the original 1996 [QuakeWorld][] mod
-[Team Fortress][]. It is a fast-paced, class based, arena first person shooter
+FortressOne is a free, open source fork of the original 1996 QuakeWorld mod
+Team Fortress. It is a fast-paced, class based, arena first person shooter
 remastered with refined graphics, new mechanics and evolved gameplay.
 
 Join us on [Discord][] or check it out on [YouTube][] or [Twitch][].
