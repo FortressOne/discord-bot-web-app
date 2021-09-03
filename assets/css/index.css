@@ -35,3 +35,15 @@
   --switch-color: var(--primary-inverse);
   --switch-checked-background-color: var(--primary);
 }
+
+#banner {
+	height: 576px;
+	margin-bottom: -576px;
+	background-color: black;
+	background: linear-gradient(
+		to bottom,
+		transparent,
+		#11191f
+	), url("../images/background.png");
+	background-repeat: no-repeat;
+}
