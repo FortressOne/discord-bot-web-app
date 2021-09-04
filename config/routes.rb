@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   resources :players, only: [:index]
   resources :matches, only: [:index]
-  resources :discord_channels, only: [:index, :show]
+  resources :discord_channels, only: [:show]
   resources :dashboard_items, only: [:index]
 
   namespace :api, defaults: { format: :json } do
