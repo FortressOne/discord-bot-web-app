@@ -39,13 +39,11 @@
 #banner {
 	height: 576px;
 	margin-bottom: -576px;
-	background-color: black;
 	background: linear-gradient(
 		to bottom,
 		transparent,
 		#11191f
 	), url("../images/background.webp");
 	background-repeat: no-repeat;
+	background-position: center;
 }
-
-
