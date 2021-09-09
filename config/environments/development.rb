@@ -78,4 +78,6 @@ Rails.application.configure do
     Bullet.add_footer = true
     Bullet.skip_html_injection = false
   end
+
+  config.action_dispatch.tld_length = 0
 end
