@@ -13,6 +13,4 @@ Rails.application.routes.draw do
       end
     end
   end
-
-  root to: static("home/index.html")
 end
