@@ -1,0 +1,10 @@
+<% content_for :stylesheets do %>
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+  <link rel="stylesheet" href="home/stylesheets/home.css">
+<% end %>
+
+<% content_for :banner do %>
+  <div id="banner"></div>
+<% end %>
+
+<%= render template: "layouts/application" %>

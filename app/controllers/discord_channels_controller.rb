@@ -1,4 +1,6 @@
 class DiscordChannelsController < ApplicationController
+  layout "ratings"
+
   def index
     @discord_channels = DiscordChannel.all
   end
