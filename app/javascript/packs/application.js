@@ -22,7 +22,9 @@ LocalTime.start()
 var Tablesort = require("tablesort")
 
 document.addEventListener("turbolinks:load", function() {
-  new Tablesort(document.getElementById('players_table'));
+	if(document.getElementById('players_table')) {
+		new Tablesort(document.getElementById('players_table'));
+	}
 })
 
 import "tablesort/tablesort"
