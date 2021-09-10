@@ -13,4 +13,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  root to: 'home#index'
 end
