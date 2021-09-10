@@ -18,24 +18,31 @@
 
     <meta name="description" content="Free, open source fork of the original 1996 QuakeWorld mod Team Fortress. It is a fast-paced, class based, arena first person shooter remastered with refined graphics, new mechanics and evolved gameplay." />
 
-    <%= yield :stylesheets %>
+    <% if content_for?(:stylesheets) %>
+      <%= yield(:stylesheets) %>
+    <% end %>
+
+    <% if content_for?(:javascripts) %>
+      <%= yield(:javascripts) %>
+    <% end %>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_pack_tag 'application' %>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/home/assets/images/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/home/assets/images/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/home/assets/images/favicons/favicon-16x16.png">
-    <link rel="manifest" href="/home/assets/images/favicons/site.webmanifest">
-    <link rel="mask-icon" href="/home/assets/images/favicons/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="/home/assets/images/favicons/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicons/site.webmanifest">
+    <link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/images/favicons/favicon.ico">
   </head>
 
   <body>
     <% if content_for?(:banner) %>
       <%= yield(:banner) %>
     <% end %>
+
     <main class="container">
       <%= yield %>
     </main>
