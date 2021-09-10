@@ -1,3 +1,4 @@
+console.log("asd");
 import LocalTime from "local-time"
 LocalTime.start()
 
