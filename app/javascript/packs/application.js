@@ -15,3 +15,14 @@ require("channels")
 //
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
+
+import LocalTime from "local-time"
+LocalTime.start()
+
+var Tablesort = require("tablesort")
+
+document.addEventListener("turbolinks:load", function() {
+  new Tablesort(document.getElementById('players_table'));
+})
+
+import "tablesort/tablesort"
