@@ -2,4 +2,8 @@
   <link rel="stylesheet" href="ratings/stylesheets/ratings.css">
 <% end %>
 
+<% content_for :javscripts do %>
+  <%= javascript_pack_tag 'ratings/javascripts/ratings.js', 'data-turbolinks-track': 'reload' %>
+<% end %>
+
 <%= render template: "layouts/application" %>
