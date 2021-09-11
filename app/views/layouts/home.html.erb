@@ -1,6 +1,6 @@
 <% content_for :stylesheets do %>
-  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-  <link rel="stylesheet" href="home/stylesheets/home.css">
+  <%= stylesheet_link_tag 'https://unpkg.com/@picocss/pico@latest/css/pico.min.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag 'home', media: 'all', 'data-turbolinks-track': 'reload' %>
 <% end %>
 
 <%= render template: "layouts/application" %>

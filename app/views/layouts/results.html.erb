@@ -1,5 +1,5 @@
 <% content_for :stylesheets do %>
-  <link rel="stylesheet" href="/results/stylesheets/results.css">
+  <%= stylesheet_link_tag 'results', media: 'all', 'data-turbolinks-track': 'reload' %>
 <% end %>
 
 <%= render template: "layouts/application" %>

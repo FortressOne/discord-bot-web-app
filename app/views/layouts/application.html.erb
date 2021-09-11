@@ -22,9 +22,11 @@
       <%= yield(:stylesheets) %>
     <% end %>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <!-- Have different stylesheets for different parts of the app atm -->
+
+    <%# <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %1> %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_pack_tag 'application' %>
+    <%# <%= stylesheet_pack_tag 'application' %1> %>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png">
