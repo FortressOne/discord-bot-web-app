@@ -1,6 +1,6 @@
 require 'saulabs/trueskill'
 
-class Api::V1::FairTeamsController < ApplicationController
+class Results::Api::V1::FairTeamsController < ApplicationController
   include Saulabs::TrueSkill
 
   def new

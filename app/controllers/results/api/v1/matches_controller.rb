@@ -1,6 +1,6 @@
 require 'saulabs/trueskill'
 
-class Api::V1::MatchesController < ActionController::API
+class Results::Api::V1::MatchesController < ActionController::API
   include Saulabs::TrueSkill
 
   def create
