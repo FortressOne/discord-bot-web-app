@@ -2,7 +2,7 @@
 
 Has a leaderboard web app, and API endpoints for choosing fair teams and reporting match results.
 
-http://ratings.fortressone.org/
+http://results.fortressone.org/
 
 Hosted on Heroku.
 

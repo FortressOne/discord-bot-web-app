@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  constraints subdomain: 'ratings' do
-    get '/' => 'discord_channels#index', :constraints => { :subdomain => 'ratings' }
+  constraints subdomain: 'results' do
+    get '/' => 'discord_channels#index'
     resources :players, only: [:index]
     resources :matches, only: [:index]
     resources :discord_channels, only: [:show]
