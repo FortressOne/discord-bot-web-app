@@ -35,13 +35,6 @@
   </head>
 
   <body>
-    <% if content_for?(:banner) %>
-      <%= yield(:banner) %>
-    <% end %>
-
-    <main class="container">
-      <%= yield %>
-    </main>
-    </div>
+    <%= yield %>
   </body>
 </html>
