@@ -1,4 +1,4 @@
-class DiscordChannelsController < ApplicationController
+class Results::DiscordChannelsController < ApplicationController
   layout "results"
 
   def index
