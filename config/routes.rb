@@ -12,4 +12,6 @@ Rails.application.routes.draw do
   end
 
   root to: 'home#index'
+
+  get 'code-of-conduct', to: "static_pages#code_of_conduct"
 end
