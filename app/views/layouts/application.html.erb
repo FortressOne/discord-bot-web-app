@@ -12,7 +12,12 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>FortressOne - Quake Team Fortress Remastered</title>
+    <% if content_for?(:title) %>
+      <%= yield(:title) %>
+    <% else %>
+      <title>FortressOne - Quake Team Fortress Remastered</title>
+    <% end %>
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
