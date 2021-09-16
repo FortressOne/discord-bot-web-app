@@ -2,7 +2,7 @@
 
 <main class="container">
   <section>
-    <%= image_tag(asset_path("home/logo.webp"), height: 128, width: 128) %>
+    <%= image_tag(asset_path("home/logo.webp"), alt: "FortressOne logo", height: 128, width: 128) %>
 
     <hgroup>
     <h1>FortressOne</h1>
@@ -97,51 +97,51 @@
     <div class="grid">
       <div style="margin-bottom: 20px;">
         <%= link_to(asset_path("home/screenshots/1.png"), target:"_blank") do %>
-          <%= image_tag(asset_path("home/screenshots/thumbnails/1.webp"), width:"640", height:"360") %>
+          <%= image_tag(asset_path("home/screenshots/thumbnails/1.webp"), alt: "Heavy leaving spawn with team", width: "640", height: "360") %>
         <% end %>
       </div>
       <div style="margin-bottom: 20px;">
         <%= link_to(asset_path("home/screenshots/2.png"), target:"_blank") do %>
-          <%= image_tag(asset_path("home/screenshots/thumbnails/2.webp"), width:"640", height:"360") %>
+          <%= image_tag(asset_path("home/screenshots/thumbnails/2.webp"), alt: "Spy lobbing grenade at Engineer and sentry gun", width: "640", height: "360") %>
         <% end %>
       </div>
       <div style="margin-bottom: 20px;">
         <%= link_to(asset_path("home/screenshots/3.png"), target:"_blank") do %>
-          <%= image_tag(asset_path("home/screenshots/thumbnails/3.webp"), width:"640", height:"360") %>
+          <%= image_tag(asset_path("home/screenshots/thumbnails/3.webp"), alt: "Detonating pipe bombs to take out attacking medic", width: "640", height: "360") %>
         <% end %>
       </div>
     </div>
     <div class="grid">
       <div style="margin-bottom: 20px;">
         <%= link_to(asset_path("home/screenshots/4.png"), target:"_blank") do %>
-          <%= image_tag(asset_path("home/screenshots/thumbnails/4.webp"), width:"640", height:"360") %>
+          <%= image_tag(asset_path("home/screenshots/thumbnails/4.webp"), alt: "Heavy turns around to discover a spy", width: "640", height: "360") %>
         <% end %>
       </div>
       <div style="margin-bottom: 20px;">
         <%= link_to(asset_path("home/screenshots/5.png"), target:"_blank") do %>
-          <%= image_tag(asset_path("home/screenshots/thumbnails/5.webp"), width:"640", height:"360") %>
+          <%= image_tag(asset_path("home/screenshots/thumbnails/5.webp"), alt: "Soldier attacks enemy ramp room", width: "640", height: "360") %>
         <% end %>
       </div>
       <div style="margin-bottom: 20px;">
         <%= link_to(asset_path("home/screenshots/6.png"), target:"_blank") do %>
-          <%= image_tag(asset_path("home/screenshots/thumbnails/6.webp"), width:"640", height:"360") %>
+          <%= image_tag(asset_path("home/screenshots/thumbnails/6.webp"), alt: "Soldier throws grenade at enemy pyro", width: "640", height: "360") %>
         <% end %>
       </div>
     </div>
     <div class="grid">
       <div style="margin-bottom: 20px;">
         <%= link_to(asset_path("home/screenshots/7.png"), target:"_blank") do %>
-          <%= image_tag(asset_path("home/screenshots/thumbnails/7.webp"), width:"640", height:"360") %>
+          <%= image_tag(asset_path("home/screenshots/thumbnails/7.webp"), alt: "Enemy medic attempts to infect defending soldier", width: "640", height: "360") %>
         <% end %>
       </div>
       <div style="margin-bottom: 20px;">
         <%= link_to(asset_path("home/screenshots/8.png"), target:"_blank") do %>
-          <%= image_tag(asset_path("home/screenshots/thumbnails/8.webp"), width:"640", height:"360") %>
+          <%= image_tag(asset_path("home/screenshots/thumbnails/8.webp"), alt: "Heavy defends flag at front of base", width: "640", height: "360") %>
         <% end %>
       </div>
       <div style="margin-bottom: 20px;">
         <%= link_to(asset_path("home/screenshots/9.png"), target:"_blank") do %>
-          <%= image_tag(asset_path("home/screenshots/thumbnails/9.webp"), width:"640", height:"360") %>
+          <%= image_tag(asset_path("home/screenshots/thumbnails/9.webp"), alt: "Demo and soldier fire on outgoing spy", width: "640", height: "360") %>
         <% end %>
       </div>
     </div>
@@ -157,7 +157,7 @@
       <table role="grid">
         <thead>
           <tr>
-            <th width="68"></th>
+            <th style="width: 68px;"></th>
             <th scope="col">Class</th>
             <th scope="col">Speed</th>
             <th scope="col">Armour</th>
@@ -169,7 +169,7 @@
         </thead>
         <tbody>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_scout.webp"), width:"68", height:"128") %></td>
+            <td><%= image_tag(asset_path("home/classes/blue_scout.webp"), alt: "Scout icon", width: "68", height: "128") %></td>
             <td>Scout</td>
             <td>450</td>
             <td>25 Green</td>
@@ -179,7 +179,7 @@
             <td>Dash, Scanner, Undisguise enemy, Disarm Detpack</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_sniper.webp"), width:"68", height:"128") %></td>
+            <td><%= image_tag(asset_path("home/classes/blue_sniper.webp"), alt: "Sniper icon", width: "68", height: "128") %></td>
             <td>Sniper</td>
             <td>300</td>
             <td>40 Green</td>
@@ -189,7 +189,7 @@
             <td>Zoom</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_soldier.webp"), width:"68", height:"128") %></td>
+            <td><%= image_tag(asset_path("home/classes/blue_soldier.webp"), alt: "Soldier icon", width: "68", height: "128") %></td>
             <td>Soldier</td>
             <td>240</td>
             <td>200 Red</td>
@@ -199,7 +199,7 @@
             <td>None</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_demoman.webp"), width:"68", height:"128") %></td>
+            <td><%= image_tag(asset_path("home/classes/blue_demoman.webp"), alt: "Demoman icon", width: "68", height: "128") %></td>
             <td>Demoman</td>
             <td>280</td>
             <td>110 Yellow</td>
@@ -209,7 +209,7 @@
             <td>Detpipe, Detpack</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_medic.webp"), width:"68", height:"128") %></td>
+            <td><%= image_tag(asset_path("home/classes/blue_medic.webp"), alt: "Medic icon", width: "68", height: "128") %></td>
             <td>Medic</td>
             <td>320</td>
             <td>90 Yellow</td>
@@ -219,7 +219,7 @@
             <td>Healing Aura, Concussion Immunity</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_hwguy.webp"), width:"68", height:"128") %></td>
+            <td><%= image_tag(asset_path("home/classes/blue_hwguy.webp"), alt: "Heavy icon", width: "68", height: "128") %></td>
             <td>HWGuy</td>
             <td>230</td>
             <td>300 Red</td>
@@ -229,7 +229,7 @@
             <td>Cannon Lock, Extra Mass</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_pyro.webp"), width:"68", height:"128") %></td>
+            <td><%= image_tag(asset_path("home/classes/blue_pyro.webp"), alt: "Pyro icon", width: "68", height: "128") %></td>
             <td>Pyro</td>
             <td>300</td>
             <td>150 Yellow</td>
@@ -239,7 +239,7 @@
             <td>Airblast</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_spy.webp"), width:"68", height:"128") %></td>
+            <td><%= image_tag(asset_path("home/classes/blue_spy.webp"), alt: "Spy icon", width: "68", height: "128") %></td>
             <td>Spy</td>
             <td>300</td>
             <td>90 Yellow</td>
@@ -249,7 +249,7 @@
             <td>Disguise, Feign, Undisguise enemy</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_engineer.webp"), width:"68", height:"128") %></td>
+            <td><%= image_tag(asset_path("home/classes/blue_engineer.webp"), alt: "Engineer icon", width: "68", height: "128") %></td>
             <td>Engineer</td>
             <td>300</td>
             <td>30 Yellow</td>
@@ -339,6 +339,7 @@
     </div>
   </section>
 </main>
+
 <footer class="container">
   <p>FortressOne <%= Time.zone.now.year %> · <%= link_to("Code of conduct", code_of_conduct_path) %></p>
 </footer>
