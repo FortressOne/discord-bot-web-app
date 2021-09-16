@@ -157,106 +157,96 @@
       <table role="grid">
         <thead>
           <tr>
-            <th style="width: 68px;"></th>
+            <th style="min-width: 136px;"></th>
             <th scope="col">Class</th>
             <th scope="col">Speed</th>
             <th scope="col">Armour</th>
             <th scope="col">Weapons</th>
-            <th scope="col">Gren 1</th>
-            <th scope="col">Gren 2</th>
+            <th scope="col">Grenades</th>
             <th scope="col">Special</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_scout.webp"), alt: "Scout icon", width: "68", height: "128") %></td>
-            <td>Scout</td>
-            <td>450</td>
-            <td>25 Green</td>
-            <td>Nailgun, Shotgun, Axe</td>
-            <td>Flash / Caltrops</td>
-            <td>Concussion</td>
-            <td>Dash, Scanner, Undisguise enemy, Disarm Detpack</td>
+            <td style="white-space: nowrap;"><%= image_tag(asset_path("home/classes/blue_scout.webp"), alt: "Scout icon", width: "68", height: "128") %></td>
+            <td style="white-space: nowrap;">Scout</td>
+            <td style="white-space: nowrap;">450</td>
+            <td style="white-space: nowrap;">25 Green</td>
+            <td style="white-space: nowrap;">Nailgun</br>Shotgun</br>Axe</td>
+            <td style="white-space: nowrap;">Flash / Caltrops</br>Concussion</td>
+            <td style="white-space: nowrap;">Dash</br>Scanner</br>Undisguise enemy</br>Disarm Detpack</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_sniper.webp"), alt: "Sniper icon", width: "68", height: "128") %></td>
-            <td>Sniper</td>
-            <td>300</td>
-            <td>40 Green</td>
-            <td>Sniper Rifle, Nailgun, Axe</td>
-            <td>Frag</td>
-            <td>Flare</td>
-            <td>Zoom</td>
+            <td style="white-space: nowrap;"><%= image_tag(asset_path("home/classes/blue_sniper.webp"), alt: "Sniper icon", width: "68", height: "128") %></td>
+            <td style="white-space: nowrap;">Sniper</td>
+            <td style="white-space: nowrap;">300</td>
+            <td style="white-space: nowrap;">40 Green</td>
+            <td style="white-space: nowrap;">Sniper Rifle</br>Nailgun</br>Axe</td>
+            <td style="white-space: nowrap;">Frag</br>Flare</td>
+            <td style="white-space: nowrap;">Zoom</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_soldier.webp"), alt: "Soldier icon", width: "68", height: "128") %></td>
-            <td>Soldier</td>
-            <td>240</td>
-            <td>200 Red</td>
-            <td>Rocket Launcher, Super Shotgun, Shotgun, Axe</td>
-            <td>Frag</td>
-            <td>Shock / Nail</td>
-            <td>None</td>
+            <td style="white-space: nowrap;"><%= image_tag(asset_path("home/classes/blue_soldier.webp"), alt: "Soldier icon", width: "68", height: "128") %></td>
+            <td style="white-space: nowrap;">Soldier</td>
+            <td style="white-space: nowrap;">240</td>
+            <td style="white-space: nowrap;">200 Red</td>
+            <td style="white-space: nowrap;">Rocket Launcher</br>Super Shotgun</br>Shotgun</br>Axe</td>
+            <td style="white-space: nowrap;">Frag</br>Shock / Nail</td>
+            <td style="white-space: nowrap;">None</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_demoman.webp"), alt: "Demoman icon", width: "68", height: "128") %></td>
-            <td>Demoman</td>
-            <td>280</td>
-            <td>110 Yellow</td>
-            <td>Pipe Launcher, Grenade Launcher, Shotgun, Axe</td>
-            <td>Frag</td>
-            <td>MIRV</td>
-            <td>Detpipe, Detpack</td>
+            <td style="white-space: nowrap;"><%= image_tag(asset_path("home/classes/blue_demoman.webp"), alt: "Demoman icon", width: "68", height: "128") %></td>
+            <td style="white-space: nowrap;">Demoman</td>
+            <td style="white-space: nowrap;">280</td>
+            <td style="white-space: nowrap;">110 Yellow</td>
+            <td style="white-space: nowrap;">Pipe Launcher</br>Grenade Launcher</br>Shotgun</br>Axe</td>
+            <td style="white-space: nowrap;">Frag</br>MIRV</td>
+            <td style="white-space: nowrap;">Detpipe</br>Detpack</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_medic.webp"), alt: "Medic icon", width: "68", height: "128") %></td>
-            <td>Medic</td>
-            <td>320</td>
-            <td>90 Yellow</td>
-            <td>Super Nailgun, Super Shotgun, Shotgun, Medi/Bio Weapon</td>
-            <td>Frag</td>
-            <td>Blast / Concussion</td>
-            <td>Healing Aura, Concussion Immunity</td>
+            <td style="white-space: nowrap;"><%= image_tag(asset_path("home/classes/blue_medic.webp"), alt: "Medic icon", width: "68", height: "128") %></td>
+            <td style="white-space: nowrap;">Medic</td>
+            <td style="white-space: nowrap;">320</td>
+            <td style="white-space: nowrap;">90 Yellow</td>
+            <td style="white-space: nowrap;">Super Nailgun</br>Super Shotgun</br>Shotgun</br>Medi/Bio Weapon</td>
+            <td style="white-space: nowrap;">Frag</br>Blast / Concussion</td>
+            <td style="white-space: nowrap;">Healing Aura</br>Concussion Immunity</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_hwguy.webp"), alt: "Heavy icon", width: "68", height: "128") %></td>
-            <td>HWGuy</td>
-            <td>230</td>
-            <td>300 Red</td>
-            <td>Assault Cannon, Super Shotgun, Shotgun, Axe</td>
-            <td>Frag</td>
-            <td>MIRV</td>
-            <td>Cannon Lock, Extra Mass</td>
+            <td style="white-space: nowrap;"><%= image_tag(asset_path("home/classes/blue_hwguy.webp"), alt: "Heavy icon", width: "68", height: "128") %></td>
+            <td style="white-space: nowrap;">HWGuy</td>
+            <td style="white-space: nowrap;">230</td>
+            <td style="white-space: nowrap;">300 Red</td>
+            <td style="white-space: nowrap;">Assault Cannon</br>Super Shotgun</br>Shotgun</br>Axe</td>
+            <td style="white-space: nowrap;">Frag</br>MIRV</td>
+            <td style="white-space: nowrap;">Cannon Lock</br>Extra Mass</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_pyro.webp"), alt: "Pyro icon", width: "68", height: "128") %></td>
-            <td>Pyro</td>
-            <td>300</td>
-            <td>150 Yellow</td>
-            <td>Flamethrower, Incendiary Cannon, Shotgun, Axe</td>
-            <td>Frag</td>
-            <td>Napalm</td>
-            <td>Airblast</td>
+            <td style="white-space: nowrap;"><%= image_tag(asset_path("home/classes/blue_pyro.webp"), alt: "Pyro icon", width: "68", height: "128") %></td>
+            <td style="white-space: nowrap;">Pyro</td>
+            <td style="white-space: nowrap;">300</td>
+            <td style="white-space: nowrap;">150 Yellow</td>
+            <td style="white-space: nowrap;">Flamethrower</br>Incendiary Cannon</br>Shotgun</br>Axe</td>
+            <td style="white-space: nowrap;">Frag</br>Napalm</td>
+            <td style="white-space: nowrap;">Airblast</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_spy.webp"), alt: "Spy icon", width: "68", height: "128") %></td>
-            <td>Spy</td>
-            <td>300</td>
-            <td>90 Yellow</td>
-            <td>Nailgun, Super Shotgun, Tranq Gun, Knife</td>
-            <td>Frag</td>
-            <td>Hallucinogenic Gas</td>
-            <td>Disguise, Feign, Undisguise enemy</td>
+            <td style="white-space: nowrap;"><%= image_tag(asset_path("home/classes/blue_spy.webp"), alt: "Spy icon", width: "68", height: "128") %></td>
+            <td style="white-space: nowrap;">Spy</td>
+            <td style="white-space: nowrap;">300</td>
+            <td style="white-space: nowrap;">90 Yellow</td>
+            <td style="white-space: nowrap;">Nailgun</br>Super Shotgun</br>Tranq Gun</br>Knife</td>
+            <td style="white-space: nowrap;">Frag</br>Hallucinogenic Gas</td>
+            <td style="white-space: nowrap;">Disguise</br>Feign</br>Undisguise enemy</td>
           </tr>
           <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_engineer.webp"), alt: "Engineer icon", width: "68", height: "128") %></td>
-            <td>Engineer</td>
-            <td>300</td>
-            <td>30 Yellow</td>
-            <td>Railgun, Super Shotgun, Shotgun, Spanner</td>
-            <td>Frag</td>
-            <td>EMP</td>
-            <td>Build Sentry Gun, Build Dispenser, Dismantle Enemy Buildings</td>
+            <td style="white-space: nowrap;"><%= image_tag(asset_path("home/classes/blue_engineer.webp"), alt: "Engineer icon", width: "68", height: "128") %></td>
+            <td style="white-space: nowrap;">Engineer</td>
+            <td style="white-space: nowrap;">300</td>
+            <td style="white-space: nowrap;">30 Yellow</td>
+            <td style="white-space: nowrap;">Railgun</br>Super Shotgun</br>Shotgun</br>Spanner</td>
+            <td style="white-space: nowrap;">Frag</br>EMP</td>
+            <td style="white-space: nowrap;">Build Sentry Gun</br>Build Dispenser</br>Dismantle Enemy Buildings</td>
           </tr>
         </tbody>
       </table>
