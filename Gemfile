@@ -42,6 +42,7 @@ gem "sassc-rails", "~> 2.1"
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+gem 'hotwire-rails'
 gem 'local_time'
 gem 'trueskill', github: 'FortressOne/trueskill'
 
