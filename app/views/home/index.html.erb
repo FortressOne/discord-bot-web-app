@@ -13,6 +13,16 @@
   </section>
 
   <section>
+    <%= turbo_frame_tag :live_player_show, src: live_player_show_path, loading: :lazy do %>
+      <hgroup>
+      <h2>Foo</h2>
+      <h3>Bar</h3>
+      </hgroup>
+      <p>baz qux.</p>
+    <% end %>
+  </section>
+
+  <section>
     <hgroup>
     <h2>Download</h2>
     <h3>Latest release: 9th August 2021</h3>

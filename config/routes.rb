@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'live_player/show'
   namespace 'results' do
     root to: 'discord_channels#index'
     resources :discord_channels, only: [:show]
