@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html>
   <head>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-SCSMVJXDGJ"></script>
@@ -12,23 +12,14 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <% if content_for?(:title) %>
-      <%= yield(:title) %>
-    <% else %>
-      <title>FortressOne - Quake Team Fortress Remastered</title>
-    <% end %>
-
+    <title>FortressOne - Quake Team Fortress Remastered</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <meta name="description" content="Free, open source fork of the original 1996 QuakeWorld mod Team Fortress. It is a fast-paced, class based, arena first person shooter remastered with refined graphics, new mechanics and evolved gameplay." />
 
-    <% if content_for?(:stylesheets) %>
-      <%= yield(:stylesheets) %>
-    <% else %>
-      <%= stylesheet_link_tag 'application/application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <% end %>
-
+    <%= stylesheet_link_tag 'https://unpkg.com/@picocss/pico@latest/css/pico.min.css', media: 'all', 'data-turbo-track': 'reload' %>
+    <%= stylesheet_link_tag 'home/application', media: 'all', 'data-turbo-track': 'reload' %>
     <%= javascript_importmap_tags %>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
