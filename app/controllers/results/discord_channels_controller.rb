@@ -1,6 +1,4 @@
 class Results::DiscordChannelsController < ApplicationController
-  layout "results"
-
   def index
     @discord_channels = DiscordChannel.all
   end
