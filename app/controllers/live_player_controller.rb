@@ -9,11 +9,6 @@ class LivePlayerController < ApplicationController
     headers = {"Authorization" => "Bearer #{access_token}", "Client-Id" => CLIENT_ID}
     payload = Faraday.get("https://api.twitch.tv/helix/streams", { game_id: FORTRESSONE_GAME_ID }, headers)
     body = JSON.parse(payload.body)["data"]
-
-    if body.empty?
-      render(status: 404) && return
-    end
-
-    @channel = body.first["user_name"]
+    @channel = body.any? && body.first["user_name"]
   end
 end

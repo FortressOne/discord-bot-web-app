@@ -30,13 +30,14 @@
         <p>Talk on <a href="https://discord.fortressone.org">Discord</a>, code on <a href="https://github.com/fortressone">GitHub</a> or watch on <a href="https://www.youtube.com/channel/UCgYzKaEyTNoVfRLwlpfKzFQ">YouTube</a> and <a href="https://www.twitch.tv/directory/game/FortressOne">Twitch</a>.</p>
     </div>
     <div>
-      <%= turbo_frame_tag :live_player_show, src: live_player_show_path, loading: :lazy do %>
+      <%= turbo_frame_tag :live_player_show, src: live_player_show_path do %>
         <hgroup>
         <h2>Watch</h2>
-        <h3>on YouTube</h3>
+        <h3>loading...</h3>
         </hgroup>
-
-        <iframe width="384" height="216" src="https://www.youtube.com/embed/GssbO8BXOAg?start=16" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div style="width: 384px; height: 216px; display: flex; justify-content: center;">
+          <%= image_tag(asset_path("loader.svg"), alt: "Loading video", width: 120, height: 30) %>
+        </div>
       <% end %>
     </div>
   </section>
