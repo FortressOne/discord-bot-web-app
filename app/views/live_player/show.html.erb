@@ -5,26 +5,28 @@
     <h3><%= @channel %> is live on Twitch</h3>
     </hgroup>
 
-    <iframe
-      src="https://player.twitch.tv/?channel=<%= @channel %>&parent=<%= request.host %>"
-      width="384"
-      height="216"
-      allowfullscreen="true">
-    </iframe>
+    <div class="video-container">
+      <iframe
+        class="responsive-iframe"
+        src="https://player.twitch.tv/?channel=<%= @channel %>&parent=<%= request.host %>"
+        allowfullscreen="true">
+      </iframe>
+    </div>
   <% else %>
     <hgroup>
     <h2>Watch</h2>
     <h3>on YouTube</h3>
     </hgroup>
 
-    <iframe
-      src="https://www.youtube.com/embed/GssbO8BXOAg?start=16"
-      width="384"
-      height="216"
-      title="YouTube video player"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen="true">
-    </iframe>
+    <div class="video-container">
+      <iframe
+        class="responsive-iframe"
+        src="https://www.youtube.com/embed/GssbO8BXOAg?start=16"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen="true">
+      </iframe>
+    </div>
   <% end %>
 <% end %>
