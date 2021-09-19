@@ -13,36 +13,39 @@
   </section>
 
   <section>
-    <%= turbo_frame_tag :live_player_show, src: live_player_show_path, loading: :lazy do %>
-      <hgroup>
-      <h2>Foo</h2>
-      <h3>Bar</h3>
-      </hgroup>
-      <p>baz qux.</p>
-    <% end %>
-  </section>
+    <div class="grid">
+      <div>
+        <hgroup>
+        <h2>Download</h2>
+        <h3>Latest release: 9th August 2021</h3>
+        </hgroup>
 
-  <section>
-    <hgroup>
-    <h2>Download</h2>
-    <h3>Latest release: 9th August 2021</h3>
-    </hgroup>
+        <p>FortressOne is stand-alone. Download the zip, extract and run.</p>
 
-    <p>FortressOne is stand-alone. Download the zip, extract and run.</p>
+        <ul>
+          <li><a href="https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-windows-1.1.1-beta.1-portable.zip">Windows v1.1.1-beta.1</a></li>
+          <li><a href="https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-linux-1.1.1-beta.1-portable.zip">Linux v1.1.1-beta.1</a></li>
+        </ul>
 
-    <ul>
-      <li><a href="https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-windows-1.1.1-beta.1-portable.zip">Windows v1.1.1-beta.1</a></li>
-      <li><a href="https://github.com/FortressOne/fte-config/releases/download/1.1.1-beta.1/fortressone-fte-linux-1.1.1-beta.1-portable.zip">Linux v1.1.1-beta.1</a></li>
-    </ul>
+        <p>Talk on <a href="https://discord.fortressone.org">Discord</a>, code on <a href="https://github.com/fortressone">GitHub</a> or watch on <a href="https://www.youtube.com/channel/UCgYzKaEyTNoVfRLwlpfKzFQ">YouTube</a> and <a href="https://www.twitch.tv/directory/game/FortressOne">Twitch</a>.</p>
+    </div>
+    <div>
+      <%= turbo_frame_tag :live_player_show, src: live_player_show_path, loading: :lazy do %>
+        <hgroup>
+        <h2>Watch</h2>
+        <h3>on YouTube</h3>
+        </hgroup>
 
-    <p>Talk on <a href="https://discord.fortressone.org">Discord</a>, code on <a href="https://github.com/fortressone">GitHub</a> or watch on <a href="https://www.youtube.com/channel/UCgYzKaEyTNoVfRLwlpfKzFQ">YouTube</a> and <a href="https://www.twitch.tv/directory/game/FortressOne">Twitch</a>.</p>
+        <iframe width="384" height="216" src="https://www.youtube.com/embed/GssbO8BXOAg?start=16" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <% end %>
+    </div>
   </section>
 
   <section>
     <div class="grid">
       <div>
         <hgroup>
-        <h2>Watch</h2>
+        <h2>Video</h2>
         <h3>In game action</h3>
         </hgroup>
         <ul>

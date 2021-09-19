@@ -44,8 +44,11 @@ gem "bootsnap", ">= 1.4.4", require: false
 
 gem 'local_time'
 gem 'trueskill', github: 'FortressOne/trueskill'
+gem 'twitch-api'
+gem 'faraday'
 
 group :development, :test do
+  gem 'pry'
   # Start debugger with binding.b [https://github.com/ruby/debug]
   gem "debug", ">= 1.0.0", platforms: %i[ mri mingw x64_mingw ]
 end

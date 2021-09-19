@@ -1,0 +1,14 @@
+<%= turbo_frame_tag :live_player_show do %>
+  <div>
+    <hgroup>
+    <h2>Watch</h2>
+    <h3><%= @channel %> is live on Twitch</h3>
+    </hgroup>
+    <iframe
+      src="https://player.twitch.tv/?channel=<%= @channel %>&parent=localhost"
+      width="384"
+      height="216"
+      allowfullscreen="true">
+    </iframe>
+  </div>
+<% end %>
