@@ -31,15 +31,11 @@
       </div>
       <div>
         <%= turbo_frame_tag :live_player_show, src: live_player_show_path do %>
-          <hgroup>
-          <h2>Watch</h2>
-          <h3>loading...</h3>
-          </hgroup>
-          <div class="video-container">
+          <%= render "video_frame", locals: { h2: "Watch", h3: "loading..." } do %>
             <div class="responsive-iframe">
               <%= image_tag(asset_path("loader.svg"), alt: "Loading video") %>
             </div>
-          </div>
+          <% end %>
         <% end %>
       </div>
     </div>
