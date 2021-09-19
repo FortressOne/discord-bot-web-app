@@ -28,17 +28,20 @@
         </ul>
 
         <p>Talk on <a href="https://discord.fortressone.org">Discord</a>, code on <a href="https://github.com/fortressone">GitHub</a> or watch on <a href="https://www.youtube.com/channel/UCgYzKaEyTNoVfRLwlpfKzFQ">YouTube</a> and <a href="https://www.twitch.tv/directory/game/FortressOne">Twitch</a>.</p>
-    </div>
-    <div>
-      <%= turbo_frame_tag :live_player_show, src: live_player_show_path do %>
-        <hgroup>
-        <h2>Watch</h2>
-        <h3>loading...</h3>
-        </hgroup>
-        <div style="width: 384px; height: 216px; display: flex; justify-content: center;">
-          <%= image_tag(asset_path("loader.svg"), alt: "Loading video", width: 120, height: 30) %>
-        </div>
-      <% end %>
+      </div>
+      <div>
+        <%= turbo_frame_tag :live_player_show, src: live_player_show_path do %>
+          <hgroup>
+          <h2>Watch</h2>
+          <h3>loading...</h3>
+          </hgroup>
+          <div class="video-container">
+            <div class="responsive-iframe">
+              <%= image_tag(asset_path("loader.svg"), alt: "Loading video") %>
+            </div>
+          </div>
+        <% end %>
+      </div>
     </div>
   </section>
 
