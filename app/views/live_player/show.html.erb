@@ -5,7 +5,7 @@
     <h3><%= @channel %> is live on Twitch</h3>
     </hgroup>
     <iframe
-      src="https://player.twitch.tv/?channel=<%= @channel %>&parent=localhost"
+      src="https://player.twitch.tv/?channel=<%= @channel %>&parent=<%= request.host %>"
       width="384"
       height="216"
       allowfullscreen="true">

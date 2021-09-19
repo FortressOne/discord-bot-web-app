@@ -1,6 +1,6 @@
 class LivePlayerController < ApplicationController
-  CLIENT_ID = "6th9ri0ta837yw7o5erw7zpuptj6nx"
-  CLIENT_SECRET = "kdt2efelht5s8um90latu8qzqxsgps"
+  CLIENT_ID = Rails.application.credentials.twitch[:client_id]
+  CLIENT_SECRET = Rails.application.credentials.twitch[:client_secret]
   FORTRESSONE_GAME_ID = 1973310673
   URL = "https://id.twitch.tv/oauth2/token?client_id=#{CLIENT_ID}&client_secret=#{CLIENT_SECRET}&grant_type=client_credentials"
 
