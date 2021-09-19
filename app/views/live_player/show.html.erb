@@ -1,24 +1,14 @@
 <%= turbo_frame_tag :live_player_show do %>
   <% if @channel %>
-    <hgroup>
-    <h2>Watch</h2>
-    <h3><%= @channel %> is live on Twitch</h3>
-    </hgroup>
-
-    <div class="video-container">
+    <%= render "video_frame", locals: { h2: "Watch", h3: @channel } do %>
       <iframe
         class="responsive-iframe"
         src="https://player.twitch.tv/?channel=<%= @channel %>&parent=<%= request.host %>"
         allowfullscreen="true">
       </iframe>
-    </div>
+    <% end %>
   <% else %>
-    <hgroup>
-    <h2>Watch</h2>
-    <h3>on YouTube</h3>
-    </hgroup>
-
-    <div class="video-container">
+    <%= render "video_frame", locals: { h2: "Watch", h3: "on YouTube" } do %>
       <iframe
         class="responsive-iframe"
         src="https://www.youtube.com/embed/GssbO8BXOAg?start=16"
@@ -27,6 +17,7 @@
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen="true">
       </iframe>
-    </div>
+      </div>
+    <% end %>
   <% end %>
 <% end %>
