@@ -39,9 +39,7 @@
       <div>
         <%= turbo_frame_tag :live_player_show, src: live_player_show_path, loading: :lazy do %>
           <%= render "video_frame", locals: { h2: "Watch", h3: "loading..." } do %>
-            <div class="responsive-iframe">
-              <%= image_tag(asset_path("loader.svg"), alt: "Loading video") %>
-            </div>
+            <div aria-busy="true" class="responsive-iframe"></div>
           <% end %>
         <% end %>
       </div>
