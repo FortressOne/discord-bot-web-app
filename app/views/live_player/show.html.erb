@@ -1,9 +1,9 @@
 <%= turbo_frame_tag :live_player_show do %>
-  <% if @channel %>
-    <%= render "video_frame", locals: { h2: "Watch", h3: @channel } do %>
+  <% if @twitch_active_fortressone_channel %>
+    <%= render "video_frame", locals: { h2: "Watch", h3: "#{@twitch_active_fortressone_channel["user_name"]} is live on Twitch" } do %>
       <iframe
         class="responsive-iframe"
-        src="https://player.twitch.tv/?channel=<%= @channel %>&parent=<%= request.host %>"
+        src="https://player.twitch.tv/?channel=<%= @twitch_active_fortressone_channel["user_login"] %>&parent=<%= request.host %>"
         allowfullscreen="true">
       </iframe>
     <% end %>
@@ -11,7 +11,7 @@
     <%= render "video_frame", locals: { h2: "Watch", h3: "on YouTube" } do %>
       <iframe
         class="responsive-iframe"
-        src="https://www.youtube.com/embed/GssbO8BXOAg?start=16"
+        src="https://www.youtube-nocookie.com/embed/GssbO8BXOAg?start=16"
         title="YouTube video player"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
