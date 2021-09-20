@@ -39,10 +39,10 @@
   </table>
   <h2>Matches</h2>
   <% @matches.each do |match| %>
-    <article id="<%= match.id %>">
+    <section id="<%= match.id %>">
       <hgroup>
-      <h2># <%= match.id %></h2>
-      <h3><%= local_time(match.created_at) %></h3>
+      <h3># <%= match.id %></h2>
+      <h4><%= local_time(match.created_at) %></h3>
       </hgroup>
       <div style="text-align: center;" class="grid">
         <div id="match_team_result_<%= match.teams.first.result %>">
@@ -54,6 +54,6 @@
           <%= match.teams.second.players.map(&:name).join(", ") %>
         </div>
       </div>
-    </article>
+    </section>
   <% end %>
 </main>
