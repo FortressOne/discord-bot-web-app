@@ -37,7 +37,6 @@
       <% end %>
     </tbody>
   </table>
-
   <h2>Matches</h2>
   <% @matches.each do |match| %>
     <article id="<%= match.id %>">
@@ -55,13 +54,6 @@
           <%= match.teams.second.players.map(&:name).join(", ") %>
         </div>
       </div>
-
-      <%#       <tr> %>
-        <%#         <td><%= result(team.result) %1></td> %>
-        <%#         <td><%= team.name %1></td> %>
-        <%#         <td><%= team.players.map(&:name).join(", ") %1></td> %>
-        <%#       </tr> %>
-      </table>
     </article>
   <% end %>
 </main>
