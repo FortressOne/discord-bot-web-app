@@ -1,6 +1,8 @@
-<h2>Discord Channels</h2>
-<ul>
-  <% @discord_channels.each do |discord_channel| %>
-    <li><%= link_to(discord_channel.name, results_discord_channel_path(discord_channel)) %></li>
-  <% end %>
-</ul>
+<main class="container">
+  <h2>Discord Channels</h2>
+  <ul>
+    <% @discord_channels.each do |discord_channel| %>
+      <li><%= link_to(discord_channel.name, results_discord_channel_path(discord_channel)) %></li>
+    <% end %>
+  </ul>
+</main>

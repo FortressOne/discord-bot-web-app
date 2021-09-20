@@ -1,73 +1,67 @@
-<h2>Players</h2>
-<table id="players_table">
-  <thead>
-    <tr>
-      <% if @discord_channel.rated? %>
-        <th>Rank</th>
-      <% end %>
-      <th>Name</th>
-      <% if @discord_channel.rated? %>
-        <th data-sort-method='dotsep'>CSE</th>
-      <% end %>
-      <th data-sort-method='number'>Played</th>
-      <th data-sort-method='number'>Wins</th>
-      <th data-sort-method='number'>Losses</th>
-      <th data-sort-method='number'>Draws</th>
-      <th data-sort-method='number'>Last Match Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @discord_channel_players.each_with_index do |dcp, index| %>
-      <% trueskill_rating = dcp.trueskill_rating %>
+<main class="container">
+  <h2>Players</h2>
+  <table id="players_table" role="grid">
+    <thead>
       <tr>
         <% if @discord_channel.rated? %>
-          <td><%= index + 1 %></td>
+          <th>Rank</th>
         <% end %>
-        <td><%= dcp.player.name %></td>
+        <th>Name</th>
         <% if @discord_channel.rated? %>
-          <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
+          <th data-sort-method='dotsep'>CSE</th>
         <% end %>
-        <td style="text-align:right;"><%= dcp.match_count %></td>
-        <td style="text-align:right;"><%= dcp.win_count %></td>
-        <td style="text-align:right;"><%= dcp.loss_count %></td>
-        <td style="text-align:right;"><%= dcp.draw_count %></td>
-        <td data-sort="<%= dcp.last_match_date && dcp.last_match_date.to_i %>"><%= dcp.last_match_date && local_time_ago(dcp.last_match_date) %></td>
+        <th data-sort-method='number'>Played</th>
+        <th data-sort-method='number'>Wins</th>
+        <th data-sort-method='number'>Losses</th>
+        <th data-sort-method='number'>Draws</th>
+        <th data-sort-method='number'>Last Match Date</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<h2>Matches</h2>
-<% @matches.each do |match| %>
-  <hr>
-  <div>
-    <table>
-      <tr>
-        <th>ID</th>
-        <th>Map</th>
-        <th>Date</th>
-      </tr>
-      <tr>
-        <td><%= match.id %></td>
-        <td><%= match.game_map && match.game_map.name || "Unknown" %></td>
-        <td><%= local_time(match.created_at) %></td>
-      </tr>
-    </table>
-    <div>
-    </div>
-    <table>
-      <tr>
-        <th>Result</th>
-        <th>Number</th>
-        <th>Players</th>
-      </tr>
-      <% match.teams.each do |team| %>
+    </thead>
+    <tbody>
+      <% @discord_channel_players.each_with_index do |dcp, index| %>
+        <% trueskill_rating = dcp.trueskill_rating %>
         <tr>
-          <td><%= result(team.result) %></td>
-          <td><%= team.name %></td>
-          <td><%= team.players.map(&:name).join(", ") %></td>
+          <% if @discord_channel.rated? %>
+            <td><%= index + 1 %></td>
+          <% end %>
+          <td><%= dcp.player.name %></td>
+          <% if @discord_channel.rated? %>
+            <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
+          <% end %>
+          <td><%= dcp.match_count %></td>
+          <td><%= dcp.win_count %></td>
+          <td><%= dcp.loss_count %></td>
+          <td><%= dcp.draw_count %></td>
+          <td data-sort="<%= dcp.last_match_date && dcp.last_match_date.to_i %>"><%= dcp.last_match_date && local_time_ago(dcp.last_match_date) %></td>
         </tr>
       <% end %>
-    </table>
-  </div>
-<% end %>
+    </tbody>
+  </table>
+
+  <h2>Matches</h2>
+  <% @matches.each do |match| %>
+    <article id="<%= match.id %>">
+      <hgroup>
+      <h2># <%= match.id %></h2>
+      <h3><%= local_time(match.created_at) %></h3>
+      </hgroup>
+      <div style="text-align: center;" class="grid">
+        <div id="match_team_result_<%= match.teams.first.result %>">
+          Blue team <%= result(match.teams.first.result) %></br>
+          <%= match.teams.first.players.map(&:name).join(", ") %>
+        </div>
+        <div id="match_team_result_<%= match.teams.second.result %>">
+          Red team <%= result(match.teams.second.result) %></br>
+          <%= match.teams.second.players.map(&:name).join(", ") %>
+        </div>
+      </div>
+
+      <%#       <tr> %>
+        <%#         <td><%= result(team.result) %1></td> %>
+        <%#         <td><%= team.name %1></td> %>
+        <%#         <td><%= team.players.map(&:name).join(", ") %1></td> %>
+        <%#       </tr> %>
+      </table>
+    </article>
+  <% end %>
+</main>
