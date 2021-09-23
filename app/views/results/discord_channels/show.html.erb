@@ -41,7 +41,7 @@
   <% @matches.each do |match| %>
     <section>
       <div class="grid">
-        <div style="text-align: left;">
+        <div id="match_id_and_date" style="text-align: left;">
           <hgroup>
           <h3><%= match.id %></h2>
           <h4><%= local_time(match.created_at) %></h3>
