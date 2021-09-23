@@ -39,19 +39,26 @@
   </table>
   <h2>Matches</h2>
   <% @matches.each do |match| %>
-    <section id="<%= match.id %>">
-      <hgroup>
-      <h3># <%= match.id %></h2>
-      <h4><%= local_time(match.created_at) %></h3>
-      </hgroup>
-      <div style="text-align: center;" class="grid">
-        <div id="match_team_result_<%= match.teams.first.result %>">
-          Blue team <%= result(match.teams.first.result) %></br>
-          <%= match.teams.first.players.map(&:name).join(", ") %>
+    <section>
+      <div class="grid">
+        <div style="text-align: left;">
+          <hgroup>
+          <h3># <%= match.id %></h2>
+          <h4><%= local_time(match.created_at) %></h3>
+          </hgroup>
         </div>
-        <div id="match_team_result_<%= match.teams.second.result %>">
-          Red team <%= result(match.teams.second.result) %></br>
-          <%= match.teams.second.players.map(&:name).join(", ") %>
+        <div style="text-align: center;" id="match_team_result_<%= match.teams.first.result %>">
+          <hgroup>
+          <h3>Blue <%= result(match.teams.first.result) %></h2>
+          <h4><%= match.teams.first.players.map(&:name).join(", ") %></h3>
+          </hgroup>
+        </div>
+        <div style="text-align: center;" id="match_team_result_<%= match.teams.second.result %>">
+          <hgroup>
+          <h3>
+            Red team <%= result(match.teams.second.result) %></h2>
+          <h4><%= match.teams.second.players.map(&:name).join(", ") %></h3>
+          </hgroup>
         </div>
       </div>
     </section>
