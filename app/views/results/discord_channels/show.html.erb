@@ -43,7 +43,7 @@
       <div class="grid">
         <div style="text-align: left;">
           <hgroup>
-          <h3># <%= match.id %></h2>
+          <h3><%= match.id %></h2>
           <h4><%= local_time(match.created_at) %></h3>
           </hgroup>
         </div>
@@ -56,7 +56,7 @@
         <div style="text-align: center;" id="match_team_result_<%= match.teams.second.result %>">
           <hgroup>
           <h3>
-            Red team <%= result(match.teams.second.result) %></h2>
+            Red <%= result(match.teams.second.result) %></h2>
           <h4><%= match.teams.second.players.map(&:name).join(", ") %></h3>
           </hgroup>
         </div>
