@@ -1,6 +1,8 @@
 <main class="container">
-  <h2>Players</h2>
+  <%= render_breadcrumbs %>
+  <h2><%= @discord_channel.name %></h2>
   <figure>
+    <h3>Players</h3>
     <table id="players_table" style="white-space: nowrap;" role="grid">
       <thead>
         <tr>
