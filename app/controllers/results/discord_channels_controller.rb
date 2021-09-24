@@ -3,7 +3,7 @@ class Results::DiscordChannelsController < ApplicationController
 
   def index
     @discord_channels = DiscordChannel.all
-    add_breadcrumb "Discord Channels"
+    add_breadcrumb "Discord channels"
   end
 
   def show
