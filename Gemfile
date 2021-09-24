@@ -46,6 +46,7 @@ gem 'local_time'
 gem 'trueskill', github: 'FortressOne/trueskill'
 gem 'twitch-api'
 gem 'faraday'
+gem "breadcrumbs_on_rails"
 
 group :development, :test do
   gem 'pry'
