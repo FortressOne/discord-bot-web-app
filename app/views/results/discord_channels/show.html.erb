@@ -1,42 +1,44 @@
 <main class="container">
   <h2>Players</h2>
-  <table id="players_table" role="grid">
-    <thead>
-      <tr>
-        <% if @discord_channel.rated? %>
-          <th>Rank</th>
-        <% end %>
-        <th>Name</th>
-        <% if @discord_channel.rated? %>
-          <th data-sort-method='dotsep'>CSE</th>
-        <% end %>
-        <th data-sort-method='number'>Played</th>
-        <th data-sort-method='number'>Wins</th>
-        <th data-sort-method='number'>Losses</th>
-        <th data-sort-method='number'>Draws</th>
-        <th data-sort-method='number'>Last Match Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @discord_channel_players.each_with_index do |dcp, index| %>
-        <% trueskill_rating = dcp.trueskill_rating %>
+  <figure>
+    <table id="players_table" style="white-space: nowrap;" role="grid">
+      <thead>
         <tr>
           <% if @discord_channel.rated? %>
-            <td><%= index + 1 %></td>
+            <th>Rank</th>
           <% end %>
-          <td><%= dcp.player.name %></td>
+          <th>Name</th>
           <% if @discord_channel.rated? %>
-            <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
+            <th data-sort-method='dotsep'>CSE</th>
           <% end %>
-          <td><%= dcp.match_count %></td>
-          <td><%= dcp.win_count %></td>
-          <td><%= dcp.loss_count %></td>
-          <td><%= dcp.draw_count %></td>
-          <td data-sort="<%= dcp.last_match_date && dcp.last_match_date.to_i %>"><%= dcp.last_match_date && local_time_ago(dcp.last_match_date) %></td>
+          <th data-sort-method='number'>Played</th>
+          <th data-sort-method='number'>Wins</th>
+          <th data-sort-method='number'>Losses</th>
+          <th data-sort-method='number'>Draws</th>
+          <th data-sort-method='number'>Last Match Date</th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% @discord_channel_players.each_with_index do |dcp, index| %>
+          <% trueskill_rating = dcp.trueskill_rating %>
+          <tr>
+            <% if @discord_channel.rated? %>
+              <td><%= index + 1 %></td>
+            <% end %>
+            <td><%= dcp.player.name %></td>
+            <% if @discord_channel.rated? %>
+              <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
+            <% end %>
+            <td><%= dcp.match_count %></td>
+            <td><%= dcp.win_count %></td>
+            <td><%= dcp.loss_count %></td>
+            <td><%= dcp.draw_count %></td>
+            <td data-sort="<%= dcp.last_match_date && dcp.last_match_date.to_i %>"><%= dcp.last_match_date && local_time_ago(dcp.last_match_date) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </figure>
   <h2>Matches</h2>
   <% @matches.each do |match| %>
     <section>
