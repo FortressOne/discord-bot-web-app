@@ -47,8 +47,11 @@
       <div class="grid">
         <div id="match_id_and_date" style="text-align: left;">
           <hgroup>
-          <h3><%= match.id %></h2>
-          <h4><%= local_time(match.created_at) %></h3>
+          <h4><%= match.id %></h4>
+          <h4><%= local_time(match.created_at) %></h4>
+          <% if match.game_map %>
+            <h3><%= match.game_map.name %></h3>
+          <% end %>
           </hgroup>
         </div>
         <div style="text-align: center;" id="match_team_result_<%= match.teams.first.result %>">
