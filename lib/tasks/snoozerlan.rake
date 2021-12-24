@@ -6,7 +6,7 @@ namespace :snoozerlan do
     discord_channel = DiscordChannel.find_by!(channel_id: 521616424549089280)
     discord_channel.matches.destroy_all
 
-    time = Time.parse("2021-12-11 14:30:00").in_time_zone("Sydney")
+    time = Time.parse("2021-12-11 05:30:00")
 
     CSV.foreach('tr.csv') do |row|
       m = discord_channel.matches.create
