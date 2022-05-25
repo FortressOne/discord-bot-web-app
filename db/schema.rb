@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_11_145347) do
-
+ActiveRecord::Schema[7.0].define(version: 2021_09_11_145347) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,7 +19,7 @@ ActiveRecord::Schema.define(version: 2021_09_11_145347) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -33,7 +32,7 @@ ActiveRecord::Schema.define(version: 2021_09_11_145347) do
     t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -46,8 +45,8 @@ ActiveRecord::Schema.define(version: 2021_09_11_145347) do
   create_table "discord_channel_players", force: :cascade do |t|
     t.bigint "discord_channel_id", null: false
     t.bigint "player_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["discord_channel_id"], name: "index_discord_channel_players_on_discord_channel_id"
     t.index ["player_id"], name: "index_discord_channel_players_on_player_id"
   end
@@ -60,22 +59,22 @@ ActiveRecord::Schema.define(version: 2021_09_11_145347) do
   create_table "discord_channels", force: :cascade do |t|
     t.string "channel_id"
     t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "rated", default: false, null: false
     t.index ["channel_id"], name: "index_discord_channels_on_channel_id", unique: true
   end
 
   create_table "game_maps", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "matches", force: :cascade do |t|
     t.bigint "game_map_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "ratings_processed"
     t.bigint "discord_channel_id"
     t.index ["discord_channel_id"], name: "index_matches_on_discord_channel_id"
@@ -86,14 +85,14 @@ ActiveRecord::Schema.define(version: 2021_09_11_145347) do
     t.decimal "discord_id"
     t.string "name"
     t.string "email"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "invisible", default: false, null: false
   end
 
   create_table "teams", force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "result"
     t.bigint "match_id", null: false
     t.string "name"
@@ -103,8 +102,8 @@ ActiveRecord::Schema.define(version: 2021_09_11_145347) do
   create_table "trueskill_ratings", force: :cascade do |t|
     t.float "mean", default: 25.0
     t.float "deviation", default: 8.333333333333334
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "discord_channel_player_id"
     t.index ["discord_channel_player_id"], name: "index_trueskill_ratings_on_discord_channel_player_id"
   end
