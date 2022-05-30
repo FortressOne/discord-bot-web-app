@@ -4,7 +4,8 @@ class DiscordChannelPlayer < ApplicationRecord
   has_one :trueskill_rating, dependent: :destroy
   belongs_to :discord_channel
   belongs_to :player
-  has_and_belongs_to_many :teams
+  has_many :discord_channel_players_teams
+  has_many :teams, through: :discord_channel_players_teams
 
   scope :leaderboard, -> do
     joins(:player)

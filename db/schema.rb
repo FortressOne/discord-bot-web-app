@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2021_09_11_145347) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_29_125858) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,7 +51,7 @@ ActiveRecord::Schema[7.0].define(version: 2021_09_11_145347) do
     t.index ["player_id"], name: "index_discord_channel_players_on_player_id"
   end
 
-  create_table "discord_channel_players_teams", id: false, force: :cascade do |t|
+  create_table "discord_channel_players_teams", force: :cascade do |t|
     t.bigint "discord_channel_player_id", null: false
     t.bigint "team_id", null: false
   end
