@@ -42,10 +42,11 @@
             <div class="responsive-iframe">
               <div class="box">
                 <div aria-busy="true">
+                </div>
               </div>
-            </div>
+            <% end %>
           <% end %>
-        <% end %>
+        </div>
       </div>
     </div>
   </section>
@@ -175,104 +176,185 @@
     <h3>The low-down on each</h3>
     </hgroup>
 
-    <figure>
-      <table style="white-space: nowrap;" role="grid">
-        <thead>
-          <tr>
-            <th style="min-width: 52px;"></th>
-            <th scope="col">Class</th>
-            <th scope="col">Speed</th>
-            <th scope="col">Armour</th>
-            <th scope="col">Weapons</th>
-            <th scope="col">Grenades</th>
-            <th scope="col">Special</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_scout.webp"), alt: "Scout icon", width: "51", height: "96") %></td>
-            <td>Scout</td>
-            <td>450</td>
-            <td>25 Green</td>
-            <td>1. Nailgun</br>2. Shotgun</br>4. Axe</td>
-            <td>1. Flash / Caltrops</br>2. Concussion</td>
-            <td>Dash</br>Scanner</br>Undisguise enemy</br>Disarm Detpack</td>
-          </tr>
-          <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_sniper.webp"), alt: "Sniper icon", width: "51", height: "96") %></td>
-            <td>Sniper</td>
-            <td>300</td>
-            <td>40 Green</td>
-            <td>1. Sniper Rifle</br>2. Nailgun</br>4. Axe</td>
-            <td>1. Frag</br>2. Flare</td>
-            <td>Zoom</td>
-          </tr>
-          <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_soldier.webp"), alt: "Soldier icon", width: "51", height: "96") %></td>
-            <td>Soldier</td>
-            <td>240</td>
-            <td>200 Red</td>
-            <td>1. Rocket Launcher</br>2. Super Shotgun</br>3. Shotgun</br>4. Axe</td>
-            <td>1. Frag</br>2. Shock / Nail</td>
-            <td>None</td>
-          </tr>
-          <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_demoman.webp"), alt: "Demoman icon", width: "51", height: "96") %></td>
-            <td>Demoman</td>
-            <td>280</td>
-            <td>110 Yellow</td>
-            <td>1. Pipe Launcher</br>2. Grenade Launcher</br>3. Shotgun</br>4. Axe</td>
-            <td>1. Frag</br>2. MIRV</td>
-            <td>Detpipe</br>Detpack</td>
-          </tr>
-          <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_medic.webp"), alt: "Medic icon", width: "51", height: "96") %></td>
-            <td>Medic</td>
-            <td>320</td>
-            <td>90 Yellow</td>
-            <td>1. Super Nailgun</br>2. Super Shotgun</br>3. Shotgun</br>4. Medi/Bio Weapon</td>
-            <td>1. Frag</br>2. Blast / Concussion</td>
-            <td>Healing Aura</br>Concussion Immunity</td>
-          </tr>
-          <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_hwguy.webp"), alt: "Heavy icon", width: "51", height: "96") %></td>
-            <td>HWGuy</td>
-            <td>230</td>
-            <td>300 Red</td>
-            <td>1. Assault Cannon</br>2. Super Shotgun</br>3. Shotgun</br>4. Axe</td>
-            <td>1. Frag</br>2. MIRV</td>
-            <td>Cannon Lock</br>Extra Mass</td>
-          </tr>
-          <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_pyro.webp"), alt: "Pyro icon", width: "51", height: "96") %></td>
-            <td>Pyro</td>
-            <td>300</td>
-            <td>150 Yellow</td>
-            <td>1. Flamethrower</br>2. Incendiary Cannon</br>3. Shotgun</br>4. Axe</td>
-            <td>1. Frag</br>2. Napalm</td>
-            <td>Airblast</td>
-          </tr>
-          <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_spy.webp"), alt: "Spy icon", width: "51", height: "96") %></td>
-            <td>Spy</td>
-            <td>300</td>
-            <td>90 Yellow</td>
-            <td>1. Nailgun</br>2. Super Shotgun</br>3. Tranq Gun</br>4. Knife</td>
-            <td>1. Frag</br>2. Hallucinogenic Gas</td>
-            <td>Disguise</br>Feign</br>Undisguise enemy</td>
-          </tr>
-          <tr>
-            <td><%= image_tag(asset_path("home/classes/blue_engineer.webp"), alt: "Engineer icon", width: "51", height: "96") %></td>
-            <td>Engineer</td>
-            <td>300</td>
-            <td>30 Yellow</td>
-            <td>1. Railgun</br>2. Super Shotgun</br>3. Shotgun</br>4. Spanner</td>
-            <td>1. Frag</br>2. EMP</td>
-            <td>Build Sentry Gun</br>Build Dispenser</br>Dismantle Enemy Buildings</td>
-          </tr>
-        </tbody>
-      </table>
-    </figure>
+    <% [
+      {
+        images: [
+          { url: "home/classes/blue_scout.webp", alt: "Scout icon" },
+          { url: "home/classes/red_scout.webp", alt: "Scout icon" },
+        ],
+        name: "Scout",
+        speed: "450",
+        armour: "25 Green",
+        weapons: ["Nailgun", "Shotgun", nil, "Axe"],
+        grenades: ["Flash / Caltrops", "Concussion"],
+        specials: ["Dash", "Scanner"],
+        attributes: ["Can uncover enemy spies", "Can disarm detpacks"],
+      }, {
+        images: [
+          { url: "home/classes/blue_sniper.webp", alt: "Sniper icon" },
+          { url: "home/classes/red_sniper.webp", alt: "Sniper icon" },
+        ],
+        name: "Sniper",
+        speed: "300",
+        armour: "40 Green",
+        weapons: ["Sniper Rifle", "Nailgun", "Axe"],
+        grenades: ["Frag", "Flare"],
+        specials: ["Zoom"],
+        attributes: [],
+      }, {
+        images: [
+          { url: "home/classes/blue_soldier.webp", alt: "Soldier icon" },
+          { url: "home/classes/red_soldier.webp", alt: "Soldier icon" },
+        ],
+        name: "Soldier",
+        speed: "240",
+        armour: "200 Red",
+        weapons: ["Rocket Launcher", "Super Shotgun", "Shotgun", "Axe"],
+        grenades: ["Frag", "Shock / Nail"],
+        specials: [],
+        attributes: [],
+      }, {
+        images: [
+          { url: "home/classes/blue_demoman.webp", alt: "Demoman icon" },
+          { url: "home/classes/red_demoman.webp", alt: "Demoman icon" },
+        ],
+        name: "Demolitions Man",
+        speed: "280",
+        armour: "110 Yellow",
+        weapons: ["Pipe Launcher", "Grenade Launcher", "Shotgun", "Axe"],
+        grenades: ["Frag", "MIRV"],
+        specials: ["Detonate pipebombs", "Set detpack"],
+        attributes: [],
+      }, {
+        images: [
+          { url: "home/classes/blue_medic.webp", alt: "Medic icon" },
+          { url: "home/classes/red_medic.webp", alt: "Medic icon" },
+        ],
+        name: "Medic",
+        speed: "320",
+        armour: "90 Yellow",
+        weapons: ["Super Nailgun", "Super Shotgun", "Shotgun", "Medi/Bio Weapon"],
+        grenades: ["Frag", "Blast / Concussion"],
+        specials: ["Healing Aura"],
+        attributes: ["Immune to concussion"],
+      }, {
+        images: [
+          { url: "home/classes/blue_hwguy.webp", alt: "Heavy icon" },
+          { url: "home/classes/red_hwguy.webp", alt: "Heavy icon" },
+        ],
+        name: "Heavy Weapons Guy",
+        speed: "230",
+        armour: "300 Red",
+        weapons: ["Assault Cannon", "Super Shotgun", "Shotgun", "Axe"],
+        grenades: ["Frag", "MIRV"],
+        specials: ["Cannon Lock"],
+        attributes: ["Reduced knockback when taking damage"],
+      }, {
+        images: [
+          { url: "home/classes/blue_pyro.webp", alt: "Pyro icon" },
+          { url: "home/classes/red_pyro.webp", alt: "Pyro icon" },
+        ],
+        name: "Pyro",
+        speed: "300",
+        armour: "150 Yellow",
+        weapons: ["Flamethrower", "Incendiary Cannon", "Shotgun", "Axe"],
+        grenades: ["Frag", "Napalm"],
+        specials: ["Airblast"],
+        attributes: ["Is resistant to fire"],
+      }, {
+        images: [
+          { url: "home/classes/blue_spy.webp", alt: "Spy icon" },
+          { url: "home/classes/red_spy.webp", alt: "Spy icon" },
+        ],
+        name: "Spy",
+        speed: "300",
+        armour: "90 Yellow",
+        weapons: ["Nailgun", "Super Shotgun", "Tranq Gun", "Knife"],
+        grenades: ["Frag", "Hallucinogenic Gas"],
+        specials: ["Feign", "Disguise"],
+        attributes: ["Can uncover enemy spies"],
+      }, {
+        images: [
+          { url: "home/classes/blue_engineer.webp", alt: "Engineer icon" },
+          { url: "home/classes/red_engineer.webp", alt: "Engineer icon" },
+        ],
+        name: "Engineer",
+        speed: "300",
+        armour: "30 Yellow",
+        weapons: ["Railgun", "Super Shotgun", "Shotgun", "Spanner"],
+        grenades: ["Frag", "EMP"],
+        specials: ["Dispenser", "Sentry Gun"],
+        attributes: ["Can dismantle enemy Buildings"],
+      }, ].each do |player_class| %>
+
+      <figure>
+        <article>
+          <div style="display: flex;">
+            <div style="flex: 33%">
+              <h3><%= player_class[:name] %></h3>
+              <% player_class[:images].each do |image| %>
+                <%= image_tag(image[:url]) %>
+              <% end %>
+            </div>
+            <div style="flex: 33%">
+              <dl>
+                <dt>Speed</dt>
+                <dd><%= player_class[:speed] %> unit/s</dd>
+                <dt>Armour</dt>
+                <dd><%= player_class[:armour] %></dd>
+              </dl>
+              <% if player_class[:specials].any? %>
+                <dl>
+                  <dt>Specials</dt>
+                  <dd>
+                    <ol>
+                      <% player_class[:specials].each do |weapon| %>
+                        <li><%= weapon %></li>
+                      <% end %>
+                    </ol>
+                  </dd>
+                </dl>
+              <% end %>
+              <% if player_class[:attributes].any? %>
+                <dl>
+                  <dt>Attributes</dt>
+                  <dd>
+                    <ul>
+                      <% player_class[:attributes].each do |weapon| %>
+                        <% binding.pry if weapon.nil? %>
+                        <li><%= weapon.presence || "-" %></li>
+                      <% end %>
+                    </ul>
+                  </dd>
+                </dl>
+              <% end %>
+            </div>
+            <div style="flex: 33%">
+              <dl>
+                <dt>Weapons</dt>
+                <dd>
+                  <ol>
+                    <% player_class[:weapons].each do |weapon| %>
+                      <li><%= weapon %></li>
+                    <% end %>
+                  </ol>
+                </dd>
+              </dl>
+              <dl>
+                <dt>Grenades</dt>
+                <dd>
+                  <ol>
+                    <% player_class[:grenades].each do |grenade| %>
+                      <li><%= grenade %></li>
+                    <% end %>
+                  </ol>
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </article>
+      </figure>
+    <% end %>
   </section>
 
   <section>
