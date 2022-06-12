@@ -170,6 +170,37 @@
     </div>
   </section>
 
+  <section>
+    <hgroup>
+    <h2>Words</h2>
+    <h3>What people are saying about FortressOne</h3>
+    </hgroup>
+    <blockquote>
+      "Possibly the best game ever made!"
+      <footer>
+        <cite>- hydr0buds</cite>
+      </footer>
+    </blockquote>
+    <blockquote>
+      "FortressOne has brought qwtf current both with improved graphics and slightly tweaked gameplay. The community on discord is very friendly and happy to help you get setup and running quickly. They organize pick up games every night and also setup tournaments."
+      <footer>
+        <cite>- a2yay</cite>
+      </footer>
+    </blockquote>
+    <blockquote>
+      "This is the game you played 20 years ago and fell in love with!"
+      <footer>
+        <cite>- ricksonfold</cite>
+      </footer>
+    </blockquote>
+    <blockquote>
+      "An outstanding mod with a lot of work going in to improve game play still till this day."
+      <footer>
+        <cite>- andywelsh17</cite>
+      </footer>
+    </blockquote>
+  </section>
+
   <section data-nosnippet>
     <hgroup>
     <h2>Classes</h2>
@@ -287,105 +318,82 @@
         attributes: ["Can dismantle enemy Buildings"],
       }, ].each do |player_class| %>
 
-      <figure>
-        <article>
-          <div style="display: flex;">
-            <div style="flex: 33%">
-              <h3><%= player_class[:name] %></h3>
-              <% player_class[:images].each do |image| %>
-                <%= image_tag(image[:url]) %>
-              <% end %>
-            </div>
-            <div style="flex: 33%">
+      <article>
+        <div style="display: flex;">
+          <div style="flex: 33%">
+            <h3><%= player_class[:name] %></h3>
+            <% player_class[:images].each do |image| %>
+              <%= image_tag(image[:url]) %>
+            <% end %>
+          </div>
+          <div style="flex: 33%">
+            <dl>
+              <dt>Speed</dt>
+              <dd><%= player_class[:speed] %> unit/s</dd>
+            </dl>
+            <dl>
+              <dt>Armour</dt>
+              <dd><%= player_class[:armour] %></dd>
+            </dl>
+            <% if player_class[:specials].any? %>
               <dl>
-                <dt>Speed</dt>
-                <dd><%= player_class[:speed] %> unit/s</dd>
-                <dt>Armour</dt>
-                <dd><%= player_class[:armour] %></dd>
-              </dl>
-              <% if player_class[:specials].any? %>
-                <dl>
-                  <dt>Specials</dt>
-                  <dd>
-                    <ol>
-                      <% player_class[:specials].each do |weapon| %>
-                        <li><%= weapon %></li>
-                      <% end %>
-                    </ol>
-                  </dd>
-                </dl>
-              <% end %>
-              <% if player_class[:attributes].any? %>
-                <dl>
-                  <dt>Attributes</dt>
-                  <dd>
-                    <ul>
-                      <% player_class[:attributes].each do |weapon| %>
-                        <% binding.pry if weapon.nil? %>
-                        <li><%= weapon.presence || "-" %></li>
-                      <% end %>
-                    </ul>
-                  </dd>
-                </dl>
-              <% end %>
-            </div>
-            <div style="flex: 33%">
-              <dl>
-                <dt>Weapons</dt>
+                <dt>Specials</dt>
                 <dd>
                   <ol>
-                    <% player_class[:weapons].each do |weapon| %>
+                    <% player_class[:specials].each do |weapon| %>
                       <li><%= weapon %></li>
                     <% end %>
                   </ol>
                 </dd>
               </dl>
+            <% end %>
+            <% if player_class[:attributes].any? %>
               <dl>
-                <dt>Grenades</dt>
+                <dt>Attributes</dt>
                 <dd>
-                  <ol>
-                    <% player_class[:grenades].each do |grenade| %>
-                      <li><%= grenade %></li>
+                  <ul>
+                    <% player_class[:attributes].each do |weapon| %>
+                      <% binding.pry if weapon.nil? %>
+                      <li><%= weapon.presence || "-" %></li>
                     <% end %>
-                  </ol>
+                  </ul>
                 </dd>
               </dl>
-            </div>
+            <% end %>
           </div>
-        </article>
-      </figure>
+          <div style="flex: 33%">
+            <dl>
+              <dt>Weapons</dt>
+              <dd>
+                <ol>
+                  <% player_class[:weapons].each do |weapon| %>
+                    <li><%= weapon %></li>
+                  <% end %>
+                </ol>
+              </dd>
+            </dl>
+            <dl>
+              <dt>Grenades</dt>
+              <dd>
+                <ol>
+                  <% player_class[:grenades].each do |grenade| %>
+                    <li><%= grenade %></li>
+                  <% end %>
+                </ol>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </article>
     <% end %>
   </section>
 
   <section>
     <hgroup>
-    <h2>Words</h2>
-    <h3>What people are saying about FortressOne</h3>
+    <h2>Controls</h2>
+    <h3>There's a lot of buttons</h3>
     </hgroup>
-    <blockquote>
-      "Possibly the best game ever made!"
-      <footer>
-        <cite>- hydr0buds</cite>
-      </footer>
-    </blockquote>
-    <blockquote>
-      "FortressOne has brought qwtf current both with improved graphics and slightly tweaked gameplay. The community on discord is very friendly and happy to help you get setup and running quickly. They organize pick up games every night and also setup tournaments."
-      <footer>
-        <cite>- a2yay</cite>
-      </footer>
-    </blockquote>
-    <blockquote>
-      "This is the game you played 20 years ago and fell in love with!"
-      <footer>
-        <cite>- ricksonfold</cite>
-      </footer>
-    </blockquote>
-    <blockquote>
-      "An outstanding mod with a lot of work going in to improve game play still till this day."
-      <footer>
-        <cite>- andywelsh17</cite>
-      </footer>
-    </blockquote>
+    <%= image_tag(asset_path("home/controls.webp"), alt: "Default keyboard config") %>
   </section>
 
   <section>
