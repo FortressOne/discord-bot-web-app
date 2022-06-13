@@ -210,8 +210,8 @@
     <% [
       {
         images: [
-          { url: "home/classes/blue_scout.webp", alt: "Scout icon" },
-          { url: "home/classes/red_scout.webp", alt: "Scout icon" },
+          { url: "home/classes/blue_scout.webp", alt: "Blue scout icon" },
+          { url: "home/classes/red_scout.webp", alt: "Red scout icon" },
         ],
         name: "Scout",
         speed: "450",
@@ -222,8 +222,8 @@
         attributes: ["Can uncover enemy spies", "Can disarm detpacks"],
       }, {
         images: [
-          { url: "home/classes/blue_sniper.webp", alt: "Sniper icon" },
-          { url: "home/classes/red_sniper.webp", alt: "Sniper icon" },
+          { url: "home/classes/blue_sniper.webp", alt: "Blue sniper icon" },
+          { url: "home/classes/red_sniper.webp", alt: "Red sniper icon" },
         ],
         name: "Sniper",
         speed: "300",
@@ -234,8 +234,8 @@
         attributes: [],
       }, {
         images: [
-          { url: "home/classes/blue_soldier.webp", alt: "Soldier icon" },
-          { url: "home/classes/red_soldier.webp", alt: "Soldier icon" },
+          { url: "home/classes/blue_soldier.webp", alt: "Blue soldier icon" },
+          { url: "home/classes/red_soldier.webp", alt: "Red soldier icon" },
         ],
         name: "Soldier",
         speed: "240",
@@ -246,8 +246,8 @@
         attributes: [],
       }, {
         images: [
-          { url: "home/classes/blue_demoman.webp", alt: "Demoman icon" },
-          { url: "home/classes/red_demoman.webp", alt: "Demoman icon" },
+          { url: "home/classes/blue_demoman.webp", alt: "Blue demoman icon" },
+          { url: "home/classes/red_demoman.webp", alt: "Red demoman icon" },
         ],
         name: "Demolitions Man",
         speed: "280",
@@ -258,8 +258,8 @@
         attributes: [],
       }, {
         images: [
-          { url: "home/classes/blue_medic.webp", alt: "Medic icon" },
-          { url: "home/classes/red_medic.webp", alt: "Medic icon" },
+          { url: "home/classes/blue_medic.webp", alt: "Blue medic icon" },
+          { url: "home/classes/red_medic.webp", alt: "Red medic icon" },
         ],
         name: "Medic",
         speed: "320",
@@ -270,8 +270,8 @@
         attributes: ["Immune to concussion"],
       }, {
         images: [
-          { url: "home/classes/blue_hwguy.webp", alt: "Heavy icon" },
-          { url: "home/classes/red_hwguy.webp", alt: "Heavy icon" },
+          { url: "home/classes/blue_hwguy.webp", alt: "Blue heavy icon" },
+          { url: "home/classes/red_hwguy.webp", alt: "Red heavy icon" },
         ],
         name: "Heavy Weapons Guy",
         speed: "230",
@@ -282,8 +282,8 @@
         attributes: ["Reduced knockback when taking damage"],
       }, {
         images: [
-          { url: "home/classes/blue_pyro.webp", alt: "Pyro icon" },
-          { url: "home/classes/red_pyro.webp", alt: "Pyro icon" },
+          { url: "home/classes/blue_pyro.webp", alt: "Blue pyro icon" },
+          { url: "home/classes/red_pyro.webp", alt: "Red pyro icon" },
         ],
         name: "Pyro",
         speed: "300",
@@ -294,8 +294,8 @@
         attributes: ["Is resistant to fire"],
       }, {
         images: [
-          { url: "home/classes/blue_spy.webp", alt: "Spy icon" },
-          { url: "home/classes/red_spy.webp", alt: "Spy icon" },
+          { url: "home/classes/blue_spy.webp", alt: "Blue spy icon" },
+          { url: "home/classes/red_spy.webp", alt: "Red spy icon" },
         ],
         name: "Spy",
         speed: "300",
@@ -306,8 +306,8 @@
         attributes: ["Can uncover enemy spies"],
       }, {
         images: [
-          { url: "home/classes/blue_engineer.webp", alt: "Engineer icon" },
-          { url: "home/classes/red_engineer.webp", alt: "Engineer icon" },
+          { url: "home/classes/blue_engineer.webp", alt: "Blue engineer icon" },
+          { url: "home/classes/red_engineer.webp", alt: "Red engineer icon" },
         ],
         name: "Engineer",
         speed: "300",
@@ -323,7 +323,7 @@
           <div style="flex: 33%">
             <h3><%= player_class[:name] %></h3>
             <% player_class[:images].each do |image| %>
-              <%= image_tag(image[:url]) %>
+              <%= image_tag(image[:url], alt: image[:alt]) %>
             <% end %>
           </div>
           <div style="flex: 33%">
