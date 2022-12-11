@@ -46,6 +46,10 @@
     <%= button_to "Sign in with Discord", player_discord_omniauth_authorize_path, data: { turbo: false } %>
     <%= button_to "Sign out", destroy_player_session_path, method: :delete, data: { turbo_method: :delete } %>
 
+    <% if player_signed_in? && current_player.image %>
+      <%= image_tag current_player.image %>
+    <% end %>
+
     <%= yield %>
   </body>
 </html>
