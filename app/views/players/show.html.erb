@@ -1,0 +1,60 @@
+<main class="container">
+  <%= render_breadcrumbs %>
+
+  <hgroup>
+  <h2><%= @player.name %></h2>
+  <h3>Has played <%= @player.match_count %> matches, last played <%= @player.last_match_date && local_time_ago(@player.last_match_date) %></h3>
+  </hgroup>
+
+  <table id="player_table" style="white-space: nowrap; max-width: 200px;" role="grid">
+    <thead>
+      <tr>
+        <td>Wins</td>
+        <td>Losses</td>
+        <td>Draws</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= @player.win_count %></td>
+        <td><%= @player.loss_count %></td>
+        <td><%= @player.draw_count %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <table id="player_discord_channels_table" style="white-space: nowrap;" role="grid">
+      <thead>
+        <tr>
+          <th>Discord Channel</th>
+          <% if @player.public_ratings || @player == current_player  %>
+            <th data-sort-method='number'>Rank</th>
+            <th data-sort-method='dotsep'>Top %</th>
+          <% end %>
+          <th data-sort-method='number'>Played</th>
+          <th data-sort-method='number'>Wins</th>
+          <th data-sort-method='number'>Losses</th>
+          <th data-sort-method='number'>Draws</th>
+          <th data-sort-method='number'>Last Match Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @player.discord_channel_players_with_matches_played.each do |dcp| %>
+          <tr>
+            <td><%= link_to dcp.discord_channel.name, results_discord_channel_path(dcp.discord_channel) %></td>
+            <% if @player.public_ratings || @player == current_player  %>
+              <td><%= dcp.rank %>/<%= dcp.discord_channel.players.count %></td>
+              <td><%= number_with_precision(dcp.percentile, precision: 1) %>%</td>
+            <% end %>
+            <td><%= dcp.match_count %></td>
+            <td><%= dcp.win_count %></td>
+            <td><%= dcp.loss_count %></td>
+            <td><%= dcp.draw_count %></td>
+            <td data-sort="<%= dcp.last_match_date && dcp.last_match_date.to_i %>"><%= dcp.last_match_date && local_time_ago(dcp.last_match_date) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </figure>
+</main>

@@ -25,8 +25,21 @@ class Player < ApplicationRecord
     player
   end
 
+  def last_match_date
+    teams.last && teams.last.match.created_at
+  end
+
+  def discord_channel_players_with_matches_played
+    discord_channel_players
+      .sort_by(&:match_count)
+      .reverse
+      .filter do |dcp|
+      dcp.teams.any?
+    end
+  end
+
   def match_count
-    matches.size
+    teams.where.not(result: nil).count
   end
 
   def win_count
