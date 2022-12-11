@@ -27,7 +27,7 @@
             <% if @discord_channel.rated? %>
               <td><%= index + 1 %></td>
             <% end %>
-            <td><%= dcp.player.name %></td>
+            <td><%= link_to(dcp.player.name, dcp.player) %></td>
             <% if @discord_channel.rated? %>
               <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
             <% end %>

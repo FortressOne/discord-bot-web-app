@@ -46,7 +46,7 @@
       </ul>
       <ul>
         <% if player_signed_in? %>
-          <li><%= current_player.name %></li>
+          <li>Signed in as <%= link_to(current_player.name, current_player) %></li>
 
           <% if current_player.image %>
             <li><%= image_tag current_player.image, style: "max-height: 4rem; border-radius: 50%;" %></li>
@@ -78,15 +78,17 @@
       </ul>
     </nav>
 
-    <section class="container">
-      <% if notice %>
-        <small><%= notice %></small>
-      <% end %>
+    <% if [notice, alert].any? %>
+      <section class="container">
+        <% if notice %>
+          <small><%= notice %></small>
+        <% end %>
 
-      <% if alert %>
-        <small><%= alert %></small>
-      <% end %>
-    </section>
+        <% if alert %>
+          <small><%= alert %></small>
+        <% end %>
+      </section>
+    <% end %>
 
     <%= yield %>
   </body>
