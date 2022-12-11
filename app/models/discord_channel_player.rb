@@ -17,6 +17,18 @@ class DiscordChannelPlayer < ApplicationRecord
 
   before_create :build_trueskill_rating
 
+  def percentile
+    discord_channel.percentile(self)
+  end
+
+  def rank
+    discord_channel.rank(self)
+  end
+
+  def rating_mean
+    trueskill_rating.mean
+  end
+
   def leaderboard_sort_order
     if discord_channel.rated?
       trueskill_rating.conservative_skill_estimate * -1

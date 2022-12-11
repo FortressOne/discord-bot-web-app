@@ -1,9 +1,9 @@
-<div id="banner"></div>
+<% content_for :banner do %>
+  <div id="banner"></div>
+<% end %>
 
 <main class="container">
   <section>
-    <%= image_tag(asset_path("home/logo.webp"), alt: "FortressOne logo", height: 128, width: 128) %>
-
     <hgroup>
     <h1>FortressOne</h1>
     <h2>Quake Team Fortress Remastered</h2>
@@ -46,7 +46,7 @@
               </div>
             <% end %>
           <% end %>
-        </div>
+            </div>
       </div>
     </div>
   </section>

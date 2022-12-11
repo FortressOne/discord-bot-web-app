@@ -1,5 +1,16 @@
 Rails.application.routes.draw do
+  get 'players/show'
+  devise_for :players, controllers: { omniauth_callbacks: 'players/omniauth_callbacks' }
+  devise_scope :player do
+    delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_player_session
+  end
+
+  resources :players, only: [:show]
+
+  root to: 'home#index'
   get 'live_player/show'
+  get 'code-of-conduct', to: "static_pages#code_of_conduct"
+
   namespace 'results' do
     root to: 'discord_channels#index'
     resources :discord_channels, only: [:show]
@@ -11,8 +22,4 @@ Rails.application.routes.draw do
       end
     end
   end
-
-  root to: 'home#index'
-
-  get 'code-of-conduct', to: "static_pages#code_of_conduct"
 end
