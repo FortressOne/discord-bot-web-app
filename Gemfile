@@ -47,6 +47,9 @@ gem 'trueskill', github: 'FortressOne/trueskill'
 gem 'twitch-api'
 gem 'faraday'
 gem "breadcrumbs_on_rails"
+gem "devise"
+gem 'omniauth-discord'
+gem 'omniauth-rails_csrf_protection'
 
 group :development, :test do
   gem 'pry'
