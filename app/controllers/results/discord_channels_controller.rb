@@ -1,4 +1,6 @@
 class Results::DiscordChannelsController < ApplicationController
+  # before_action :authenticate_player!
+
   add_breadcrumb "Home", :root_path
 
   def index

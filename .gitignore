@@ -36,3 +36,7 @@ yarn-debug.log*
 .yarn-integrity
 
 latest.dump
+
+/config/credentials/production.key
+
+/config/credentials/development.key
