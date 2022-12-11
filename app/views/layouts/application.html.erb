@@ -35,20 +35,58 @@
   </head>
 
   <body>
-    <% if notice %>
-      <p class="notice"><%= notice %></p>
-    <% end %>
+    <%= content_for :banner %>
+    <nav class="container">
+      <ul>
+        <li>
+          <%= link_to "/" do %>
+            <%= image_tag(asset_path("home/logo.webp"), alt: "FortressOne logo", height: 128, width: 128) %>
+          <% end %>
+        </li>
+      </ul>
+      <ul>
+        <% if player_signed_in? %>
+          <li><%= current_player.name %></li>
 
-    <% if alert %>
-      <p class="alert"><%= alert %></p>
-    <% end %>
+          <% if current_player.image %>
+            <li><%= image_tag current_player.image, style: "max-height: 4rem; border-radius: 50%;" %></li>
+          <% end %>
 
-    <%= button_to "Sign in with Discord", player_discord_omniauth_authorize_path, data: { turbo: false } %>
-    <%= button_to "Sign out", destroy_player_session_path, method: :delete, data: { turbo_method: :delete } %>
+          <li>
+            <%= button_to(
+              "Sign out",
+              destroy_player_session_path,
+              method: :delete,
+              data: { turbo_method: :delete },
+              role: :button,
+              class: "secondary",
+              form: { style: "margin-bottom: 0px;" }
+            )%>
+          </li>
+        <% else %>
+          <li>
+            <%= button_to(
+              "Sign in with Discord",
+              player_discord_omniauth_authorize_path,
+              data: { turbo: false },
+              role: :button,
+              class: "secondary",
+              form: { style: "margin-bottom: 0px;" }
+            ) %>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
 
-    <% if player_signed_in? && current_player.image %>
-      <%= image_tag current_player.image %>
-    <% end %>
+    <section class="container">
+      <% if notice %>
+        <small><%= notice %></small>
+      <% end %>
+
+      <% if alert %>
+        <small><%= alert %></small>
+      <% end %>
+    </section>
 
     <%= yield %>
   </body>

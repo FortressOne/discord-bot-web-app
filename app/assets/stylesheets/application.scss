@@ -52,6 +52,10 @@
   --switch-checked-background-color: var(--primary);
 }
 
+html body main.container nav ul li form.button_to {
+  margin-bottom: 0px;
+}
+
 #banner {
   height: 576px;
   margin-bottom: -576px;
