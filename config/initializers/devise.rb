@@ -274,8 +274,8 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
   config.omniauth(
     :discord,
-    "424430779502952458",
-    "xQ3eIUiKkN0eX8lBB8H_npUG5KTBn_JQ",
+    Rails.application.credentials.discord[:client_id],
+    Rails.application.credentials.discord[:client_secret],
     scope: "email identify",
     callback_url: "http://localhost:3000/players/auth/discord/callback"
   )
