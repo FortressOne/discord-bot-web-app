@@ -1,0 +1,32 @@
+<main class="container">
+  <%= render_breadcrumbs %>
+  <h2>Players</h2>
+
+  <figure>
+    <table id="players_table" style="white-space: nowrap;" role="grid">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th data-sort-method='number'>Played</th>
+          <th data-sort-method='number'>Wins</th>
+          <th data-sort-method='number'>Losses</th>
+          <th data-sort-method='number'>Draws</th>
+          <th data-sort-method='number'>Last Match Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @players.each do |player| %>
+          <td><%= link_to(player.name, player) %></td>
+          <td><%= player.match_count %></td>
+          <td><%= player.win_count %></td>
+          <td><%= player.loss_count %></td>
+          <td><%= player.draw_count %></td>
+          <td data-sort="<%= player.last_match_date && player.last_match_date.to_i %>">
+            <%= player.last_match_date && local_time_ago(player.last_match_date) %>
+          </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </figure>
+</main>
