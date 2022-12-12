@@ -57,7 +57,7 @@
               "Sign out",
               destroy_player_session_path,
               method: :delete,
-              data: { turbo_method: :delete },
+              data: { turbo: false },
               role: :button,
               class: "secondary",
               form: { style: "margin-bottom: 0px;" }
