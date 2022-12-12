@@ -1,15 +1,17 @@
 class Player < ApplicationRecord
+  include ResultConstants
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   # devise :database_authenticatable, :registerable,
   #        :recoverable, :rememberable, :validatable
   devise :omniauthable, omniauth_providers: %i[discord]
 
-  include ResultConstants
-
   has_many :discord_channel_players, dependent: :destroy
   has_many :discord_channels, through: :discord_channel_players
   has_many :teams, through: :discord_channel_players
+
+  has_secure_token :auth_token
 
   scope :visible, ->{ where(invisible: false) }
 
@@ -23,6 +25,11 @@ class Player < ApplicationRecord
     # player.skip_confirmation!
     player.save
     player
+  end
+  
+  def get_auth_token 
+    self.regenerate_auth_token if self.auth_token.nil?
+    self.auth_token
   end
 
   def last_match_date

@@ -8,10 +8,20 @@
     <h2><%= @player.name %></h2>
     <h3>Last played <%= @player.last_match_date && local_time_ago(@player.last_match_date) %></h3>
   </hgroup>
-  <h4><%= @player.match_count %> matches</h4>
+
+  <% if @player == current_player %>
+    <dl>
+      <div>
+        <dt><strong>Secure token:</strong></dt>
+        <dd><span style="font-family: monospace;"><%= @player.auth_token %></span></dd>
+      </div>
+    </dl>
+  <% end %>
+
   <table id="player_table" style="white-space: nowrap; max-width: 200px;" role="grid">
     <thead>
       <tr>
+        <td>Played</td>
         <td>Wins</td>
         <td>Losses</td>
         <td>Draws</td>
@@ -19,6 +29,7 @@
     </thead>
     <tbody>
       <tr>
+        <td><%= @player.match_count %></td>
         <td><%= @player.win_count %></td>
         <td><%= @player.loss_count %></td>
         <td><%= @player.draw_count %></td>
