@@ -1,11 +1,10 @@
 Rails.application.routes.draw do
-  get 'players/show'
   devise_for :players, controllers: { omniauth_callbacks: 'players/omniauth_callbacks' }
   devise_scope :player do
     delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_player_session
   end
 
-  resources :players, only: [:show]
+  resources :players, only: [:index, :show]
 
   root to: 'home#index'
   get 'live_player/show'
