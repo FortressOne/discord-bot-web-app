@@ -44,14 +44,14 @@
         <tr>
           <th>Discord Channel</th>
           <% if @player.public_ratings || @player == current_player  %>
+            <th>Tier</th>
+            <th data-sort-method='dotsep'>Percentile</th>
             <th data-sort-method='number'>Rank</th>
-            <th data-sort-method='dotsep'>Top %</th>
           <% end %>
           <th data-sort-method='number'>Played</th>
           <th data-sort-method='number'>Wins</th>
           <th data-sort-method='number'>Losses</th>
           <th data-sort-method='number'>Draws</th>
-          <th data-sort-method='number'>Last Match</th>
         </tr>
       </thead>
       <tbody>
@@ -59,14 +59,14 @@
           <tr>
             <td><%= link_to dcp.discord_channel.name, results_discord_channel_path(dcp.discord_channel) %></td>
             <% if @player.public_ratings || @player == current_player  %>
+              <td><%= dcp.tier %></td>
+              <td><%= dcp.percentile.to_i.ordinalize %></td>
               <td><%= dcp.rank %>/<%= dcp.discord_channel.players.count %></td>
-              <td><%= number_with_precision(dcp.percentile, precision: 1) %>%</td>
             <% end %>
             <td><%= dcp.match_count %></td>
             <td><%= dcp.win_count %></td>
             <td><%= dcp.loss_count %></td>
             <td><%= dcp.draw_count %></td>
-            <td data-sort="<%= dcp.last_match_date && dcp.last_match_date.to_i %>"><%= dcp.last_match_date && local_time_ago(dcp.last_match_date) %></td>
           </tr>
         <% end %>
       </tbody>
