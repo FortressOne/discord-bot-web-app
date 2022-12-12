@@ -277,7 +277,7 @@ Devise.setup do |config|
     Rails.application.credentials.discord[:client_id],
     Rails.application.credentials.discord[:client_secret],
     scope: "email identify",
-    callback_url: "http://localhost:3000/players/auth/discord/callback"
+    callback_url: Rails.application.credentials.discord[:callback_url]
   )
 
   # ==> Warden configuration
