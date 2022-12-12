@@ -2,14 +2,13 @@
   <%= render_breadcrumbs %>
 
   <hgroup>
-  <% if @player.image %>
-    <%= image_tag @player.image, style: "max-height: 4.5rem; border-radius: 50%; margin-right: 1rem; float: left;" %>
-  <% end %>
-  <h2>
-    <%= @player.name %>
-  </h2>
-  <h3>Has played <%= @player.match_count %> matches, last played <%= @player.last_match_date && local_time_ago(@player.last_match_date) %></h3>
+    <% if @player.image %>
+      <%= image_tag @player.image, style: "max-height: 4.5rem; border-radius: 50%; margin-right: 1rem; float: left;" %>
+    <% end %>
+    <h2><%= @player.name %></h2>
+    <h3>Last played <%= @player.last_match_date && local_time_ago(@player.last_match_date) %></h3>
   </hgroup>
+  <h4><%= @player.match_count %> matches</h4>
   <table id="player_table" style="white-space: nowrap; max-width: 200px;" role="grid">
     <thead>
       <tr>
