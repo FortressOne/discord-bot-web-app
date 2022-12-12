@@ -9,6 +9,7 @@
           <% if @discord_channel.rated? %>
             <th>Rank</th>
           <% end %>
+          <th style="width: 1.5rem;"></th>
           <th>Name</th>
           <% if @discord_channel.rated? %>
             <th data-sort-method='dotsep'>CSE</th>
@@ -29,8 +30,10 @@
             <% end %>
             <td>
               <% if dcp.player.image %>
-                <%= image_tag dcp.player.image, style: "max-height: 1.5rem; border-radius: 50%; margin-right: 0.5rem;" %>
+                <%= image_tag dcp.player.image, style: "max-width: 1.5rem; border-radius: 50%;" %>
               <% end %>
+            </td>
+            <td>
               <%= link_to(dcp.player.name, dcp.player) %>
             </td>
             <% if @discord_channel.rated? %>
