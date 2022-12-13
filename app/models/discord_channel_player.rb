@@ -42,8 +42,8 @@ class DiscordChannelPlayer < ApplicationRecord
     discord_channel.rank(self)
   end
 
-  def rating_mean
-    trueskill_rating.mean
+  def conservative_skill_estimate
+    trueskill_rating.conservative_skill_estimate
   end
 
   def leaderboard_sort_order
