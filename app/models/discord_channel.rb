@@ -9,9 +9,9 @@ class DiscordChannel < ApplicationRecord
   end
 
   def rank(discord_channel_player)
-    trueskill_ratings
-      .where("mean > ?", discord_channel_player.rating_mean)
-      .count + 1
+    1 + trueskill_ratings.count do |tr|
+      tr.conservative_skill_estimate > discord_channel_player.conservative_skill_estimate
+    end
   end
 
   def to_param
