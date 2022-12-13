@@ -349,7 +349,6 @@
                 <dd>
                   <ul>
                     <% player_class[:attributes].each do |weapon| %>
-                      <% binding.pry if weapon.nil? %>
                       <li><%= weapon.presence || "-" %></li>
                     <% end %>
                   </ul>
