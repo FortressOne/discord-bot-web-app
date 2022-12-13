@@ -20,7 +20,7 @@ class DiscordChannelPlayer < ApplicationRecord
   def tier
     case
     when percentile < 25.0
-      return "🔔"
+      return "🔑"
     when percentile < 50.0
       return "🥄"
     when percentile < 75.0
