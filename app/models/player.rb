@@ -5,7 +5,8 @@ class Player < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   # devise :database_authenticatable, :registerable,
   #        :recoverable, :rememberable, :validatable
-  devise :omniauthable, omniauth_providers: %i[discord]
+
+  devise :rememberable, :omniauthable, omniauth_providers: %i[discord]
 
   has_many :discord_channel_players, dependent: :destroy
   has_many :discord_channels, through: :discord_channel_players
@@ -26,8 +27,8 @@ class Player < ApplicationRecord
     player.save
     player
   end
-  
-  def get_auth_token 
+
+  def get_auth_token
     self.regenerate_auth_token if self.auth_token.nil?
     self.auth_token
   end
