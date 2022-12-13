@@ -67,7 +67,7 @@
             <% if @player.public_ratings || @player == current_player  %>
               <td><%= dcp.tier %></td>
               <td><%= dcp.percentile.to_i.ordinalize %></td>
-              <td><%= dcp.rank %>/<%= dcp.discord_channel.players.count %></td>
+              <td><%= dcp.rank %>/<%= dcp.discord_channel.players_with_at_least_one_match_played_count %></td>
             <% end %>
             <td><%= dcp.match_count %></td>
             <td><%= dcp.win_count %></td>
