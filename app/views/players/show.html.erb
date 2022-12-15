@@ -15,7 +15,7 @@
     </hgroup>
   </div>
 
-  <% if @player == current_player %>
+  <% if @player == current_player || current_player&.admin? %>
     <dl>
       <div>
         <dt><strong>Secure token:</strong></dt>
@@ -49,7 +49,7 @@
       <thead>
         <tr>
           <th>Discord Channel</th>
-          <% if @player.public_ratings || @player == current_player  %>
+          <% if @player.public_ratings || @player == current_player || current_player&.admin?  %>
             <th>Tier</th>
             <th data-sort-method='dotsep'>Percentile</th>
             <th data-sort-method='number'>Rank</th>
@@ -64,7 +64,7 @@
         <% @player.discord_channel_players_with_matches_played.each do |dcp| %>
           <tr>
             <td><%= link_to dcp.discord_channel.name, results_discord_channel_path(dcp.discord_channel) %></td>
-            <% if @player.public_ratings || @player == current_player  %>
+            <% if @player.public_ratings || @player == current_player  || current_player&.admin? %>
               <td><%= dcp.tier %></td>
               <td><%= dcp.percentile.to_i.ordinalize %></td>
               <td><%= dcp.rank %>/<%= dcp.discord_channel.players_with_at_least_one_match_played_count %></td>

@@ -18,20 +18,12 @@ class DiscordChannelPlayer < ApplicationRecord
   before_create :build_trueskill_rating
 
   def tier
-    case
-    when percentile < 25.0
-      return "🔑"
-    when percentile < 50.0
-      return "🥄"
-    when percentile < 75.0
-      return "🔱"
-    when percentile < 85.0
-      return "⚔️"
-    when percentile < 93.0
-      return "💎"
-    else
-      return "👑"
-    end
+    return "🔑" if percentile < 25.0
+    return "🥄" if percentile < 50.0
+    return "🔱" if percentile < 75.0
+    return "⚔️"  if percentile < 85.0
+    return "💎" if percentile < 93.0
+    "👑"
   end
 
   def percentile
