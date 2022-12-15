@@ -109,3 +109,7 @@ html body main.container nav ul li form.button_to {
 #match_id_and_date {
   background-color: #161f24;
 }
+
+[aria-busy="true"]:not(input, select, textarea):not(:empty)::before {
+  display: none;
+}
