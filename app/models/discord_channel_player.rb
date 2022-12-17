@@ -1,6 +1,17 @@
 class DiscordChannelPlayer < ApplicationRecord
   include ResultConstants
 
+  FORM_PERIOD = 5
+
+  TIERS = [
+      ["🔑",25.0],
+      ["🥄",50.0],
+      ["🔱",75.0],
+      ["⚔️" ,85.0],
+      ["💎",93.0],
+      ["👑",100.0]
+    ]
+
   has_one :trueskill_rating, dependent: :destroy
   belongs_to :discord_channel
   belongs_to :player
@@ -18,12 +29,9 @@ class DiscordChannelPlayer < ApplicationRecord
   before_create :build_trueskill_rating
 
   def tier
-    return "🔑" if percentile < 25.0
-    return "🥄" if percentile < 50.0
-    return "🔱" if percentile < 75.0
-    return "⚔️"  if percentile < 85.0
-    return "💎" if percentile < 93.0
-    "👑"
+    TIERS.each do |emoji, limit|
+      return emoji if percentile < limit
+    end
   end
 
   def percentile
@@ -36,6 +44,24 @@ class DiscordChannelPlayer < ApplicationRecord
 
   def conservative_skill_estimate
     trueskill_rating.conservative_skill_estimate
+  end
+
+  # returns cse less form_period/cse of cse per in-a-row loss (ignoring draws).
+  # I.e with form_period 5, lost last match, returns 80% of cse, lost two last
+  # matches, returns 60% of cse. Won't set you below 0. Resets with a win.
+  def form_weighted_cse
+    if teams.empty? || conservative_skill_estimate <= 0
+      return conservative_skill_estimate
+    end
+
+    per_consecutive_loss_handicap = conservative_skill_estimate / FORM_PERIOD
+    form_period_teams = teams.last(FORM_PERIOD).reverse
+
+    form_period_teams.inject(conservative_skill_estimate) do |fwcse, team|
+      break fwcse if team.result == 1
+
+      fwcse -= per_consecutive_loss_handicap
+    end
   end
 
   def leaderboard_sort_order
