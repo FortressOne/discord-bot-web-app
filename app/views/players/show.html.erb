@@ -50,9 +50,10 @@
         <tr>
           <th>Discord Channel</th>
           <% if @player.public_ratings || @player == current_player || current_player&.admin?  %>
+            <th data-sort-method='number'>CSE</th>
             <th>Tier</th>
-            <th data-sort-method='dotsep'>Percentile</th>
             <th data-sort-method='number'>Rank</th>
+            <th data-sort-method='dotsep'>Percentile</th>
           <% end %>
           <th data-sort-method='number'>Played</th>
           <th data-sort-method='number'>Wins</th>
@@ -65,9 +66,10 @@
           <tr>
             <td><%= link_to dcp.discord_channel.name, results_discord_channel_path(dcp.discord_channel) %></td>
             <% if @player.public_ratings || @player == current_player  || current_player&.admin? %>
+              <td><%= number_with_precision(dcp.conservative_skill_estimate, precision: 2) %></td>
               <td><%= dcp.tier %></td>
-              <td><%= dcp.percentile.to_i.ordinalize %></td>
               <td><%= dcp.rank %>/<%= dcp.discord_channel.players_with_at_least_one_match_played_count %></td>
+              <td><%= dcp.percentile.to_i.ordinalize %></td>
             <% end %>
             <td><%= dcp.match_count %></td>
             <td><%= dcp.win_count %></td>

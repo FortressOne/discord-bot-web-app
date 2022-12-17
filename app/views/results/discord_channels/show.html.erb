@@ -6,13 +6,13 @@
     <table id="players_table" style="white-space: nowrap;" role="grid">
       <thead>
         <tr>
-          <% if @discord_channel.rated? || current_player&.admin? %>
-            <th>Rank</th>
-          <% end %>
           <th style="width: 1.5rem;"></th>
           <th>Name</th>
           <% if @discord_channel.rated? || current_player&.admin? %>
             <th data-sort-method='number'>CSE</th>
+            <th>Tier</th>
+            <th data-sort-method='number'>Rank</th>
+            <th data-sort-method='dotsep'>Percentile</th>
           <% end %>
           <th data-sort-method='number'>Played</th>
           <th data-sort-method='number'>Wins</th>
@@ -25,9 +25,6 @@
         <% @discord_channel_players.each_with_index do |dcp, index| %>
           <% trueskill_rating = dcp.trueskill_rating %>
           <tr>
-            <% if @discord_channel.rated? || current_player&.admin? %>
-              <td><%= dcp.rank %></td>
-            <% end %>
             <td>
               <% if dcp.player.image %>
                 <%= image_tag dcp.player.image, style: "max-width: 1.5rem; border-radius: 50%;" %>
@@ -38,6 +35,9 @@
             </td>
             <% if @discord_channel.rated? || current_player&.admin? %>
               <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
+              <td><%= dcp.tier %></td>
+              <td><%= dcp.rank %>/<%= dcp.discord_channel.players_with_at_least_one_match_played_count %></td>
+              <td><%= dcp.percentile.to_i.ordinalize %></td>
             <% end %>
             <td><%= dcp.match_count %></td>
             <td><%= dcp.win_count %></td>
