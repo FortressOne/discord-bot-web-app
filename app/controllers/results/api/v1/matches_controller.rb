@@ -4,7 +4,12 @@ class Results::Api::V1::MatchesController < ActionController::API
   include Saulabs::TrueSkill
 
   def create
-    discord_channel = DiscordChannel.find_or_create_by(match_params[:discord_channel])
+    discord_channel = DiscordChannel.find_or_create_by(
+      channel_id: match_params[:discord_channel][:channel_id]
+    )
+
+    discord_channel.name = match_params[:discord_channel][:name]
+
     match = Match.create(discord_channel_id: discord_channel.id)
 
     match_params[:teams].each do |name, attrs|
