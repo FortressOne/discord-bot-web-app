@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_14_030712) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_18_124734) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -118,8 +118,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_14_030712) do
     t.float "deviation", default: 8.333333333333334
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "discord_channel_player_id"
-    t.index ["discord_channel_player_id"], name: "index_trueskill_ratings_on_discord_channel_player_id"
+    t.bigint "trueskill_rateable_id"
+    t.string "trueskill_rateable_type"
+    t.index ["trueskill_rateable_type", "trueskill_rateable_id"], name: "index_tr_on_tr_type_and_tr_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -129,5 +130,4 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_14_030712) do
   add_foreign_key "matches", "discord_channels"
   add_foreign_key "matches", "game_maps"
   add_foreign_key "teams", "matches"
-  add_foreign_key "trueskill_ratings", "discord_channel_players"
 end
