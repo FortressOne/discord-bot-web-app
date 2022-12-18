@@ -4,15 +4,15 @@ class DiscordChannelPlayer < ApplicationRecord
   FORM_PERIOD = 5
 
   TIERS = [
-      ["🔑",25.0],
-      ["🥄",50.0],
-      ["🔱",75.0],
-      ["⚔️" ,85.0],
-      ["💎",93.0],
-      ["👑",100.0]
-    ]
+    ["🔑",25.0],
+    ["🥄",50.0],
+    ["🔱",75.0],
+    ["⚔️",85.0],
+    ["💎",93.0],
+    ["👑",100.0]
+  ]
 
-  has_one :trueskill_rating, dependent: :destroy
+  has_one :trueskill_rating, as: :trueskill_rateable, dependent: :destroy
   belongs_to :discord_channel
   belongs_to :player
   has_many :discord_channel_players_teams

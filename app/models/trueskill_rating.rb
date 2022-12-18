@@ -3,7 +3,7 @@ require 'saulabs/trueskill'
 class TrueskillRating < ApplicationRecord
   include Saulabs::TrueSkill
 
-  belongs_to :discord_channel_player
+  belongs_to :trueskill_rateable, polymorphic: true
 
   scope :global, ->{ where(discord_channel: nil) }
 
