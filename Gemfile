@@ -50,6 +50,7 @@ gem "breadcrumbs_on_rails"
 gem "devise"
 gem 'omniauth-discord'
 gem 'omniauth-rails_csrf_protection'
+gem "chartkick"
 
 group :development, :test do
   gem 'pry'

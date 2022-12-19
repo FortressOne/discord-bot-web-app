@@ -10,3 +10,6 @@ document.addEventListener("turbo:load", function() {
 		new Tablesort(document.getElementById('players_table'));
 	}
 })
+
+import "chartkick"
+import "Chart.bundle"
