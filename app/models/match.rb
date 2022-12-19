@@ -20,6 +20,8 @@ class Match < ApplicationRecord
   end
 
   def update_trueskill_ratings
+    puts "updating match id: #{id}"
+
     team1 = teams.find_by(name: 1)
     team2 = teams.find_by(name: 2)
 

@@ -23,6 +23,14 @@ class Team < ApplicationRecord
       tr.mean = rating.mean
       tr.deviation = rating.deviation
       tr.save
+
+      dcpts = discord_channel_players_teams.find_by(
+        discord_channel_player: tr.trueskill_rateable
+      )
+
+      dcpts
+        .create_trueskill_rating
+        .update(mean: rating.mean, deviation: rating.deviation)
     end
   end
 end
