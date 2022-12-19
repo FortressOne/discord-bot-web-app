@@ -11,7 +11,7 @@ namespace :ratings do
       dcp.create_trueskill_rating
     end
 
-    Match.all.each do |match|
+    Match.order(:created_at).each do |match|
       match.update_trueskill_ratings
     end
   end
