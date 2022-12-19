@@ -91,4 +91,10 @@ class DiscordChannelPlayer < ApplicationRecord
   def draw_count
     teams.where(result: DRAW).count
   end
+
+  def trueskill_ratings
+    discord_channel_players_teams.map do |dcpt|
+      dcpt.trueskill_ratings.conservative_skill_estimate
+    end
+  end
 end
