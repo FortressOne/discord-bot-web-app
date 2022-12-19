@@ -6,7 +6,7 @@ class AddTrueskillRateableIdAndTypeToTrueskillRating < ActiveRecord::Migration[7
 
     TrueskillRating.all.each do |tr|
       tr.trueskill_rateable_type = "DiscordChannelPlayer"
-      tr.trueskill_rateable_id = tr.discord_channel_plyer_id
+      tr.trueskill_rateable_id = tr.discord_channel_player_id
       tr.save
     end
   end
