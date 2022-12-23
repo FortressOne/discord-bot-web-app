@@ -6,6 +6,7 @@
     <table id="players_table" style="white-space: nowrap;" role="grid">
       <thead>
         <tr>
+          <th style="width: 1.5rem;"></th>
           <th>Name</th>
           <th data-sort-method='number'>Played</th>
           <th data-sort-method='number'>Wins</th>
@@ -16,6 +17,11 @@
       </thead>
       <tbody>
         <% @players.each do |player| %>
+          <td>
+            <% if player.image %>
+              <%= image_tag player.image, style: "max-width: 1.5rem; border-radius: 50%;" %>
+            <% end %>
+          </td>
           <td><%= link_to(player.name, player) %></td>
           <td><%= player.match_count %></td>
           <td><%= player.win_count %></td>
