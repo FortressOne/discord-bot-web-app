@@ -1,6 +1,27 @@
 class Player < ApplicationRecord
   include ResultConstants
 
+  IMAGES = [
+    "blue_demoman.webp",
+    "blue_engineer.webp",
+    "blue_hwguy.webp",
+    "blue_medic.webp",
+    "blue_pyro.webp",
+    "blue_scout.webp",
+    "blue_sniper.webp",
+    "blue_soldier.webp",
+    "blue_spy.webp",
+    "red_demoman.webp",
+    "red_engineer.webp",
+    "red_hwguy.webp",
+    "red_medic.webp",
+    "red_pyro.webp",
+    "red_scout.webp",
+    "red_sniper.webp",
+    "red_soldier.webp",
+    "red_spy.webp",
+  ]
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   # devise :database_authenticatable, :registerable,
@@ -20,7 +41,8 @@ class Player < ApplicationRecord
     player = find_or_initialize_by(discord_id: auth.uid)
     player.email = auth.info.email
     # player.password = Devise.friendly_token[0, 20]
-    player.image = auth.info.image # assuming the player model has an image
+    player.name = auth.info.name
+    player.image = auth.info.image || "home/classes/#{IMAGES.sample}"
     # If you are using confirmable and the provider(s) you use validate emails, 
     # uncomment the line below to skip the confirmation emails.
     # player.skip_confirmation!
