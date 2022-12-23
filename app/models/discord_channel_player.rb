@@ -18,6 +18,8 @@ class DiscordChannelPlayer < ApplicationRecord
   has_many :discord_channel_players_teams
   has_many :teams, through: :discord_channel_players_teams
 
+  after_create :create_trueskill_rating
+
   scope :leaderboard, -> do
     joins(:player)
       .joins(:teams)

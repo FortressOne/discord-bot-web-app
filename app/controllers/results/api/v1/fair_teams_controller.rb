@@ -16,10 +16,6 @@ class Results::Api::V1::FairTeamsController < ApplicationController
         discord_channel_id: discord_channel.id
       )
 
-      TrueskillRating.find_or_create_by(
-        discord_channel_player_id: discord_channel_player.id
-      )
-
       discord_channel_player
     end
 
