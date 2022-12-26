@@ -61,11 +61,21 @@ class Player < ApplicationRecord
 
   def discord_channel_players_with_matches_played
     discord_channel_players
+      .includes(
+        [
+          :teams,
+          :trueskill_rating,
+          {
+            discord_channel: :trueskill_ratings,
+            discord_channel_players_teams: :trueskill_rating,
+          }
+        ]
+      )
       .sort_by(&:match_count)
       .reverse
       .filter do |dcp|
-      dcp.teams.any?
-    end
+        dcp.teams.any?
+      end
   end
 
   def match_count
