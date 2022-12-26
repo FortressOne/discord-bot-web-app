@@ -1,4 +1,12 @@
 GIT
+  remote: git@github.com:flyerhzm/bullet.git
+  revision: ef33b38fb3790dfc1a557bdb1dea7cee536fc0bc
+  specs:
+    bullet (7.0.4)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
+
+GIT
   remote: https://github.com/FortressOne/trueskill.git
   revision: 5c02cac6b4671a05b4782d65938e2798e9a99644
   specs:
@@ -260,6 +268,7 @@ GEM
       faraday_middleware (~> 0.12)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
+    uniform_notifier (1.16.0)
     version_gem (1.1.1)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -286,6 +295,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.4.4)
   breadcrumbs_on_rails
+  bullet!
   capybara (>= 3.26)
   chartkick
   debug (>= 1.0.0)
