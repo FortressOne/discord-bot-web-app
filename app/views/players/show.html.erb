@@ -16,12 +16,7 @@
   </div>
 
   <% if @player == current_player || current_player&.admin? %>
-    <dl>
-      <div>
-        <dt><strong>Secure token:</strong></dt>
-        <dd><span style="font-family: monospace;"><%= @player.auth_token %></span></dd>
-      </div>
-    </dl>
+      <pre>setinfo _fo_token <%= @player.auth_token %></pre>
   <% end %>
 
   <figure>

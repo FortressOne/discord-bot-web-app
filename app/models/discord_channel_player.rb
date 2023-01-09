@@ -28,8 +28,6 @@ class DiscordChannelPlayer < ApplicationRecord
       .sort_by(&:leaderboard_sort_order)
   end
 
-  before_create :build_trueskill_rating
-
   def tier
     TIERS.each do |emoji, limit|
       return emoji if percentile < limit
