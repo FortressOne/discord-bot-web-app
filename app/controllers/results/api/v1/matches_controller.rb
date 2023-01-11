@@ -50,6 +50,11 @@ class Results::Api::V1::MatchesController < ActionController::API
 
     embed = Discordrb::Webhooks::Embed.new
 
+    embed.add_field(
+      name: "Quad started on #{match_params[:server][:name]}",
+      value: "<qw://#{match_params[:server][:host]}/observe>"
+    )
+
     match.teams.each do |team|
       embed.add_field(
         inline: true,
@@ -58,12 +63,17 @@ class Results::Api::V1::MatchesController < ActionController::API
       )
     end
 
-    embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: map_params)
+    embed.footer = Discordrb::Webhooks::EmbedFooter.new(
+      text: [
+        "ID: #{match.id}",
+        map_params
+      ].join(" · ")
+    )
 
     Discordrb::API::Channel.create_message(
       "Bot #{Rails.application.credentials.discord[:token]}",
       discord_channel.channel_id,
-      "Match started",
+      nil,
       false,
       embed
     )
@@ -103,6 +113,7 @@ class Results::Api::V1::MatchesController < ActionController::API
         :id,
         :winner,
         :map,
+        server: {},
         teams: {},
         discord_channel: {}
       )
