@@ -48,6 +48,26 @@ class Results::Api::V1::MatchesController < ActionController::API
       match.update_trueskill_ratings
     end
 
+    embed = Discordrb::Webhooks::Embed.new
+
+    match.teams.each do |team|
+      embed.add_field(
+        inline: true,
+        name: "#{team.colour} Team #{team.emoji}",
+        value: team.players.map(&:name).join("\n")
+      )
+    end
+
+    embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: map_params)
+
+    Discordrb::API::Channel.create_message(
+      "Bot #{Rails.application.credentials.discord[:token]}",
+      discord_channel.channel_id,
+      "Match started",
+      false,
+      embed
+    )
+
     render json: match.id.to_json, status: :ok
   end
 
@@ -59,8 +79,7 @@ class Results::Api::V1::MatchesController < ActionController::API
       result = case winner
                when "0" then DRAW
                when team.name then WIN
-               else
-                 LOSS
+               else LOSS
                end
 
       team.update(result: result)
