@@ -17,6 +17,10 @@ class Match < ApplicationRecord
       .includes(teams: :players)
   end
 
+  def scores
+    Hash[teams.map { |t| [t.name, t.score] }]
+  end
+
   def winning_team
     teams.find { |team| team.result == 1 }
   end
