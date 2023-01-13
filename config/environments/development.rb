@@ -71,9 +71,10 @@ Rails.application.configure do
   config.web_console.permissions = '172.20.0.2'
 
   config.team_emojis = {
-    1 => "<:flag_1:1062548481576800307>",
+    1 => "<:flag_1_flipped:1063484999585763328>",
     2 => "<:flag_2:1062548478422679625>",
     3 => "<:flag_3:1062548475402788954>",
     4 => "<:flag_4:1062548473163034625>",
+    "blank" => "<:blank:1063494588158988318>",
   }
 end
