@@ -22,6 +22,7 @@ class Results::Api::V1::MatchesController < ActionController::API
     match = Match.create(
       discord_channel_id: discord_channel.id,
       server_id: server.id,
+      demo_uri: demo_uri_params
     )
 
     match_params[:teams].each do |name, attrs|
@@ -152,6 +153,11 @@ class Results::Api::V1::MatchesController < ActionController::API
       inline: true,
       name: "#{team.colour} Team #{team.emoji}",
       value: team.players.map(&:name).join("\n")
+    )
+
+    embed.add_field(
+      name: "",
+      value: "[demo](#{match.demo_uri})" # add stats etc
     )
 
     embed.footer = Discordrb::Webhooks::EmbedFooter.new(
