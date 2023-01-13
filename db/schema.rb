@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_23_155336) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_13_051022) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -77,8 +77,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_23_155336) do
     t.datetime "updated_at", null: false
     t.boolean "ratings_processed"
     t.bigint "discord_channel_id"
+    t.integer "time_left"
+    t.bigint "server_id"
     t.index ["discord_channel_id"], name: "index_matches_on_discord_channel_id"
     t.index ["game_map_id"], name: "index_matches_on_game_map_id"
+    t.index ["server_id"], name: "index_matches_on_server_id"
   end
 
   create_table "players", force: :cascade do |t|
@@ -104,12 +107,20 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_23_155336) do
     t.index ["reset_password_token"], name: "index_players_on_reset_password_token", unique: true
   end
 
+  create_table "servers", force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "teams", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "result"
     t.bigint "match_id", null: false
     t.string "name"
+    t.integer "score"
     t.index ["match_id"], name: "index_teams_on_match_id"
   end
 
@@ -129,5 +140,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_23_155336) do
   add_foreign_key "discord_channel_players", "players"
   add_foreign_key "matches", "discord_channels"
   add_foreign_key "matches", "game_maps"
+  add_foreign_key "matches", "servers"
   add_foreign_key "teams", "matches"
 end

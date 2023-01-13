@@ -9,11 +9,20 @@ class Results::Api::V1::MatchesController < ActionController::API
       channel_id: match_params[:discord_channel][:channel_id]
     )
 
+    server = Server.find_or_create_by(
+      address: match_params[:server][:address]
+    )
+
+    server.update(name: match_params[:server][:name])
+
     if !discord_channel.name && match_params.dig(:discord_channel, :name)
       disord_channel.update(name: match_params.dig(:discord_channel, :name))
     end
 
-    match = Match.create(discord_channel_id: discord_channel.id)
+    match = Match.create(
+      discord_channel_id: discord_channel.id,
+      server_id: server.id,
+    )
 
     match_params[:teams].each do |name, attrs|
       team = match.teams.create(name: name)
@@ -51,8 +60,8 @@ class Results::Api::V1::MatchesController < ActionController::API
     embed = Discordrb::Webhooks::Embed.new
 
     embed.add_field(
-      name: "Quad started on #{match_params[:server][:name]}",
-      value: "<qw://#{match_params[:server][:host]}/observe>"
+      name: "Match started on #{server.name}",
+      value: "<qw://#{server.address}/observe>"
     )
 
     match.teams.each do |team|
@@ -83,19 +92,79 @@ class Results::Api::V1::MatchesController < ActionController::API
 
   def update
     match = Match.find(match_params["id"])
+    match.update(time_left: match_params["timeleft"])
     winner = match_params["winner"]
 
     match.teams.each do |team|
+      score = match_params[:teams][team.name][:score]
+
       result = case winner
                when "0" then DRAW
                when team.name then WIN
                else LOSS
                end
 
-      team.update(result: result)
+      team.update(
+        score: score,
+        result: result
+      )
     end
 
     match.update_trueskill_ratings
+
+    embed = Discordrb::Webhooks::Embed.new
+
+    scores = Hash[%w(1 2).map { |tn| [tn, match.teams.find_by(name: tn).score ]}]
+
+    value = if match.drawn?
+              "Draw"
+            elsif match.winning_team.name == "1"
+              "Blue wins by #{scores["1"] - scores["2"]} points"
+            elsif match.winning_team.name == "2"
+              "Red wins with #{seconds_to_str(match.time_left)} remaining"
+            end
+
+    embed.add_field(
+      name: "Match finished on #{match.server.name}",
+      value: value
+    )
+
+    team = match.teams.first
+    embed.add_field(
+      inline: true,
+      name: "#{team.colour} Team #{team.emoji}",
+      value: team.players.map(&:name).join("\n")
+    )
+
+    embed.add_field(
+      inline: true,
+      name: [scores["1"], scores["2"]].join(" — "),
+      value: ""
+    )
+
+    team = match.teams.last
+    embed.add_field(
+      inline: true,
+      name: "#{team.colour} Team #{team.emoji}",
+      value: team.players.map(&:name).join("\n")
+    )
+
+    embed.footer = Discordrb::Webhooks::EmbedFooter.new(
+      text: [
+        "ID: #{match.id}",
+        match.game_map.name
+      ].join(" · ")
+    )
+
+    discord_channel = match.discord_channel
+
+    Discordrb::API::Channel.create_message(
+      "Bot #{Rails.application.credentials.discord[:token]}",
+      discord_channel.channel_id,
+      nil,
+      false,
+      embed
+    )
 
     render json: match.id.to_json, status: :ok
   end
@@ -112,10 +181,16 @@ class Results::Api::V1::MatchesController < ActionController::API
       .permit(
         :id,
         :winner,
+        :timeleft,
         :map,
         server: {},
         teams: {},
         discord_channel: {}
       )
+  end
+
+  def seconds_to_str(seconds)
+    ["#{seconds / 3600}h", "#{seconds / 60 % 60}m", "#{seconds % 60}s"]
+      .select { |str| str =~ /[1-9]/ }.join(" ")
   end
 end
