@@ -72,10 +72,15 @@ class Results::Api::V1::MatchesController < ActionController::API
       )
     end
 
+    embed.add_field(
+      name: "",
+      value: "[demo](#{demo_uri_params})" # add stats etc
+    )
+
     embed.footer = Discordrb::Webhooks::EmbedFooter.new(
       text: [
         "ID: #{match.id}",
-        map_params
+        map_params,
       ].join(" · ")
     )
 
@@ -114,7 +119,7 @@ class Results::Api::V1::MatchesController < ActionController::API
 
     embed = Discordrb::Webhooks::Embed.new
 
-    scores = Hash[%w(1 2).map { |tn| [tn, match.teams.find_by(name: tn).score ]}]
+    scores = match.scores
 
     value = if match.drawn?
               "Draw"
@@ -175,6 +180,10 @@ class Results::Api::V1::MatchesController < ActionController::API
     match_params[:map]
   end
 
+  def demo_uri_params
+    match_params[:demo_uri]
+  end
+
   def match_params
     params
       .require(:match)
@@ -183,6 +192,7 @@ class Results::Api::V1::MatchesController < ActionController::API
         :winner,
         :timeleft,
         :map,
+        :demo_uri,
         server: {},
         teams: {},
         discord_channel: {}
