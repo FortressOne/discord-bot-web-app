@@ -22,7 +22,8 @@ class Results::Api::V1::MatchesController < ActionController::API
     match = Match.create(
       discord_channel_id: discord_channel.id,
       server_id: server.id,
-      demo_uri: demo_uri_params
+      demo_uri: demo_uri_params,
+      stats_uri: stats_uri_params,
     )
 
     match_params[:teams].each do |name, attrs|
@@ -72,11 +73,6 @@ class Results::Api::V1::MatchesController < ActionController::API
         value: team.players.map(&:name).join("\n")
       )
     end
-
-    embed.add_field(
-      name: "",
-      value: "[demo](#{demo_uri_params})" # add stats etc
-    )
 
     embed.footer = Discordrb::Webhooks::EmbedFooter.new(
       text: [
@@ -157,7 +153,10 @@ class Results::Api::V1::MatchesController < ActionController::API
 
     embed.add_field(
       name: "",
-      value: "[demo](#{match.demo_uri})" # add stats etc
+      value: [
+        "[demo](#{match.demo_uri})",
+        "[stats](#{match.stats_uri})"
+      ].join(" · ")
     )
 
     embed.footer = Discordrb::Webhooks::EmbedFooter.new(
@@ -190,6 +189,10 @@ class Results::Api::V1::MatchesController < ActionController::API
     match_params[:demo_uri]
   end
 
+  def stats_uri_params
+    match_params[:stats_uri]
+  end
+
   def match_params
     params
       .require(:match)
@@ -199,6 +202,7 @@ class Results::Api::V1::MatchesController < ActionController::API
         :timeleft,
         :map,
         :demo_uri,
+        :stats_uri,
         server: {},
         teams: {},
         discord_channel: {}
