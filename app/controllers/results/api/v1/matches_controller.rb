@@ -66,11 +66,21 @@ class Results::Api::V1::MatchesController < ActionController::API
       value: "<qw://#{server.address}/observe>"
     )
 
-    match.teams.each do |team|
+    match.teams.find_by(name: "1").tap do|team|
       embed.add_field(
         inline: true,
         name: "#{team.colour} Team #{team.emoji}",
         value: team.players.map(&:name).join("\n")
+      )
+    end
+
+    match.teams.find_by(name: "2").tap do |team|
+      embed.add_field(
+        inline: true,
+        name: "#{team.emoji} #{team.colour} Team",
+        value: team.players.map do |p|
+          "<:blank:1063494588158988318> #{p.name}"
+        end.join("\n")
       )
     end
 
@@ -131,7 +141,7 @@ class Results::Api::V1::MatchesController < ActionController::API
       value: value
     )
 
-    team = match.teams.first
+    team = match.teams.find_by(name: "1")
     embed.add_field(
       inline: true,
       name: "#{team.colour} Team #{team.emoji}",
@@ -144,12 +154,15 @@ class Results::Api::V1::MatchesController < ActionController::API
       value: ""
     )
 
-    team = match.teams.last
-    embed.add_field(
-      inline: true,
-      name: "#{team.colour} Team #{team.emoji}",
-      value: team.players.map(&:name).join("\n")
-    )
+    match.teams.find_by(name: "2").tap do |team|
+      embed.add_field(
+        inline: true,
+        name: "#{team.emoji} #{team.colour} Team",
+        value: team.players.map do |p|
+          "<:blank:1063494588158988318> #{p.name}"
+        end.join("\n")
+      )
+    end
 
     embed.add_field(
       name: "",
