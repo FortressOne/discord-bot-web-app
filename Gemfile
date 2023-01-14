@@ -51,7 +51,7 @@ gem "devise"
 gem 'omniauth-discord'
 gem 'omniauth-rails_csrf_protection'
 gem "chartkick"
-gem "discordrb"
+gem 'discordrb', github: "shardlab/discordrb", branch: "main"
 
 group :development, :test do
   gem 'pry'

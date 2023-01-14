@@ -4,6 +4,8 @@ class Results::Api::V1::MatchesController < ActionController::API
   include Saulabs::TrueSkill
   include ResultConstants
 
+  DELIMITER = " · "
+
   def create
     discord_channel = DiscordChannel.find_or_create_by(
       channel_id: match_params[:discord_channel][:channel_id]
@@ -61,10 +63,18 @@ class Results::Api::V1::MatchesController < ActionController::API
 
     embed = Discordrb::Webhooks::Embed.new
 
-    embed.add_field(
-      name: "Match started on #{server.name}",
-      value: "<qw://#{server.address}/observe>"
+    embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+      name: match.server.name,
+      url: "http://phobos.baseq.fr:9999/join?url=#{match.server.address}",
+      icon_url: "https://cdn.discordapp.com/icons/417258901810184192/aff794b4daac5f0a5cc7ee516f04abe7.jpg?size=256"
     )
+
+    embed.description = [
+      "Match starting",
+      match.teams.map { |team| team.players.size }.join("v"),
+      match.game_map.name,
+      "##{match.id}"
+    ].join(DELIMITER)
 
     match.teams.find_by(name: "1").tap do|team|
       embed.add_field(
@@ -84,11 +94,11 @@ class Results::Api::V1::MatchesController < ActionController::API
       )
     end
 
-    embed.footer = Discordrb::Webhooks::EmbedFooter.new(
-      text: [
-        "ID: #{match.id}",
-        map_params,
-      ].join(" · ")
+    embed.add_field(
+      name: "",
+      value: [
+        "[spectate](http://phobos.baseq.fr:9999/observe?url=#{match.server.address})",
+      ].join(DELIMITER)
     )
 
     Discordrb::API::Channel.create_message(
@@ -96,7 +106,7 @@ class Results::Api::V1::MatchesController < ActionController::API
       discord_channel.channel_id,
       nil,
       false,
-      embed
+      embed,
     )
 
     render json: match.id.to_json, status: :ok
@@ -126,9 +136,15 @@ class Results::Api::V1::MatchesController < ActionController::API
 
     embed = Discordrb::Webhooks::Embed.new
 
+    embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+      name: match.server.name,
+      url: "http://phobos.baseq.fr:9999/join?url=#{match.server.address}",
+      icon_url: "https://cdn.discordapp.com/icons/417258901810184192/aff794b4daac5f0a5cc7ee516f04abe7.jpg?size=256"
+    )
+
     scores = match.scores
 
-    value = if match.drawn?
+    description = if match.drawn?
               "Draw"
             elsif match.winning_team.name == "1"
               "Blue wins by #{scores["1"] - scores["2"]} points"
@@ -136,10 +152,12 @@ class Results::Api::V1::MatchesController < ActionController::API
               "Red wins with #{seconds_to_str(match.time_left)} remaining"
             end
 
-    embed.add_field(
-      name: "Match finished on #{match.server.name}",
-      value: value
-    )
+    embed.description = [
+      description,
+      match.teams.map { |team| team.players.size }.join("v"),
+      match.game_map.name,
+      "##{match.id}"
+    ].join(DELIMITER)
 
     team = match.teams.find_by(name: "1")
     embed.add_field(
@@ -169,13 +187,6 @@ class Results::Api::V1::MatchesController < ActionController::API
       value: [
         "[demo](#{match.demo_uri})",
         "[stats](#{match.stats_uri})"
-      ].join(" · ")
-    )
-
-    embed.footer = Discordrb::Webhooks::EmbedFooter.new(
-      text: [
-        "ID: #{match.id}",
-        match.game_map.name
       ].join(" · ")
     )
 
