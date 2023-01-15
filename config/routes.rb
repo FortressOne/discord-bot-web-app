@@ -4,7 +4,9 @@ Rails.application.routes.draw do
     delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_player_session
   end
 
-  resources :players, only: [:index, :show]
+  resources :players, only: [:index, :show] do
+    get 'rotate_token', on: :member
+  end
 
   root to: 'home#index'
   get 'live_player/show'
