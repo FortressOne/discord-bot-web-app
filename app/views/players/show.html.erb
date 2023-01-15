@@ -16,8 +16,13 @@
   </div>
 
   <% if @player == current_player || current_player&.admin? %>
-    <p>Connect to a FortressOne server and enter <code>login <%= @player.auth_token %></code> at the console.</p>
-  <% end %>
+    <p>
+      Connect to a FortressOne server and enter
+      <code>login <%= @player.auth_token %></code>
+      at the console.
+      <%= link_to("Rotate token", rotate_token_player_path, data: {turbo: false}) %>
+    </p>
+<% end %>
 
   <figure>
     <table id="player_table" style="white-space: nowrap; max-width: 200px;" role="grid">
