@@ -30,7 +30,7 @@ class DiscordChannelPlayer < ApplicationRecord
 
   def tier
     TIERS.each do |emoji, limit|
-      return emoji if percentile < limit
+      return emoji if percentile <= limit
     end
   end
 
