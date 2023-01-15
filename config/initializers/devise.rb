@@ -164,13 +164,13 @@ Devise.setup do |config|
 
   # ==> Configuration for :rememberable
   # The time the user will be remembered without asking for credentials again.
-  # config.remember_for = 2.weeks
+  config.remember_for = 1.year
 
   # Invalidates all the remember me tokens when the user signs out.
   config.expire_all_remember_me_on_sign_out = true
 
   # If true, extends the user's remember period when remembered via cookie.
-  # config.extend_remember_period = false
+  config.extend_remember_period = true
 
   # Options to be passed to the created cookie. For instance, you can set
   # secure: true in order to force SSL only cookies.
@@ -188,7 +188,7 @@ Devise.setup do |config|
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
-  # config.timeout_in = 30.minutes
+  config.timeout_in = 1.year
 
   # ==> Configuration for :lockable
   # Defines which strategy will be used to lock an account.
@@ -272,12 +272,14 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
+
   config.omniauth(
     :discord,
     Rails.application.credentials.discord[:client_id],
     Rails.application.credentials.discord[:client_secret],
-    scope: "email identify",
-    callback_url: Rails.application.credentials.discord[:callback_url]
+    callback_url: Rails.application.credentials.discord[:callback_url],
+    prompt: "none",
+    scope: "email identify"
   )
 
   # ==> Warden configuration
