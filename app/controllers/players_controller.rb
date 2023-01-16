@@ -11,4 +11,11 @@ class PlayersController < ApplicationController
     add_breadcrumb "Players", players_path
     add_breadcrumb @player.name
   end
+
+  def rotate_token
+    authenticate_player!
+    current_player.regenerate_auth_token
+    @player = Player.find(params[:id])
+    render :show
+  end
 end

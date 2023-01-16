@@ -16,13 +16,13 @@
   </div>
 
   <% if @player == current_player || current_player&.admin? %>
-    <dl>
-      <div>
-        <dt><strong>Secure token:</strong></dt>
-        <dd><span style="font-family: monospace;"><%= @player.auth_token %></span></dd>
-      </div>
-    </dl>
-  <% end %>
+    <p>
+      Connect to a FortressOne server and enter
+      <code>login <%= @player.auth_token %></code>
+      at the console.
+      <%= link_to("Rotate token", rotate_token_player_path, data: {turbo: false}) %>
+    </p>
+<% end %>
 
   <figure>
     <table id="player_table" style="white-space: nowrap; max-width: 200px;" role="grid">
@@ -70,7 +70,7 @@
               <% if @player.public_ratings || @player == current_player  || current_player&.admin? %>
                 <td><%= number_with_precision(dcp.conservative_skill_estimate, precision: 2) %></td>
                 <td><%= dcp.tier %></td>
-                <td><%= dcp.rank %>/<%= dcp.discord_channel.players_with_at_least_one_match_played_count %></td>
+                <td><%= dcp.rank %>/<%= dcp.discord_channel.discord_channel_players.count %></td>
                 <td><%= dcp.percentile.to_i.ordinalize %></td>
               <% end %>
               <td><%= dcp.match_count %></td>

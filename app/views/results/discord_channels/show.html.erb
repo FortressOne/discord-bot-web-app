@@ -36,7 +36,7 @@
             <% if @discord_channel.rated? || current_player&.admin? %>
               <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
               <td><%= dcp.tier %></td>
-              <td><%= dcp.rank %>/<%= dcp.discord_channel.players_with_at_least_one_match_played_count %></td>
+              <td><%= dcp.rank %>/<%= dcp.discord_channel.discord_channel_players.count %></td>
               <td><%= dcp.percentile.to_i.ordinalize %></td>
             <% end %>
             <td><%= dcp.match_count %></td>
