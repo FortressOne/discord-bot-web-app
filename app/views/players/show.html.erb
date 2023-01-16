@@ -18,7 +18,7 @@
   <% if @player == current_player || current_player&.admin? %>
     <p>
       Connect to a FortressOne server and enter
-      <code>login <%= @player.auth_token %></code>
+      <code>/login <%= @player.auth_token %></code>
       at the console.
       <%= link_to("Rotate token", rotate_token_player_path, data: {turbo: false}) %>
     </p>
