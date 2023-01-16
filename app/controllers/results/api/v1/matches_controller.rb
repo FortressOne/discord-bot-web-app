@@ -84,7 +84,7 @@ class Results::Api::V1::MatchesController < ActionController::API
         inline: true,
         name: "#{team.emoji} #{team.colour} Team",
         value: team.players.map do |p|
-          "<:blank:1063494588158988318> #{p.name}"
+          "#{Rails.application.config.team_emojis["blank"]} #{p.name}"
         end.join("\n")
       )
     end
@@ -172,7 +172,7 @@ class Results::Api::V1::MatchesController < ActionController::API
         inline: true,
         name: "#{team.emoji} #{team.colour} Team",
         value: team.players.map do |p|
-          "<:blank:1063494588158988318> #{p.name}"
+          "#{Rails.application.config.team_emojis["blank"]} #{p.name}"
         end.join("\n")
       )
     end
