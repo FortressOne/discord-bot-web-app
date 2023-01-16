@@ -8,22 +8,17 @@ class Results::Api::V1::MatchesController < ActionController::API
 
   def create
     discord_channel = DiscordChannel.find_or_create_by(
-      channel_id: match_params[:discord_channel][:channel_id]
+      channel_id: discord_channel_params[:channel_id]
     )
 
-    server = Server.find_or_create_by(
-      address: match_params[:server][:address]
-    )
+    discord_channel_params[:name] && discord_channel.update(name: discord_channel_params[:name])
 
-    server.update(name: match_params[:server][:name])
-
-    if !discord_channel.name && match_params.dig(:discord_channel, :name)
-      disord_channel.update(name: match_params.dig(:discord_channel, :name))
-    end
+    server = server_params && Server.find_or_create_by(address: server_params[:address])
+    server && server_params[:name] && server.update(name: server_params[:name])
 
     match = Match.create(
       discord_channel_id: discord_channel.id,
-      server_id: server.id,
+      server_id: server && server.id,
       demo_uri: demo_uri_params,
       stats_uri: stats_uri_params,
     )
@@ -204,6 +199,14 @@ class Results::Api::V1::MatchesController < ActionController::API
   end
 
   private
+
+  def discord_channel_params
+    match_params[:discord_channel]
+  end
+
+  def server_params
+    match_params[:server]
+  end
 
   def map_params
     match_params[:map]
