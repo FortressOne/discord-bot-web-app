@@ -113,4 +113,12 @@ Rails.application.configure do
   # config.active_record.database_selector = { delay: 2.seconds }
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+
+  config.team_emojis = {
+    1 => "<:flag_1_flipped:1063503655602499685>",
+    2 => "<:flag_2:1062548328040120391>",
+    3 => "<:flag_3:1062548325053767751>",
+    4 => "<:flag_4:1062548323204087808>",
+    "blank" => "<:blank:1063503652045721711>",
+  }
 end

@@ -1,11 +1,14 @@
 require 'saulabs/trueskill'
 
 class Match < ApplicationRecord
+  include ResultConstants
   include Saulabs::TrueSkill
 
   belongs_to :game_map, optional: true
   belongs_to :discord_channel
+  belongs_to :server, optional: true
   has_many :teams, dependent: :destroy
+  has_many :players, through: :teams
 
   scope :ratings_not_processed, -> { where(ratings_processed: nil) }
 
@@ -15,8 +18,16 @@ class Match < ApplicationRecord
       .includes(teams: :players)
   end
 
+  def scores
+    Hash[teams.map { |t| [t.name, t.score] }]
+  end
+
   def winning_team
-    teams.find { |team| team.result == 1 }
+    teams.find { |team| team.result == WIN }
+  end
+
+  def drawn?
+    teams.all? { |team| team.result == DRAW }
   end
 
   def update_trueskill_ratings
