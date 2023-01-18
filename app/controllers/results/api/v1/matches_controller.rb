@@ -30,7 +30,7 @@ class Results::Api::V1::MatchesController < ActionController::API
         team.result = attrs[:result].to_i
       else
         attrs[:players].each do |player_attrs|
-          player = Player.find_or_create_by(player_attrs)
+          player = Player.find_by(player_attrs)
 
           if !player.name && player_attrs[:name]
             player.update(name: player_attrs[:name])
