@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_13_141011) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_18_053217) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_13_141011) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "discord_channel_player_rounds", force: :cascade do |t|
+    t.bigint "discord_channel_player_id", null: false
+    t.bigint "round_id", null: false
+    t.integer "playerclass"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discord_channel_player_id"], name: "index_dcp_rounds_on_dcp_id"
+    t.index ["round_id"], name: "index_discord_channel_player_rounds_on_round_id"
   end
 
   create_table "discord_channel_players", force: :cascade do |t|
@@ -109,6 +119,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_13_141011) do
     t.index ["reset_password_token"], name: "index_players_on_reset_password_token", unique: true
   end
 
+  create_table "rounds", force: :cascade do |t|
+    t.bigint "match_id", null: false
+    t.integer "number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["match_id"], name: "index_rounds_on_match_id"
+  end
+
   create_table "servers", force: :cascade do |t|
     t.string "name"
     t.string "address"
@@ -138,10 +156,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_13_141011) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "discord_channel_player_rounds", "discord_channel_players"
+  add_foreign_key "discord_channel_player_rounds", "rounds"
   add_foreign_key "discord_channel_players", "discord_channels"
   add_foreign_key "discord_channel_players", "players"
   add_foreign_key "matches", "discord_channels"
   add_foreign_key "matches", "game_maps"
   add_foreign_key "matches", "servers"
+  add_foreign_key "rounds", "matches"
   add_foreign_key "teams", "matches"
 end

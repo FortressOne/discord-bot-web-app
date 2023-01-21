@@ -8,6 +8,7 @@ class Match < ApplicationRecord
   belongs_to :discord_channel
   belongs_to :server, optional: true
   has_many :teams, dependent: :destroy
+  has_many :rounds, dependent: :destroy
   has_many :players, through: :teams
 
   scope :ratings_not_processed, -> { where(ratings_processed: nil) }
@@ -16,6 +17,12 @@ class Match < ApplicationRecord
     order(created_at: :desc)
       .includes(:game_map)
       .includes(teams: :players)
+  end
+
+  def team_for(discord_channel_player)
+    teams.first do |team|
+      team.discord_channel_players.includes?(discord_channel_player)
+    end
   end
 
   def scores

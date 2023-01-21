@@ -16,7 +16,9 @@ class DiscordChannelPlayer < ApplicationRecord
   belongs_to :discord_channel
   belongs_to :player
   has_many :discord_channel_players_teams
+  has_many :discord_channel_player_rounds
   has_many :teams, through: :discord_channel_players_teams
+  has_many :rounds, through: :discord_channel_player_rounds
 
   after_create :create_trueskill_rating
 
