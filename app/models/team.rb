@@ -2,7 +2,7 @@ class Team < ApplicationRecord
   include ResultConstants
 
   RANKS = { WIN => 1, DRAW => 1, LOSS => 2 }.freeze
-  COLOUR = { 1 => "Blue", 2 => "Red", 3 => "Yellow", 4 => "Green" }.freeze
+  COLOUR = { 1 => "blue", 2 => "red", 3 => "yellow", 4 => "green" }.freeze
 
   belongs_to :match
   has_many :discord_channel_players_teams
@@ -15,11 +15,15 @@ class Team < ApplicationRecord
   end
 
   def colour
-    COLOUR[name.to_i]
+    COLOUR[number]
+  end
+
+  def number
+    name.to_i
   end
 
   def emoji
-    Rails.application.config.team_emojis[name.to_i]
+    Rails.application.config.team_emojis[number]
   end
 
   def trueskill_ratings_rating_objs

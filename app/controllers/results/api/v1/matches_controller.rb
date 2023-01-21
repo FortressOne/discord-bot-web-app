@@ -11,45 +11,43 @@ class Results::Api::V1::MatchesController < ActionController::API
       channel_id: discord_channel_params[:channel_id]
     )
 
-    discord_channel_params[:name] && discord_channel.update(name: discord_channel_params[:name])
+    server = Server.find_or_create_by(address: server_params[:address])
+    server.update(name: server_params[:name])
 
-    server = server_params && Server.find_or_create_by(address: server_params[:address])
-    server && server_params[:name] && server.update(name: server_params[:name])
+    game_map = GameMap.find_or_create_by(name: map_params)
 
     match = Match.create(
       discord_channel_id: discord_channel.id,
-      server_id: server && server.id,
+      server_id: server.id,
       demo_uri: demo_uri_params,
       stats_uri: stats_uri_params,
+      game_map_id: game_map.id
     )
 
-    match_params[:teams].each do |name, attrs|
-      team = match.teams.create(name: name)
+    round = Round.create(match_id: match.id, number: 1)
 
-      if attrs[:result]
-        team.result = attrs[:result].to_i
-      else
-        attrs[:players].each do |player_attrs|
-          player = Player.find_by(player_attrs)
+    match_params[:teams].each do |team_name, attrs|
+      team = Team.create(match_id: match.id, name: team_name)
 
-          if !player.name && player_attrs[:name]
-            player.update(name: player_attrs[:name])
-          end
+      attrs[:players].each do |player_attrs|
+        player = Player.find_by(auth_token: player_attrs[:auth_token])
 
-          discord_channel_player = DiscordChannelPlayer.find_or_create_by(
-            player_id: player.id,
-            discord_channel_id: discord_channel.id,
-          )
+        discord_channel_player = DiscordChannelPlayer.find_or_create_by(
+          player_id: player.id,
+          discord_channel_id: discord_channel.id,
+        )
 
-          team.discord_channel_players << discord_channel_player
-        end
+        discord_channel_player_team = DiscordChannelPlayersTeam.create(
+          discord_channel_player_id: discord_channel_player.id,
+          team_id: team.id
+        )
+
+        discord_channel_player_round = DiscordChannelPlayerRound.create(
+          discord_channel_player_id: discord_channel_player.id,
+          round_id: round.id,
+          playerclass: player_attrs[:playerclass]
+        )
       end
-
-      team.save
-    end
-
-    if map_params
-      match.update(game_map: GameMap.find_or_create_by(name: map_params))
     end
 
     if match.teams.all? { |team| team.result != nil }
@@ -71,21 +69,35 @@ class Results::Api::V1::MatchesController < ActionController::API
       "##{match.id}"
     ].join(DELIMITER)
 
-    match.teams.find_by(name: "1").tap do|team|
-      embed.add_field(
-        inline: true,
-        name: "#{team.colour} Team #{team.emoji}",
-        value: team.players.map(&:name).join("\n")
-      )
-    end
+    ["1", "2"].each do |team_name|
+      team = match.teams.find_by(name: team_name)
 
-    match.teams.find_by(name: "2").tap do |team|
+      discord_channel_player_teams = DiscordChannelPlayersTeam.where(team: team)
+
+      discord_channel_players_in_team = team.discord_channel_players
+
+      discord_channel_player_rounds = DiscordChannelPlayerRound
+        .where(round: round)
+        .and(
+          DiscordChannelPlayerRound.where(
+            discord_channel_player: discord_channel_players_in_team
+          )
+        )
+
+      binding.pry
+
+      # could be optimised
+      dcprs = DiscordChannelPlayerRound.where(
+        discord_channel_player_id: team.discord_channel_players.map(&:id),
+        round_id: round.id
+      )
+
+      binding.pry
+
       embed.add_field(
         inline: true,
-        name: "#{team.emoji} #{team.colour} Team",
-        value: team.players.map do |p|
-          "#{Rails.application.config.team_emojis["blank"]} #{p.name}"
-        end.join("\n")
+        name: " #{team.emoji} #{team.colour.titleize} Team",
+        value: dcprs.map { |dcpr| "#{dcpr.emoji} #{dcpr.discord_channel_player.player.name}" }.join("\n")
       )
     end
 
