@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_18_053217) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_25_115829) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,6 +52,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_18_053217) do
     t.index ["round_id"], name: "index_discord_channel_player_rounds_on_round_id"
   end
 
+  create_table "discord_channel_player_team_rounds", force: :cascade do |t|
+    t.bigint "discord_channel_player_team_id", null: false
+    t.bigint "round_id", null: false
+    t.integer "playerclass"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discord_channel_player_team_id"], name: "index_dcpt_rounds_on_dcpt_id"
+    t.index ["round_id"], name: "index_discord_channel_player_team_rounds_on_round_id"
+  end
+
+  create_table "discord_channel_player_teams", force: :cascade do |t|
+    t.bigint "discord_channel_player_id", null: false
+    t.bigint "team_id", null: false
+  end
+
   create_table "discord_channel_players", force: :cascade do |t|
     t.bigint "discord_channel_id", null: false
     t.bigint "player_id", null: false
@@ -59,11 +74,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_18_053217) do
     t.datetime "updated_at", null: false
     t.index ["discord_channel_id"], name: "index_discord_channel_players_on_discord_channel_id"
     t.index ["player_id"], name: "index_discord_channel_players_on_player_id"
-  end
-
-  create_table "discord_channel_players_teams", force: :cascade do |t|
-    t.bigint "discord_channel_player_id", null: false
-    t.bigint "team_id", null: false
   end
 
   create_table "discord_channels", force: :cascade do |t|
@@ -158,6 +168,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_18_053217) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "discord_channel_player_rounds", "discord_channel_players"
   add_foreign_key "discord_channel_player_rounds", "rounds"
+  add_foreign_key "discord_channel_player_team_rounds", "discord_channel_player_teams"
+  add_foreign_key "discord_channel_player_team_rounds", "rounds"
   add_foreign_key "discord_channel_players", "discord_channels"
   add_foreign_key "discord_channel_players", "players"
   add_foreign_key "matches", "discord_channels"

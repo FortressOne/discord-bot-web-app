@@ -1,4 +1,4 @@
-class PlayerClass
+class Playerclass
   PLAYERCLASSES = {
     1 => {
       images: [
@@ -124,6 +124,6 @@ class PlayerClass
   end
 
   def emoji(team)
-    Rails.config.playerclass_emojis[
+    Rails.config.playerclass_emojis[team]
   end
 end

@@ -15,9 +15,9 @@ class DiscordChannelPlayer < ApplicationRecord
   has_one :trueskill_rating, as: :trueskill_rateable, dependent: :destroy
   belongs_to :discord_channel
   belongs_to :player
-  has_many :discord_channel_players_teams
+  has_many :discord_channel_player_teams
   has_many :discord_channel_player_rounds
-  has_many :teams, through: :discord_channel_players_teams
+  has_many :teams, through: :discord_channel_player_teams
   has_many :rounds, through: :discord_channel_player_rounds
 
   after_create :create_trueskill_rating
@@ -29,6 +29,8 @@ class DiscordChannelPlayer < ApplicationRecord
       .includes(:player, :trueskill_rating)
       .sort_by(&:leaderboard_sort_order)
   end
+
+  delegate :name, to: :player
 
   def tier
     TIERS.each do |emoji, limit|
@@ -101,7 +103,7 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   def trueskill_ratings
-    discord_channel_players_teams.map do |dcpt|
+    discord_channel_player_teams.map do |dcpt|
       dcpt.trueskill_rating.conservative_skill_estimate
     end
   end
