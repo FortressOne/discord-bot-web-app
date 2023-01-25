@@ -5,8 +5,8 @@ class Team < ApplicationRecord
   COLOUR = { 1 => "blue", 2 => "red", 3 => "yellow", 4 => "green" }.freeze
 
   belongs_to :match
-  has_many :discord_channel_players_teams
-  has_many :discord_channel_players, through: :discord_channel_players_teams
+  has_many :discord_channel_player_teams
+  has_many :discord_channel_players, through: :discord_channel_player_teams
   has_many :players, through: :discord_channel_players
   has_many :trueskill_ratings, through: :discord_channel_players
 
@@ -37,7 +37,7 @@ class Team < ApplicationRecord
       tr.deviation = rating.deviation
       tr.save
 
-      dcpts = discord_channel_players_teams.find_by(
+      dcpts = discord_channel_player_teams.find_by(
         discord_channel_player: tr.trueskill_rateable
       )
 

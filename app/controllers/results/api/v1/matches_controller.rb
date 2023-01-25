@@ -37,13 +37,13 @@ class Results::Api::V1::MatchesController < ActionController::API
           discord_channel_id: discord_channel.id,
         )
 
-        discord_channel_player_team = DiscordChannelPlayersTeam.create(
+        discord_channel_player_team = DiscordChannelPlayerTeam.create(
           discord_channel_player_id: discord_channel_player.id,
           team_id: team.id
         )
 
-        discord_channel_player_round = DiscordChannelPlayerRound.create(
-          discord_channel_player_id: discord_channel_player.id,
+        discord_channel_player_team_round = DiscordChannelPlayerTeamRound.create(
+          discord_channel_player_team_id: discord_channel_player_team.id,
           round_id: round.id,
           playerclass: player_attrs[:playerclass]
         )
@@ -69,35 +69,15 @@ class Results::Api::V1::MatchesController < ActionController::API
       "##{match.id}"
     ].join(DELIMITER)
 
-    ["1", "2"].each do |team_name|
-      team = match.teams.find_by(name: team_name)
-
-      discord_channel_player_teams = DiscordChannelPlayersTeam.where(team: team)
-
-      discord_channel_players_in_team = team.discord_channel_players
-
-      discord_channel_player_rounds = DiscordChannelPlayerRound
+    match.teams.each do |team|
+      dcptrs = DiscordChannelPlayerTeamRound
         .where(round: round)
-        .and(
-          DiscordChannelPlayerRound.where(
-            discord_channel_player: discord_channel_players_in_team
-          )
-        )
-
-      binding.pry
-
-      # could be optimised
-      dcprs = DiscordChannelPlayerRound.where(
-        discord_channel_player_id: team.discord_channel_players.map(&:id),
-        round_id: round.id
-      )
-
-      binding.pry
+        .select { |dcptr| dcptr.team == team }
 
       embed.add_field(
         inline: true,
         name: " #{team.emoji} #{team.colour.titleize} Team",
-        value: dcprs.map { |dcpr| "#{dcpr.emoji} #{dcpr.discord_channel_player.player.name}" }.join("\n")
+        value: dcptrs.map { |dcptr| "#{dcptr.emoji} #{dcptr.name}" }.join("\n")
       )
     end
 
@@ -152,12 +132,12 @@ class Results::Api::V1::MatchesController < ActionController::API
     scores = match.scores
 
     description = if match.drawn?
-              "Draw"
-            elsif match.winning_team.name == "1"
-              "Blue wins by #{scores["1"] - scores["2"]} points"
-            elsif match.winning_team.name == "2"
-              "Red wins with #{seconds_to_str(match.time_left)} remaining"
-            end
+                    "Draw"
+                  elsif match.winning_team.name == "1"
+                    "Blue wins by #{scores["1"] - scores["2"]} points"
+                  elsif match.winning_team.name == "2"
+                    "Red wins with #{seconds_to_str(match.time_left)} remaining"
+                  end
 
     embed.description = [
       description,
