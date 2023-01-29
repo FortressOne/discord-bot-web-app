@@ -106,7 +106,7 @@ class Results::Api::V1::MatchesController < ActionController::API
     winner = match_params["winner"]
 
     if !winner
-      round = Round.create(match_id: match.id, number: 1)
+      round = Round.create(match_id: match.id, number: 2)
 
       match_params[:teams].each do |team_name, attrs|
         team = Team.find_by(match_id: match.id, name: team_name)
