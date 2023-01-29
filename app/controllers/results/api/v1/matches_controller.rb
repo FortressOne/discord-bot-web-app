@@ -103,6 +103,8 @@ class Results::Api::V1::MatchesController < ActionController::API
     match = Match.find(match_params["id"])
     discord_channel = match.discord_channel
 
+    teams = match.teams
+
     winner = match_params["winner"]
 
     if !winner
@@ -140,10 +142,6 @@ class Results::Api::V1::MatchesController < ActionController::API
         icon_url: "https://cdn.discordapp.com/icons/417258901810184192/aff794b4daac5f0a5cc7ee516f04abe7.jpg?size=256"
       )
 
-      discord_channel = match.discord_channel
-
-      teams = match.teams
-
       embed.description = [
         "Second round starting",
         teams.map { |team| team.players.size }.join("v"),
@@ -180,7 +178,7 @@ class Results::Api::V1::MatchesController < ActionController::API
     else
       match.update(time_left: match_params["timeleft"])
 
-      match.teams.each do |team|
+      teams.each do |team|
         score = match_params[:teams][team.name][:score]
 
         result = case winner
@@ -217,17 +215,20 @@ class Results::Api::V1::MatchesController < ActionController::API
 
       embed.description = [
         description,
-        match.teams.map { |team| team.players.size }.join("v"),
+        teams.map { |team| team.players.size }.join("v"),
         match.game_map.name,
         "##{match.id}"
       ].join(DELIMITER)
 
-      team = match.teams.find_by(name: "1")
-      embed.add_field(
-        inline: true,
-        name: "#{team.colour} Team #{team.emoji}",
-        value: team.players.map(&:name).join("\n")
-      )
+      teams.find_by(name: "1").tap do |team|
+        embed.add_field(
+          inline: true,
+          name: "#{team.emoji} #{team.colour.titleize} Team",
+          value: team.discord_channel_player_teams.map do |dcpt|
+            "#{dcpt.emojis} #{dcpt.name}"
+          end.join("\n")
+        )
+      end
 
       embed.add_field(
         inline: true,
@@ -235,12 +236,12 @@ class Results::Api::V1::MatchesController < ActionController::API
         value: ""
       )
 
-      match.teams.find_by(name: "2").tap do |team|
+      teams.find_by(name: "2").tap do |team|
         embed.add_field(
           inline: true,
-          name: "#{team.emoji} #{team.colour} Team",
-          value: team.players.map do |p|
-            "#{Rails.application.config.team_emojis["blank"]} #{p.name}"
+          name: "#{team.emoji} #{team.colour.titleize} Team",
+          value: team.discord_channel_player_teams.map do |dcpt|
+            "#{dcpt.emojis} #{dcpt.name}"
           end.join("\n")
         )
       end
