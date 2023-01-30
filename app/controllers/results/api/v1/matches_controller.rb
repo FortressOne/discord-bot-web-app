@@ -5,6 +5,8 @@ class Results::Api::V1::MatchesController < ActionController::API
   include ResultConstants
 
   DELIMITER = " · "
+  FINAL_ROUND = 1
+  PENULTIMATE_ROUND = 2
 
   def create
     discord_channel = DiscordChannel.find_or_create_by(
@@ -24,7 +26,7 @@ class Results::Api::V1::MatchesController < ActionController::API
       game_map_id: game_map.id
     )
 
-    round = Round.create(match_id: match.id, number: 1)
+    round = Round.create(match_id: match.id, number: PENULTIMATE_ROUND)
 
     match_params[:teams].each do |team_name, attrs|
       team = Team.create(match_id: match.id, name: team_name)
@@ -63,7 +65,7 @@ class Results::Api::V1::MatchesController < ActionController::API
     )
 
     embed.description = [
-      "Match starting",
+      "Match has begun",
       match.teams.map { |team| team.players.size }.join("v"),
       match.game_map.name,
       "##{match.id}"
@@ -102,13 +104,15 @@ class Results::Api::V1::MatchesController < ActionController::API
   def update
     match = Match.find(match_params["id"])
     discord_channel = match.discord_channel
-
+    winner = match_params["winner"]
     teams = match.teams
 
-    winner = match_params["winner"]
+    match_params["teams"].each do |team_name, attrs|
+      teams.find_by(name: team_name).update(score: attrs[:score])
+    end
 
     if !winner
-      round = Round.create(match_id: match.id, number: 2)
+      round = Round.create(match_id: match.id, number: FINAL_ROUND)
 
       match_params[:teams].each do |team_name, attrs|
         team = Team.find_by(match_id: match.id, name: team_name)
@@ -143,13 +147,31 @@ class Results::Api::V1::MatchesController < ActionController::API
       )
 
       embed.description = [
-        "Second round starting",
+        "Round 2 has begun",
         teams.map { |team| team.players.size }.join("v"),
         match.game_map.name,
         "##{match.id}"
       ].join(DELIMITER)
 
-      teams.each do |team|
+      teams.find_by(name: "1").tap do |team|
+        dcptrs = DiscordChannelPlayerTeamRound
+          .where(round: round)
+          .select { |dcptr| dcptr.team == team }
+
+        embed.add_field(
+          inline: true,
+          name: " #{team.emoji} #{team.colour.titleize} Team",
+          value: dcptrs.map { |dcptr| "#{dcptr.emoji} #{dcptr.name}" }.join("\n")
+        )
+      end
+
+      embed.add_field(
+        inline: true,
+        name: [teams.find_by(name: "1").score, teams.find_by(name: "2").score].join(" — "),
+        value: ""
+      )
+
+      teams.find_by(name: "2").tap do |team|
         dcptrs = DiscordChannelPlayerTeamRound
           .where(round: round)
           .select { |dcptr| dcptr.team == team }
@@ -298,6 +320,7 @@ class Results::Api::V1::MatchesController < ActionController::API
         :map,
         :demo_uri,
         :stats_uri,
+        :round,
         server: {},
         teams: {},
         discord_channel: {}
