@@ -5,7 +5,7 @@ class Team < ApplicationRecord
   COLOUR = { 1 => "blue", 2 => "red", 3 => "yellow", 4 => "green" }.freeze
 
   belongs_to :match
-  has_many :discord_channel_player_teams
+  has_many :discord_channel_player_teams, dependent: :destroy
   has_many :discord_channel_players, through: :discord_channel_player_teams
   has_many :players, through: :discord_channel_players
   has_many :trueskill_ratings, through: :discord_channel_players
