@@ -5,51 +5,51 @@ class Results::Api::V1::MatchesController < ActionController::API
   include ResultConstants
 
   DELIMITER = " · "
+  FINAL_ROUND = 1
+  PENULTIMATE_ROUND = 2
 
   def create
     discord_channel = DiscordChannel.find_or_create_by(
       channel_id: discord_channel_params[:channel_id]
     )
 
-    discord_channel_params[:name] && discord_channel.update(name: discord_channel_params[:name])
+    server = Server.find_or_create_by(address: server_params[:address])
+    server.update(name: server_params[:name])
 
-    server = server_params && Server.find_or_create_by(address: server_params[:address])
-    server && server_params[:name] && server.update(name: server_params[:name])
+    game_map = GameMap.find_or_create_by(name: map_params)
 
     match = Match.create(
       discord_channel_id: discord_channel.id,
-      server_id: server && server.id,
+      server_id: server.id,
       demo_uri: demo_uri_params,
       stats_uri: stats_uri_params,
+      game_map_id: game_map.id
     )
 
-    match_params[:teams].each do |name, attrs|
-      team = match.teams.create(name: name)
+    round = Round.create(match_id: match.id, number: PENULTIMATE_ROUND)
 
-      if attrs[:result]
-        team.result = attrs[:result].to_i
-      else
-        attrs[:players].each do |player_attrs|
-          player = Player.find_by(player_attrs)
+    match_params[:teams].each do |team_name, attrs|
+      team = Team.create(match_id: match.id, name: team_name)
 
-          if !player.name && player_attrs[:name]
-            player.update(name: player_attrs[:name])
-          end
+      attrs[:players].each do |player_attrs|
+        player = Player.find_by(auth_token: player_attrs[:auth_token])
 
-          discord_channel_player = DiscordChannelPlayer.find_or_create_by(
-            player_id: player.id,
-            discord_channel_id: discord_channel.id,
-          )
+        discord_channel_player = DiscordChannelPlayer.find_or_create_by(
+          player_id: player.id,
+          discord_channel_id: discord_channel.id,
+        )
 
-          team.discord_channel_players << discord_channel_player
-        end
+        discord_channel_player_team = DiscordChannelPlayerTeam.create(
+          discord_channel_player_id: discord_channel_player.id,
+          team_id: team.id
+        )
+
+        discord_channel_player_team_round = DiscordChannelPlayerTeamRound.create(
+          discord_channel_player_team_id: discord_channel_player_team.id,
+          round_id: round.id,
+          playerclass: player_attrs[:playerclass]
+        )
       end
-
-      team.save
-    end
-
-    if map_params
-      match.update(game_map: GameMap.find_or_create_by(name: map_params))
     end
 
     if match.teams.all? { |team| team.result != nil }
@@ -65,27 +65,21 @@ class Results::Api::V1::MatchesController < ActionController::API
     )
 
     embed.description = [
-      "Match starting",
+      "Match has begun",
       match.teams.map { |team| team.players.size }.join("v"),
       match.game_map.name,
       "##{match.id}"
     ].join(DELIMITER)
 
-    match.teams.find_by(name: "1").tap do|team|
-      embed.add_field(
-        inline: true,
-        name: "#{team.colour} Team #{team.emoji}",
-        value: team.players.map(&:name).join("\n")
-      )
-    end
+    match.teams.each do |team|
+      dcptrs = DiscordChannelPlayerTeamRound
+        .where(round: round)
+        .select { |dcptr| dcptr.team == team }
 
-    match.teams.find_by(name: "2").tap do |team|
       embed.add_field(
         inline: true,
-        name: "#{team.emoji} #{team.colour} Team",
-        value: team.players.map do |p|
-          "#{Rails.application.config.team_emojis["blank"]} #{p.name}"
-        end.join("\n")
+        name: " #{team.emoji} #{team.colour.titleize} Team",
+        value: dcptrs.map { |dcptr| "#{dcptr.emoji} #{dcptr.name}" }.join("\n")
       )
     end
 
@@ -109,91 +103,187 @@ class Results::Api::V1::MatchesController < ActionController::API
 
   def update
     match = Match.find(match_params["id"])
-    match.update(time_left: match_params["timeleft"])
+    discord_channel = match.discord_channel
     winner = match_params["winner"]
+    teams = match.teams
 
-    match.teams.each do |team|
-      score = match_params[:teams][team.name][:score]
-
-      result = case winner
-               when "0" then DRAW
-               when team.name then WIN
-               else LOSS
-               end
-
-      team.update(
-        score: score,
-        result: result
-      )
+    match_params["teams"].each do |team_name, attrs|
+      teams.find_by(name: team_name).update(score: attrs[:score])
     end
 
-    match.update_trueskill_ratings
+    if !winner
+      round = Round.create(match_id: match.id, number: FINAL_ROUND)
 
-    embed = Discordrb::Webhooks::Embed.new
+      match_params[:teams].each do |team_name, attrs|
+        team = Team.find_by(match_id: match.id, name: team_name)
 
-    embed.author = Discordrb::Webhooks::EmbedAuthor.new(
-      name: match.server.name,
-      url: "http://phobos.baseq.fr:9999/join?url=#{match.server.address}",
-      icon_url: "https://cdn.discordapp.com/icons/417258901810184192/aff794b4daac5f0a5cc7ee516f04abe7.jpg?size=256"
-    )
+        attrs[:players].each do |player_attrs|
+          player = Player.find_by(auth_token: player_attrs[:auth_token])
 
-    scores = match.scores
+          discord_channel_player = DiscordChannelPlayer.find_by(
+            player_id: player.id,
+            discord_channel_id: match.discord_channel.id,
+          )
 
-    description = if match.drawn?
-              "Draw"
-            elsif match.winning_team.name == "1"
-              "Blue wins by #{scores["1"] - scores["2"]} points"
-            elsif match.winning_team.name == "2"
-              "Red wins with #{seconds_to_str(match.time_left)} remaining"
-            end
+          discord_channel_player_team = DiscordChannelPlayerTeam.find_by(
+            discord_channel_player_id: discord_channel_player.id,
+            team_id: team.id
+          )
 
-    embed.description = [
-      description,
-      match.teams.map { |team| team.players.size }.join("v"),
-      match.game_map.name,
-      "##{match.id}"
-    ].join(DELIMITER)
+          discord_channel_player_team_round = DiscordChannelPlayerTeamRound.create(
+            discord_channel_player_team_id: discord_channel_player_team.id,
+            round_id: round.id,
+            playerclass: player_attrs[:playerclass]
+          )
+        end
+      end
 
-    team = match.teams.find_by(name: "1")
-    embed.add_field(
-      inline: true,
-      name: "#{team.colour} Team #{team.emoji}",
-      value: team.players.map(&:name).join("\n")
-    )
+      embed = Discordrb::Webhooks::Embed.new
 
-    embed.add_field(
-      inline: true,
-      name: [scores["1"], scores["2"]].join(" — "),
-      value: ""
-    )
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: match.server.name,
+        url: "http://phobos.baseq.fr:9999/join?url=#{match.server.address}",
+        icon_url: "https://cdn.discordapp.com/icons/417258901810184192/aff794b4daac5f0a5cc7ee516f04abe7.jpg?size=256"
+      )
 
-    match.teams.find_by(name: "2").tap do |team|
+      embed.description = [
+        "Round 2 has begun",
+        teams.map { |team| team.players.size }.join("v"),
+        match.game_map.name,
+        "##{match.id}"
+      ].join(DELIMITER)
+
+      teams.find_by(name: "1").tap do |team|
+        dcptrs = DiscordChannelPlayerTeamRound
+          .where(round: round)
+          .select { |dcptr| dcptr.team == team }
+
+        embed.add_field(
+          inline: true,
+          name: " #{team.emoji} #{team.colour.titleize} Team",
+          value: dcptrs.map { |dcptr| "#{dcptr.emoji} #{dcptr.name}" }.join("\n")
+        )
+      end
+
       embed.add_field(
         inline: true,
-        name: "#{team.emoji} #{team.colour} Team",
-        value: team.players.map do |p|
-          "#{Rails.application.config.team_emojis["blank"]} #{p.name}"
-        end.join("\n")
+        name: [teams.find_by(name: "1").score, teams.find_by(name: "2").score].join(" — "),
+        value: ""
+      )
+
+      teams.find_by(name: "2").tap do |team|
+        dcptrs = DiscordChannelPlayerTeamRound
+          .where(round: round)
+          .select { |dcptr| dcptr.team == team }
+
+        embed.add_field(
+          inline: true,
+          name: " #{team.emoji} #{team.colour.titleize} Team",
+          value: dcptrs.map { |dcptr| "#{dcptr.emoji} #{dcptr.name}" }.join("\n")
+        )
+      end
+
+      embed.add_field(
+        name: "",
+        value: [
+          "[spectate](http://phobos.baseq.fr:9999/observe?url=#{match.server.address})",
+        ].join(DELIMITER)
+      )
+
+      Discordrb::API::Channel.create_message(
+        "Bot #{Rails.application.credentials.discord[:token]}",
+        discord_channel.channel_id,
+        nil,
+        false,
+        embed,
+      )
+    else
+      match.update(time_left: match_params["timeleft"])
+
+      teams.each do |team|
+        score = match_params[:teams][team.name][:score]
+
+        result = case winner
+                 when "0" then DRAW
+                 when team.name then WIN
+                 else LOSS
+                 end
+
+        team.update(
+          score: score,
+          result: result
+        )
+      end
+
+      match.update_trueskill_ratings
+
+      embed = Discordrb::Webhooks::Embed.new
+
+      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+        name: match.server.name,
+        url: "http://phobos.baseq.fr:9999/join?url=#{match.server.address}",
+        icon_url: "https://cdn.discordapp.com/icons/417258901810184192/aff794b4daac5f0a5cc7ee516f04abe7.jpg?size=256"
+      )
+
+      scores = match.scores
+
+      description = if match.drawn?
+                      "Draw"
+                    elsif match.winning_team.name == "1"
+                      "Blue wins by #{scores["1"] - scores["2"]} points"
+                    elsif match.winning_team.name == "2"
+                      "Red wins with #{seconds_to_str(match.time_left)} remaining"
+                    end
+
+      embed.description = [
+        description,
+        teams.map { |team| team.players.size }.join("v"),
+        match.game_map.name,
+        "##{match.id}"
+      ].join(DELIMITER)
+
+      teams.find_by(name: "1").tap do |team|
+        embed.add_field(
+          inline: true,
+          name: "#{team.emoji} #{team.colour.titleize} Team",
+          value: team.discord_channel_player_teams.map do |dcpt|
+            "#{dcpt.emojis} #{dcpt.name}"
+          end.join("\n")
+        )
+      end
+
+      embed.add_field(
+        inline: true,
+        name: [scores["1"], scores["2"]].join(" — "),
+        value: ""
+      )
+
+      teams.find_by(name: "2").tap do |team|
+        embed.add_field(
+          inline: true,
+          name: "#{team.emoji} #{team.colour.titleize} Team",
+          value: team.discord_channel_player_teams.map do |dcpt|
+            "#{dcpt.emojis} #{dcpt.name}"
+          end.join("\n")
+        )
+      end
+
+      embed.add_field(
+        name: "",
+        value: [
+          "[demo](#{match.demo_uri})",
+          "[stats](#{match.stats_uri})"
+        ].join(" · ")
+      )
+
+      Discordrb::API::Channel.create_message(
+        "Bot #{Rails.application.credentials.discord[:token]}",
+        discord_channel.channel_id,
+        nil,
+        false,
+        embed
       )
     end
-
-    embed.add_field(
-      name: "",
-      value: [
-        "[demo](#{match.demo_uri})",
-        "[stats](#{match.stats_uri})"
-      ].join(" · ")
-    )
-
-    discord_channel = match.discord_channel
-
-    Discordrb::API::Channel.create_message(
-      "Bot #{Rails.application.credentials.discord[:token]}",
-      discord_channel.channel_id,
-      nil,
-      false,
-      embed
-    )
 
     render json: match.id.to_json, status: :ok
   end
@@ -230,6 +320,7 @@ class Results::Api::V1::MatchesController < ActionController::API
         :map,
         :demo_uri,
         :stats_uri,
+        :round,
         server: {},
         teams: {},
         discord_channel: {}

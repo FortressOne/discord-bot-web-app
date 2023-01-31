@@ -2,11 +2,11 @@ class Team < ApplicationRecord
   include ResultConstants
 
   RANKS = { WIN => 1, DRAW => 1, LOSS => 2 }.freeze
-  COLOUR = { 1 => "Blue", 2 => "Red", 3 => "Yellow", 4 => "Green" }.freeze
+  COLOUR = { 1 => "blue", 2 => "red", 3 => "yellow", 4 => "green" }.freeze
 
   belongs_to :match
-  has_many :discord_channel_players_teams
-  has_many :discord_channel_players, through: :discord_channel_players_teams
+  has_many :discord_channel_player_teams
+  has_many :discord_channel_players, through: :discord_channel_player_teams
   has_many :players, through: :discord_channel_players
   has_many :trueskill_ratings, through: :discord_channel_players
 
@@ -15,11 +15,15 @@ class Team < ApplicationRecord
   end
 
   def colour
-    COLOUR[name.to_i]
+    COLOUR[number]
+  end
+
+  def number
+    name.to_i
   end
 
   def emoji
-    Rails.application.config.team_emojis[name.to_i]
+    Rails.application.config.team_emojis[number]
   end
 
   def trueskill_ratings_rating_objs
@@ -33,7 +37,7 @@ class Team < ApplicationRecord
       tr.deviation = rating.deviation
       tr.save
 
-      dcpts = discord_channel_players_teams.find_by(
+      dcpts = discord_channel_player_teams.find_by(
         discord_channel_player: tr.trueskill_rateable
       )
 
