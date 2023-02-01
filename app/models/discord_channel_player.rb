@@ -104,7 +104,7 @@ class DiscordChannelPlayer < ApplicationRecord
 
   def trueskill_ratings
     discord_channel_player_teams.map do |dcpt|
-      dcpt.trueskill_rating.conservative_skill_estimate
+      dcpt.trueskill_rating&.conservative_skill_estimate
     end
   end
 end
