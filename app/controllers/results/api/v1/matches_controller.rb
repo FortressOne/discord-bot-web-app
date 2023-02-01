@@ -111,6 +111,14 @@ class Results::Api::V1::MatchesController < ActionController::API
       teams.find_by(name: team_name).update(score: attrs[:score])
     end
 
+    embed = Discordrb::Webhooks::Embed.new
+
+    embed.author = Discordrb::Webhooks::EmbedAuthor.new(
+      name: match.server.name,
+      url: "http://phobos.baseq.fr:9999/join?url=#{match.server.address}",
+      icon_url: "https://cdn.discordapp.com/icons/417258901810184192/aff794b4daac5f0a5cc7ee516f04abe7.jpg?size=256"
+    )
+
     if !winner
       round = Round.create(match_id: match.id, number: FINAL_ROUND)
 
@@ -137,14 +145,6 @@ class Results::Api::V1::MatchesController < ActionController::API
           )
         end
       end
-
-      embed = Discordrb::Webhooks::Embed.new
-
-      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
-        name: match.server.name,
-        url: "http://phobos.baseq.fr:9999/join?url=#{match.server.address}",
-        icon_url: "https://cdn.discordapp.com/icons/417258901810184192/aff794b4daac5f0a5cc7ee516f04abe7.jpg?size=256"
-      )
 
       embed.description = [
         "Round 2 has begun",
@@ -217,23 +217,24 @@ class Results::Api::V1::MatchesController < ActionController::API
 
       match.update_trueskill_ratings
 
-      embed = Discordrb::Webhooks::Embed.new
-
-      embed.author = Discordrb::Webhooks::EmbedAuthor.new(
-        name: match.server.name,
-        url: "http://phobos.baseq.fr:9999/join?url=#{match.server.address}",
-        icon_url: "https://cdn.discordapp.com/icons/417258901810184192/aff794b4daac5f0a5cc7ee516f04abe7.jpg?size=256"
-      )
-
       scores = match.scores
 
-      description = if match.drawn?
-                      "Draw"
-                    elsif match.winning_team.name == "1"
-                      "Blue wins by #{scores["1"] - scores["2"]} points"
-                    elsif match.winning_team.name == "2"
-                      "Red wins with #{seconds_to_str(match.time_left)} remaining"
-                    end
+      description, colour = if match.drawn?
+                              [
+                                "Draw",
+                                "#664DB3"
+                              ]
+                            elsif match.winning_team.name == "1"
+                              [
+                                "Blue wins by #{scores["1"] - scores["2"]} points",
+                                "#4D66B3"
+                              ]
+                            elsif match.winning_team.name == "2"
+                              [
+                                "Red wins with #{seconds_to_str(match.time_left)} remaining",
+                                "#B3664D"
+                              ]
+                            end
 
       embed.description = [
         description,
@@ -241,6 +242,8 @@ class Results::Api::V1::MatchesController < ActionController::API
         match.game_map.name,
         "##{match.id}"
       ].join(DELIMITER)
+
+      embed.color = colour
 
       teams.find_by(name: "1").tap do |team|
         embed.add_field(
