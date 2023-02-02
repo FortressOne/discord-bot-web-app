@@ -7,6 +7,17 @@ class Players::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def discord
     @player = Player.from_omniauth(request.env["omniauth.auth"])
 
+    server_member = JSON.parse(
+      Discordrb::API::Server.resolve_member(
+        "Bot #{Rails.application.credentials.discord[:token]}",
+        Rails.application.config.discord[:server_id],
+        request.env["omniauth.auth"]["uid"]
+      )
+    )
+
+    nick = server_member["nick"]
+    @player.name = (nick ? nick : server_member["user"]["username"])
+
     if @player.persisted?
       remember_me(@player)
       sign_in_and_redirect @player, event: :authentication # this will throw if @player is not activated
