@@ -8,6 +8,7 @@ class DiscordChannelPlayerTeam < ApplicationRecord
   after_create :create_trueskill_rating
 
   delegate :name, to: :discord_channel_player
+  delegate :match, to: :team
 
   def emojis
     discord_channel_player_team_rounds.map(&:emoji).join("")
