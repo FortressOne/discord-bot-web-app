@@ -15,8 +15,15 @@ class Players::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       )
     )
 
-    nick = server_member && server_member["nick"]
-    @player.name = (nick ? nick : server_member["user"]["username"])
+    if server_member
+      name = if server_member["nick"]
+               server_member["nick"]
+             else
+               server_member["user"]["username"]
+             end
+
+      @player.update(name: name)
+    end
 
     if @player.persisted?
       remember_me(@player)
