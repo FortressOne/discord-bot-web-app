@@ -70,6 +70,8 @@ Rails.application.configure do
   config.hosts << "host.docker.internal"
   config.web_console.permissions = '172.20.0.2'
 
+  config.discord = { server_id: "744911007859736616" }
+
   config.team_emojis = {
     1 => "<:flag_1_flipped:1063484999585763328>",
     2 => "<:flag_2:1062548478422679625>",

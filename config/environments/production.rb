@@ -114,6 +114,8 @@ Rails.application.configure do
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
+  config.discord = { server_id: "417258901810184192" }
+
   config.team_emojis = {
     1 => "<:flag_1_flipped:1063503655602499685>",
     2 => "<:flag_2:1062548328040120391>",
