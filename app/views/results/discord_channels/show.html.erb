@@ -22,7 +22,7 @@
         </tr>
       </thead>
       <tbody>
-        <% @discord_channel_players.each_with_index do |dcp, index| %>
+        <% @discord_channel_players.each do |dcp| %>
           <% trueskill_rating = dcp.trueskill_rating %>
           <tr>
             <td>
