@@ -73,7 +73,7 @@ Rails.application.configure do
   config.discord = { server_id: "744911007859736616" }
 
   config.team_emojis = {
-    1 => "<:flag_1_flipped:1063484999585763328>",
+    1 => "<:flag_1:1062548481576800307>",
     2 => "<:flag_2:1062548478422679625>",
     3 => "<:flag_3:1062548475402788954>",
     4 => "<:flag_4:1062548473163034625>",
