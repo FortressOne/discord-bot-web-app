@@ -77,7 +77,7 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   def last_match_date
-    teams.last && teams.last.match.created_at
+    teams.last { |team| team.created_at }.created_at
   end
 
   def match_count

@@ -9,11 +9,16 @@ class Results::DiscordChannelsController < ApplicationController
   def show
     @discord_channel = DiscordChannel.find_by(channel_id: params[:id])
 
-    @discord_channel_players = @discord_channel
-      .discord_channel_players
-      .leaderboard
+    @discord_channel_players = DiscordChannelPlayer
+      .where(discord_channel_id: @discord_channel.id)
+      .joins(:teams)
+      .includes(:teams, :player, :trueskill_rating)
+      .sort_by(&:last_match_date)
+      .reverse
 
-    @matches = @discord_channel.matches.history
+    @matches = Match
+      .where(discord_channel_id: @discord_channel.id)
+      .history
 
     add_breadcrumb "Discord channels", results_root_path
     add_breadcrumb @discord_channel.name

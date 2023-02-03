@@ -2,7 +2,12 @@ class PlayersController < ApplicationController
   add_breadcrumb "Home", :root_path
 
   def index
-    @players = Player.all.sort_by(&:match_count).reverse
+    @players = Player
+      .joins(:teams)
+      .includes(:teams)
+      .sort_by(&:last_match_date)
+      .reverse
+
     add_breadcrumb "Players"
   end
 
