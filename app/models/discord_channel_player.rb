@@ -97,14 +97,17 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   def trueskill_ratings_graph(int)
-    trueskill_ratings.last(int).map.with_index do |tr, i|
-      [i+1, tr]
-    end
-  end
+    recent_teams = teams.where.not(result: nil).last(30)
 
-  def trueskill_ratings
-    discord_channel_player_teams.map do |dcpt|
-      dcpt.trueskill_rating&.conservative_skill_estimate
+    dcpts = teams.map do |team|
+      DiscordChannelPlayerTeam.find_by(
+        discord_channel_player_id: id,
+        team_id: team.id
+      )
+    end
+
+    dcpts.map.with_index do |dcpt, i|
+      [i+1, dcpt.trueskill_rating.conservative_skill_estimate]
     end
   end
 end

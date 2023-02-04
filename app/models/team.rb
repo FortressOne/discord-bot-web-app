@@ -37,12 +37,16 @@ class Team < ApplicationRecord
       tr.deviation = rating.deviation
       tr.save
 
-      dcpts = discord_channel_player_teams.find_by(
+      dcpt = discord_channel_player_teams.find_by(
         discord_channel_player: tr.trueskill_rateable
       )
 
-      dcpts
-        .create_trueskill_rating
+      if dcpt.trueskill_rating.nil?
+        dcpt.create_trueskill_rating
+      end
+
+      dcpt
+        .trueskill_rating
         .update(mean: rating.mean, deviation: rating.deviation)
     end
   end
