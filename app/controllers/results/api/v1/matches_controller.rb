@@ -4,7 +4,6 @@ class Results::Api::V1::MatchesController < ActionController::API
   include Saulabs::TrueSkill
   include ResultConstants
 
-  DELIMITER = " · "
   FINAL_ROUND = 1
   PENULTIMATE_ROUND = 2
 
@@ -66,7 +65,7 @@ class Results::Api::V1::MatchesController < ActionController::API
 
     embed.description = [
       "Match has begun",
-      match.teams.map { |team| team.players.size }.join("v"),
+      match.size,
       match.game_map.name,
       "##{match.id}"
     ].join(DELIMITER)
@@ -78,7 +77,7 @@ class Results::Api::V1::MatchesController < ActionController::API
 
       embed.add_field(
         inline: true,
-        name: " #{team.emoji} #{team.colour.titleize} Team",
+        name: " #{team.emoji} #{team.description}",
         value: dcptrs.map { |dcptr| "#{dcptr.emoji} #{dcptr.name}" }.join("\n")
       )
     end
@@ -148,7 +147,7 @@ class Results::Api::V1::MatchesController < ActionController::API
 
       embed.description = [
         "Round 2 has begun",
-        teams.map { |team| team.players.size }.join("v"),
+        match.size,
         match.game_map.name,
         "##{match.id}"
       ].join(DELIMITER)
@@ -160,14 +159,14 @@ class Results::Api::V1::MatchesController < ActionController::API
 
         embed.add_field(
           inline: true,
-          name: " #{team.emoji} #{team.colour.titleize} Team",
+          name: " #{team.emoji} #{team.description}",
           value: dcptrs.map { |dcptr| "#{dcptr.emoji} #{dcptr.name}" }.join("\n")
         )
       end
 
       embed.add_field(
         inline: true,
-        name: [teams.find_by(name: "1").score, teams.find_by(name: "2").score].join(" — "),
+        name: match.score,
         value: ""
       )
 
@@ -178,7 +177,7 @@ class Results::Api::V1::MatchesController < ActionController::API
 
         embed.add_field(
           inline: true,
-          name: " #{team.emoji} #{team.colour.titleize} Team",
+          name: " #{team.emoji} #{team.description}",
           value: dcptrs.map { |dcptr| "#{dcptr.emoji} #{dcptr.name}" }.join("\n")
         )
       end
@@ -219,26 +218,17 @@ class Results::Api::V1::MatchesController < ActionController::API
 
       scores = match.scores
 
-      description, colour = if match.drawn?
-                              [
-                                "Draw",
-                                "#664DB3"
-                              ]
-                            elsif match.winning_team.name == "1"
-                              [
-                                "Blue wins by #{scores["1"] - scores["2"]} points",
-                                "#4D66B3"
-                              ]
-                            elsif match.winning_team.name == "2"
-                              [
-                                "Red wins with #{seconds_to_str(match.time_left)} remaining",
-                                "#B3664D"
-                              ]
-                            end
+      colour = if match.drawn?
+                 "#664DB3"
+               elsif match.winning_team.name == "1"
+                 "#4D66B3"
+               elsif match.winning_team.name == "2"
+                 "#B3664D"
+               end
 
       embed.description = [
-        description,
-        teams.map { |team| team.players.size }.join("v"),
+        match.description,
+        match.size,
         match.game_map.name,
         "##{match.id}"
       ].join(DELIMITER)
@@ -248,7 +238,7 @@ class Results::Api::V1::MatchesController < ActionController::API
       teams.find_by(name: "1").tap do |team|
         embed.add_field(
           inline: true,
-          name: "#{team.emoji} #{team.colour.titleize} Team",
+          name: "#{team.emoji} #{team.description}",
           value: team.discord_channel_player_teams.map do |dcpt|
             "#{dcpt.emojis} #{dcpt.name}"
           end.join("\n")
@@ -257,14 +247,14 @@ class Results::Api::V1::MatchesController < ActionController::API
 
       embed.add_field(
         inline: true,
-        name: [scores["1"], scores["2"]].join(" — "),
+        name: match.score,
         value: ""
       )
 
       teams.find_by(name: "2").tap do |team|
         embed.add_field(
           inline: true,
-          name: "#{team.emoji} #{team.colour.titleize} Team",
+          name: "#{team.emoji} #{team.description}",
           value: team.discord_channel_player_teams.map do |dcpt|
             "#{dcpt.emojis} #{dcpt.name}"
           end.join("\n")
@@ -274,9 +264,9 @@ class Results::Api::V1::MatchesController < ActionController::API
       embed.add_field(
         name: "",
         value: [
+          "[match summary](#{match_url})",
           "[demo](#{match.demo_uri})",
-          "[stats](#{match.stats_uri})"
-        ].join(" · ")
+        ].join(DELIMITER)
       )
 
       Discordrb::API::Channel.create_message(
@@ -328,10 +318,5 @@ class Results::Api::V1::MatchesController < ActionController::API
         teams: {},
         discord_channel: {}
       )
-  end
-
-  def seconds_to_str(seconds)
-    ["#{seconds / 3600}h", "#{seconds / 60 % 60}m", "#{seconds % 60}s"]
-      .select { |str| str =~ /[1-9]/ }.join(" ")
   end
 end

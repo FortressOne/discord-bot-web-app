@@ -13,4 +13,8 @@ class DiscordChannelPlayerTeam < ApplicationRecord
   def emojis
     discord_channel_player_team_rounds.map(&:emoji).join("")
   end
+
+  def images
+    discord_channel_player_team_rounds.map(&:image)
+  end
 end

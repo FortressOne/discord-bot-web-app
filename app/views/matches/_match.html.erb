@@ -1,0 +1,52 @@
+<div id="<%= dom_id match %>">
+  <article>
+    <header>
+      <p>
+        <%= link_to match.server.name, "qw://#{match.server.address}" %></br>
+        <%=
+          [
+            match.description,
+            match.size,
+            match.game_map.name,
+            "##{match.id}"
+          ].join(DELIMITER)
+          %>
+      </p>
+      <progress value="<%= 1200 - match.time_left %>" max="1200"></progress>
+    </header>
+    <div class="grid">
+      <div style="margin: auto;">
+        <% team1 = match.teams.find_by(name: "1") %>
+        <%= image_tag(team1.flag[:url], alt: team1.flag[:alt], style: "height: 44px;") %>
+        <strong><%= team1.description %></strong>
+        </br>
+        <% team1.discord_channel_player_teams.each do |dcpt| %>
+          <% dcpt.images.each do |pc| %>
+            <%= image_tag(pc[:url], alt: pc[:alt], style: "height: 44px;") %>
+          <% end %>
+          <%= dcpt.name %>
+          </br>
+        <% end %>
+      </div>
+      <div style="margin: auto;">
+        <h1><%= match.score %></h1>
+      </div>
+      <div style="margin: auto;">
+        <% team2 = match.teams.find_by(name: "2") %>
+        <%= image_tag(team2.flag[:url], alt: team2.flag[:alt], style: "height: 44px;") %>
+        <strong><%= team2.description %></strong>
+        </br>
+        <% team2.discord_channel_player_teams.each do |dcpt| %>
+          <% dcpt.images.each do |pc| %>
+            <%= image_tag(pc[:url], alt: pc[:alt], style: "height: 44px;") %>
+          <% end %>
+          <%= dcpt.name %>
+          </br>
+        <% end %>
+      </div>
+    </div>
+    <footer>
+      <%= link_to "Demo", match.demo_uri %><%= DELIMITER %><%= link_to "Stats", match.stats_uri %>
+    </footer>
+  </article>
+</div>

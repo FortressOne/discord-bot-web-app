@@ -4,11 +4,23 @@ class Team < ApplicationRecord
   RANKS = { WIN => 1, DRAW => 1, LOSS => 2 }.freeze
   COLOUR = { 1 => "blue", 2 => "red", 3 => "yellow", 4 => "green" }.freeze
 
+  DEFAULT_FLAG = { url: "home/flags/flag_0.png", alt: "Quartered flag" }
+  FLAGS = {
+    1 => { url: "home/flags/flag_1.png", alt: "Blue flag" },
+    2 => { url: "home/flags/flag_2.png", alt: "Red flag" },
+    3 => { url: "home/flags/flag_3.png", alt: "Yellow flag" },
+    4 => { url: "home/flags/flag_4.png", alt: "Green flag" },
+  }
+
   belongs_to :match
   has_many :discord_channel_player_teams, dependent: :destroy
   has_many :discord_channel_players, through: :discord_channel_player_teams
   has_many :players, through: :discord_channel_players
   has_many :trueskill_ratings, through: :discord_channel_players
+
+  def description
+    "#{colour.titleize} Team"
+  end
 
   def rank
     RANKS[result]
@@ -49,5 +61,9 @@ class Team < ApplicationRecord
         .trueskill_rating
         .update(mean: rating.mean, deviation: rating.deviation)
     end
+  end
+
+  def flag
+    FLAGS.fetch(number, DEFAULT_FLAG)
   end
 end

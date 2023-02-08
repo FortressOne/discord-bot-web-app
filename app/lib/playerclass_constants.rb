@@ -1,10 +1,10 @@
 module PlayerclassConstants
   PLAYERCLASSES = {
     1 => {
-      images: [
-        { url: "home/classes/blue_scout.webp", alt: "Blue scout icon" },
-        { url: "home/classes/red_scout.webp", alt: "Red scout icon" },
-      ],
+      images: {
+        blue: { url: "home/classes/blue_scout.webp", alt: "Blue scout icon" },
+        red: { url: "home/classes/red_scout.webp", alt: "Red scout icon" },
+      },
       name: "Scout",
       speed: "450",
       armour: "25 Green",
@@ -14,10 +14,10 @@ module PlayerclassConstants
       attributes: ["Can uncover enemy spies", "Can disarm detpacks"],
     },
     2 => {
-      images: [
-        { url: "home/classes/blue_sniper.webp", alt: "Blue sniper icon" },
-        { url: "home/classes/red_sniper.webp", alt: "Red sniper icon" },
-      ],
+      images: {
+        blue: { url: "home/classes/blue_sniper.webp", alt: "Blue sniper icon" },
+        red: { url: "home/classes/red_sniper.webp", alt: "Red sniper icon" },
+      },
       name: "Sniper",
       speed: "300",
       armour: "40 Green",
@@ -27,10 +27,10 @@ module PlayerclassConstants
       attributes: [],
     },
     3 => {
-      images: [
-        { url: "home/classes/blue_soldier.webp", alt: "Blue soldier icon" },
-        { url: "home/classes/red_soldier.webp", alt: "Red soldier icon" },
-      ],
+      images: {
+        blue: { url: "home/classes/blue_soldier.webp", alt: "Blue soldier icon" },
+        red: { url: "home/classes/red_soldier.webp", alt: "Red soldier icon" },
+      },
       name: "Soldier",
       speed: "240",
       armour: "200 Red",
@@ -40,10 +40,10 @@ module PlayerclassConstants
       attributes: [],
     },
     4 => {
-      images: [
-        { url: "home/classes/blue_demoman.webp", alt: "Blue demoman icon" },
-        { url: "home/classes/red_demoman.webp", alt: "Red demoman icon" },
-      ],
+      images: {
+        blue: { url: "home/classes/blue_demoman.webp", alt: "Blue demoman icon" },
+        red: { url: "home/classes/red_demoman.webp", alt: "Red demoman icon" },
+      },
       name: "Demolitions Man",
       speed: "280",
       armour: "110 Yellow",
@@ -53,10 +53,10 @@ module PlayerclassConstants
       attributes: [],
     },
     5 => {
-      images: [
-        { url: "home/classes/blue_medic.webp", alt: "Blue medic icon" },
-        { url: "home/classes/red_medic.webp", alt: "Red medic icon" },
-      ],
+      images: {
+        blue: { url: "home/classes/blue_medic.webp", alt: "Blue medic icon" },
+        red: { url: "home/classes/red_medic.webp", alt: "Red medic icon" },
+      },
       name: "Medic",
       speed: "320",
       armour: "90 Yellow",
@@ -66,10 +66,10 @@ module PlayerclassConstants
       attributes: ["Immune to concussion"],
     },
     6 => {
-      images: [
-        { url: "home/classes/blue_hwguy.webp", alt: "Blue heavy icon" },
-        { url: "home/classes/red_hwguy.webp", alt: "Red heavy icon" },
-      ],
+      images: {
+        blue: { url: "home/classes/blue_hwguy.webp", alt: "Blue heavy icon" },
+        red: { url: "home/classes/red_hwguy.webp", alt: "Red heavy icon" },
+      },
       name: "Heavy Weapons Guy",
       speed: "230",
       armour: "300 Red",
@@ -79,10 +79,10 @@ module PlayerclassConstants
       attributes: ["Reduced knockback when taking damage"],
     },
     7 => {
-      images: [
-        { url: "home/classes/blue_pyro.webp", alt: "Blue pyro icon" },
-        { url: "home/classes/red_pyro.webp", alt: "Red pyro icon" },
-      ],
+      images: {
+        blue: { url: "home/classes/blue_pyro.webp", alt: "Blue pyro icon" },
+        red: { url: "home/classes/red_pyro.webp", alt: "Red pyro icon" },
+      },
       name: "Pyro",
       speed: "300",
       armour: "150 Yellow",
@@ -92,10 +92,10 @@ module PlayerclassConstants
       attributes: ["Is resistant to fire"],
     },
     8 => {
-      images: [
-        { url: "home/classes/blue_spy.webp", alt: "Blue spy icon" },
-        { url: "home/classes/red_spy.webp", alt: "Red spy icon" },
-      ],
+      images: {
+        blue: { url: "home/classes/blue_spy.webp", alt: "Blue spy icon" },
+        red: { url: "home/classes/red_spy.webp", alt: "Red spy icon" },
+      },
       name: "Spy",
       speed: "300",
       armour: "90 Yellow",
@@ -105,10 +105,10 @@ module PlayerclassConstants
       attributes: ["Can uncover enemy spies"],
     },
     9 => {
-      images: [
-        { url: "home/classes/blue_engineer.webp", alt: "Blue engineer icon" },
-        { url: "home/classes/red_engineer.webp", alt: "Red engineer icon" },
-      ],
+      images: {
+        blue: { url: "home/classes/blue_engineer.webp", alt: "Blue engineer icon" },
+        red: { url: "home/classes/red_engineer.webp", alt: "Red engineer icon" },
+      },
       name: "Engineer",
       speed: "300",
       armour: "30 Yellow",
