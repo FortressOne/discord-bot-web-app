@@ -8,6 +8,9 @@ Rails.application.routes.draw do
     get 'rotate_token', on: :member
   end
 
+  # resources :matches, only: [:index, :show]
+  resources :matches, only: [:show]
+
   root to: 'home#index'
   get 'live_player/show'
   get 'code-of-conduct', to: "static_pages#code_of_conduct"

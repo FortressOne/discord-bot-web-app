@@ -209,7 +209,7 @@
         <div style="display: flex;">
           <div style="flex: 33%">
             <h3><%= playerclass[:name] %></h3>
-            <% playerclass[:images].each do |image| %>
+            <% playerclass[:images].each do |_colour, image| %>
               <%= image_tag(image[:url], alt: image[:alt]) %>
             <% end %>
           </div>
@@ -329,5 +329,5 @@
 </main>
 
 <footer class="container">
-  <p>FortressOne <%= Time.zone.now.year %> · <%= link_to("Code of conduct", code_of_conduct_path) %></p>
+  <p>FortressOne <%= Time.zone.now.year %><%= DELIMITER %><%= link_to("Code of conduct", code_of_conduct_path) %></p>
 </footer>

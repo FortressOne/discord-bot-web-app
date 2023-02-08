@@ -19,10 +19,46 @@ class Match < ApplicationRecord
       .includes(teams: :players)
   end
 
+  def description
+    if drawn?
+      "Draw"
+    elsif winning_team.name == "1"
+      "Blue wins by #{scores["1"] - scores["2"]} points"
+    elsif winning_team.name == "2"
+      "Red wins with #{seconds_to_str(time_left)} remaining"
+    end
+  end
+
+  def size
+    teams.map { |team| team.players.size }.join("v")
+  end
+
+  def update_trueskill_ratings
+    puts "updating match id: #{id}"
+
+    team1_player_ratings = team(1).trueskill_ratings_rating_objs
+    team2_player_ratings = team(2).trueskill_ratings_rating_objs
+
+    FactorGraph.new(
+      team1_player_ratings => team(1).rank,
+      team2_player_ratings => team(2).rank
+    ).update_skills
+
+    team(1).update_ratings(team1_player_ratings)
+    team(2).update_ratings(team2_player_ratings)
+
+    ratings_processed = true
+    save
+  end
+
   def team_for(discord_channel_player)
     teams.first do |team|
       team.discord_channel_players.includes?(discord_channel_player)
     end
+  end
+
+  def score
+    "#{team(1).score} — #{team(2).score}"
   end
 
   def scores
@@ -37,24 +73,14 @@ class Match < ApplicationRecord
     teams.all? { |team| team.result == DRAW }
   end
 
-  def update_trueskill_ratings
-    puts "updating match id: #{id}"
+  private
 
-    team1 = teams.find_by(name: 1)
-    team2 = teams.find_by(name: 2)
+  def seconds_to_str(seconds)
+    ["#{seconds / 3600}h", "#{seconds / 60 % 60}m", "#{seconds % 60}s"]
+      .select { |str| str =~ /[1-9]/ }.join(" ")
+  end
 
-    team1_player_ratings = team1.trueskill_ratings_rating_objs
-    team2_player_ratings = team2.trueskill_ratings_rating_objs
-
-    FactorGraph.new(
-      team1_player_ratings => team1.rank,
-      team2_player_ratings => team2.rank
-    ).update_skills
-
-    team1.update_ratings(team1_player_ratings)
-    team2.update_ratings(team2_player_ratings)
-
-    ratings_processed = true
-    save
+  def team(n)
+    teams.find_by(name: n)
   end
 end
