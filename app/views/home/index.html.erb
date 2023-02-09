@@ -110,6 +110,17 @@
 
   <section>
     <hgroup>
+    <h2>Latest pick-up game result</h2>
+    <h3>Games organised through Discord</h3>
+    </hgroup>
+
+    <% @matches.each do |match| %>
+      <%= render match %>
+    <% end %>
+  </section>
+
+  <section>
+    <hgroup>
     <h2>Screenshots</h2>
     <h3>Click to open</h3>
     </hgroup>
