@@ -2,18 +2,9 @@
   <article>
     <header>
       <p>
-      <%= local_time(match.created_at) %>
-      <small>(<%= local_time_ago(match.created_at) %>)</small></br>
-
-        <% if match.server %>
-          <%= link_to(match.server.name, "qw://#{match.server.address}") %>
-        <% elsif match.discord_channel %>
-          <%= link_to(match.discord_channel.name, match.discord_channel.invite_url) %>
-        <% else %>
-          "Unknown location"
-        <% end %>
+        <span style="text-align: left;"><%= match_location(match) %></span>
+        <span style="float: right;"><%= local_time(match.created_at) %><small> (<%= local_time_ago(match.created_at) %>)</small></span>
         </br>
-
         <%= match_summary(match) %>
       </p>
       <% if match.time_left %>
@@ -52,11 +43,11 @@
       </div>
     </div>
     <footer>
-        <%= link_to("Summary", match) %>
-        <%= DELIMITER %>
-        <%= link_to("Demo", match.demo_uri) %>
-        <%= DELIMITER %>
-        <%= link_to("Stats", match.stats_uri) %>
+      <%= link_to("Summary", match) %>
+      <%= DELIMITER %>
+      <%= link_to("Demo", match.demo_uri) %>
+      <%= DELIMITER %>
+      <%= link_to("Stats", match.stats_uri) %>
     </footer>
   </article>
 </div>
