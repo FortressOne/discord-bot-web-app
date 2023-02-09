@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_25_115829) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_08_120331) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -82,6 +82,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_25_115829) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "rated", default: false, null: false
+    t.string "invite_url"
     t.index ["channel_id"], name: "index_discord_channels_on_channel_id", unique: true
   end
 

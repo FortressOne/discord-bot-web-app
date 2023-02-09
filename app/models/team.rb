@@ -18,6 +18,10 @@ class Team < ApplicationRecord
   has_many :players, through: :discord_channel_players
   has_many :trueskill_ratings, through: :discord_channel_players
 
+  def size
+    discord_channel_player_teams.count
+  end
+
   def description
     "#{colour.titleize} Team"
   end

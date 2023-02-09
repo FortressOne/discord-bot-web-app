@@ -119,11 +119,15 @@ class Playerclass
     },
   }
 
-  def initialize(number)
-    @playerclass = PLAYERCLASS[n]
+  def initialize(n)
+    @playerclass = PLAYERCLASSES[n]
   end
 
   def emoji(team)
     Rails.config.playerclass_emojis[team]
+  end
+
+  def image(team)
+    @playerclass[:images][team]
   end
 end

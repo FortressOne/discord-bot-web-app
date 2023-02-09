@@ -264,8 +264,8 @@ class Results::Api::V1::MatchesController < ActionController::API
       embed.add_field(
         name: "",
         value: [
-          "[match summary](#{match_url})",
-          "[demo](#{match.demo_uri})",
+          "[Summary](#{match_url})",
+          "[Demo](#{match.demo_uri})",
         ].join(DELIMITER)
       )
 

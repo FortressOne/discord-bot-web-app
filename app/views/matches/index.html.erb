@@ -1,14 +1,11 @@
-<p style="color: green"><%= notice %></p>
+<div class="container">
+  <p style="color: green"><%= notice %></p>
 
-<h1>Matches</h1>
+  <h1>Matches</h1>
 
-<div id="matches">
-  <% @matches.each do |match| %>
-    <%= render match %>
-    <p>
-      <%= link_to "Show this match", match %>
-    </p>
-  <% end %>
+  <div id="matches">
+    <% @matches.each do |match| %>
+      <%= render match %>
+    <% end %>
+  </div>
 </div>
-
-<%= link_to "New match", new_match_path %>
