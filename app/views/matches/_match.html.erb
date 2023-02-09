@@ -14,14 +14,7 @@
         <% end %>
         </br>
 
-        <%=
-          [
-            match.description,
-            match.size,
-            match.map_name,
-            "##{match.id}"
-          ].join(DELIMITER)
-          %>
+        <%= match_summary(match) %>
       </p>
       <% if match.time_left %>
         <progress value="<%= 1200 - match.time_left %>" max="1200"></progress>

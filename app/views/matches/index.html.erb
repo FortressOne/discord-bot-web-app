@@ -4,8 +4,12 @@
   <h1>Matches</h1>
 
   <div id="matches">
+    <%== pagy_nav(@pagy) %>
+
     <% @matches.each do |match| %>
       <%= render match %>
     <% end %>
+
+    <%== pagy_nav(@pagy) %>
   </div>
 </div>
