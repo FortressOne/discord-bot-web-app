@@ -218,14 +218,6 @@ class Results::Api::V1::MatchesController < ActionController::API
 
       scores = match.scores
 
-      colour = if match.drawn?
-                 "#664DB3"
-               elsif match.winning_team.name == "1"
-                 "#4D66B3"
-               elsif match.winning_team.name == "2"
-                 "#B3664D"
-               end
-
       embed.description = [
         match.description,
         match.size,
@@ -233,7 +225,7 @@ class Results::Api::V1::MatchesController < ActionController::API
         "##{match.id}"
       ].join(DELIMITER)
 
-      embed.color = colour
+      embed.color = match.result_colour
 
       teams.find_by(name: "1").tap do |team|
         embed.add_field(

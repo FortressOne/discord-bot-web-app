@@ -90,6 +90,12 @@ class Match < ApplicationRecord
     teams.find { |team| team.name == n.to_s }
   end
 
+  def result_colour
+    return COLOUR[:draw] if drawn?
+    return COLOUR[:blue] if winning_team.name == "1"
+    return COLOUR[:red] if winning_team.name == "2"
+  end
+
   private
 
   def seconds_to_str(seconds)
