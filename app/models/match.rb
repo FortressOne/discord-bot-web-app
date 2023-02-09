@@ -10,6 +10,7 @@ class Match < ApplicationRecord
   has_many :teams, dependent: :destroy
   has_many :rounds, dependent: :destroy
   has_many :players, through: :teams
+  has_many :discord_channel_players, through: :teams
 
   scope :ratings_not_processed, -> { where(ratings_processed: nil) }
 
@@ -23,14 +24,22 @@ class Match < ApplicationRecord
     if drawn?
       "Draw"
     elsif winning_team.name == "1"
-      "Blue wins by #{scores["1"] - scores["2"]} points"
+      if scores["1"] && scores["2"]
+        "Blue wins by #{scores["1"] - scores["2"]} points"
+      else
+        "Blue wins"
+      end
     elsif winning_team.name == "2"
-      "Red wins with #{seconds_to_str(time_left)} remaining"
+      if scores["1"] && scores["2"]
+        "Red wins with #{seconds_to_str(time_left)} remaining"
+      else
+        "Red wins"
+      end
     end
   end
 
   def size
-    teams.map { |team| team.players.size }.join("v")
+    teams.map { |team| team.size }.join("v")
   end
 
   def update_trueskill_ratings
@@ -73,14 +82,18 @@ class Match < ApplicationRecord
     teams.all? { |team| team.result == DRAW }
   end
 
+  def map_name
+    game_map && game_map.name
+  end
+
+  def team(n)
+    teams.find { |team| team.name == n.to_s }
+  end
+
   private
 
   def seconds_to_str(seconds)
     ["#{seconds / 3600}h", "#{seconds / 60 % 60}m", "#{seconds % 60}s"]
       .select { |str| str =~ /[1-9]/ }.join(" ")
-  end
-
-  def team(n)
-    teams.find_by(name: n)
   end
 end

@@ -6,7 +6,7 @@ class DiscordChannelPlayerTeamRound < ApplicationRecord
   delegate :name, to: :discord_channel_player_team
 
   def image
-    PlayerclassConstants::PLAYERCLASSES[playerclass][:images][team.colour.to_sym]
+    Playerclass.new(playerclass).image(team.colour.to_sym)
   end
 
   def emoji

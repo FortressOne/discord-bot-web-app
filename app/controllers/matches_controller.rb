@@ -1,23 +1,30 @@
 class MatchesController < ApplicationController
   before_action :set_match, only: %i[ show ]
 
-  # GET /matches or /matches.json
-  # def index
-  #   @matches = Match.all
-  # end
+  def index
+    @matches = Match
+      .includes([
+        :server,
+        :game_map,
+        { teams: { discord_channel_player_teams: [
+          :discord_channel_player_team_rounds,
+          { discord_channel_player: :player },
+        ]} },
+      ])
+          .last(100)
+          .reverse
+  end
 
-  # GET /matches/1 or /matches/1.json
   def show
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_match
-      @match = Match.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def match_params
-      params.fetch(:match, {})
-    end
+  def set_match
+    @match = Match.find(params[:id])
+  end
+
+  def match_params
+    params.fetch(:match, {})
+  end
 end

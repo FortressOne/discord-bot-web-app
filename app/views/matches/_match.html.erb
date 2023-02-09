@@ -2,21 +2,34 @@
   <article>
     <header>
       <p>
-        <%= link_to match.server.name, "qw://#{match.server.address}" %></br>
+      <%= local_time(match.created_at) %>
+      <small>(<%= local_time_ago(match.created_at) %>)</small></br>
+
+        <% if match.server %>
+          <%= link_to(match.server.name, "qw://#{match.server.address}") %>
+        <% elsif match.discord_channel %>
+          <%= link_to(match.discord_channel.name, match.discord_channel.invite_url) %>
+        <% else %>
+          "Unknown location"
+        <% end %>
+        </br>
+
         <%=
           [
             match.description,
             match.size,
-            match.game_map.name,
+            match.map_name,
             "##{match.id}"
           ].join(DELIMITER)
           %>
       </p>
-      <progress value="<%= 1200 - match.time_left %>" max="1200"></progress>
+      <% if match.time_left %>
+        <progress value="<%= 1200 - match.time_left %>" max="1200"></progress>
+      <% end %>
     </header>
     <div class="grid">
       <div style="margin: auto;">
-        <% team1 = match.teams.find_by(name: "1") %>
+        <% team1 = match.team(1) %>
         <%= image_tag(team1.flag[:url], alt: team1.flag[:alt], style: "height: 44px;") %>
         <strong><%= team1.description %></strong>
         </br>
@@ -32,7 +45,7 @@
         <h1><%= match.score %></h1>
       </div>
       <div style="margin: auto;">
-        <% team2 = match.teams.find_by(name: "2") %>
+        <% team2 = match.team(2) %>
         <%= image_tag(team2.flag[:url], alt: team2.flag[:alt], style: "height: 44px;") %>
         <strong><%= team2.description %></strong>
         </br>
@@ -46,7 +59,11 @@
       </div>
     </div>
     <footer>
-      <%= link_to "Demo", match.demo_uri %><%= DELIMITER %><%= link_to "Stats", match.stats_uri %>
+        <%= link_to("Summary", match) %>
+        <%= DELIMITER %>
+        <%= link_to("Demo", match.demo_uri) %>
+        <%= DELIMITER %>
+        <%= link_to("Stats", match.stats_uri) %>
     </footer>
   </article>
 </div>

@@ -8,8 +8,7 @@ Rails.application.routes.draw do
     get 'rotate_token', on: :member
   end
 
-  # resources :matches, only: [:index, :show]
-  resources :matches, only: [:show]
+  resources :matches, only: [:index, :show]
 
   root to: 'home#index'
   get 'live_player/show'

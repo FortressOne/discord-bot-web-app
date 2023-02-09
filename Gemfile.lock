@@ -95,6 +95,9 @@ GEM
     breadcrumbs_on_rails (4.1.0)
       railties (>= 5.0)
     builder (3.2.4)
+    bullet (7.0.4)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
     capybara (3.38.0)
       addressable
       matrix
@@ -297,6 +300,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
+    uniform_notifier (1.16.0)
     user_agent_parser (2.14.0)
     version_gem (1.1.1)
     warden (1.2.9)
@@ -327,6 +331,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.4.4)
   breadcrumbs_on_rails
+  bullet
   capybara (>= 3.26)
   chartkick
   debug (>= 1.0.0)
