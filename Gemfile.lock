@@ -204,6 +204,7 @@ GEM
     opus-ruby (1.0.1)
       ffi
     orm_adapter (0.5.0)
+    pagy (6.0.1)
     pg (1.4.5)
     pry (0.14.1)
       coderay (~> 1.1)
@@ -343,6 +344,7 @@ DEPENDENCIES
   local_time
   omniauth-discord
   omniauth-rails_csrf_protection
+  pagy (~> 6.0)
   pg
   pry
   puma (~> 5.0)
