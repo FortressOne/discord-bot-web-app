@@ -67,7 +67,7 @@ class Match < ApplicationRecord
   end
 
   def score
-    "#{team(1).score} — #{team(2).score}"
+    team(1).score && "#{team(1).score} — #{team(2).score}"
   end
 
   def scores

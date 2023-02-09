@@ -2,8 +2,11 @@ class MatchesController < ApplicationController
   before_action :set_match, only: %i[ show ]
 
   def index
-    @matches = Match
+    @pagy, @matches = pagy(
+      Match
+      .order(created_at: :desc)
       .includes([
+        :discord_channel,
         :server,
         :game_map,
         { teams: { discord_channel_player_teams: [
@@ -11,8 +14,7 @@ class MatchesController < ApplicationController
           { discord_channel_player: :player },
         ]} },
       ])
-          .last(100)
-          .reverse
+    )
   end
 
   def show
