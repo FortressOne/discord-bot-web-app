@@ -8,7 +8,7 @@
         <%= match_summary(match) %>
       </p>
       <% if match.time_left %>
-        <progress value="<%= 1200 - match.time_left %>" max="1200"></progress>
+        <progress style='--progress-color: <%= match.result_colour %>;' value=<%= 1200 - match.time_left %> max="1200"></progress>
       <% end %>
     </header>
     <div class="grid">
