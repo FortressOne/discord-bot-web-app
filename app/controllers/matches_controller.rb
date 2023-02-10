@@ -14,6 +14,9 @@ class MatchesController < ApplicationController
           { discord_channel_player: :player },
         ]} },
       ])
+          .joins(:teams)
+          .group(:id)
+          .having("COUNT(teams.id) > 1")
     )
   end
 
