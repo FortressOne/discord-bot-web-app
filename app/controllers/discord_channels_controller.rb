@@ -1,4 +1,4 @@
-class Results::DiscordChannelsController < ApplicationController
+class DiscordChannelsController < ApplicationController
   add_breadcrumb "Home", :root_path
 
   def index
@@ -16,11 +16,11 @@ class Results::DiscordChannelsController < ApplicationController
       .sort_by(&:last_match_date)
       .reverse
 
-    @matches = Match
-      .where(discord_channel_id: @discord_channel.id)
-      .history
+    @pagy, @matches = pagy(
+      Match.where(discord_channel_id: @discord_channel.id).completed
+    )
 
-    add_breadcrumb "Discord channels", results_root_path
+    add_breadcrumb "Discord channels", discord_channels_path
     add_breadcrumb @discord_channel.name
   end
 end

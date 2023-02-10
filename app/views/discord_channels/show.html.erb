@@ -50,32 +50,13 @@
     </table>
   </figure>
   <h3>Matches</h3>
-  <% @matches.each do |match| %>
-    <section>
-      <div class="grid">
-        <div id="match_id_and_date" style="text-align: left;">
-          <hgroup>
-          <h4><%= match.id %></h4>
-          <h4><%= local_time(match.created_at) %></h4>
-          <% if match.game_map %>
-            <h3><%= match.game_map.name %></h3>
-          <% end %>
-          </hgroup>
-        </div>
-        <div style="text-align: center;" id="match_team_result_<%= match.teams.first.result %>">
-          <hgroup>
-          <h3>Blue <%= result(match.teams.first.result) %></h2>
-          <h4><%= match.teams.first.players.map(&:name).join(", ") %></h3>
-          </hgroup>
-        </div>
-        <div style="text-align: center;" id="match_team_result_<%= match.teams.second.result %>">
-          <hgroup>
-          <h3>
-            Red <%= result(match.teams.second.result) %></h2>
-          <h4><%= match.teams.second.players.map(&:name).join(", ") %></h3>
-          </hgroup>
-        </div>
-      </div>
-    </section>
-  <% end %>
+  <div id="matches">
+    <%== pagy_nav(@pagy) %>
+
+    <% @matches.each do |match| %>
+      <%= render match %>
+    <% end %>
+
+    <%== pagy_nav(@pagy) %>
+  </div>
 </main>

@@ -4,20 +4,18 @@ Rails.application.routes.draw do
     delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_player_session
   end
 
+  root to: 'home#index'
+  get 'live_player/show'
+  get 'code-of-conduct', to: "static_pages#code_of_conduct"
+
   resources :players, only: [:index, :show] do
     get 'rotate_token', on: :member
   end
 
   resources :matches, only: [:index, :show]
-
-  root to: 'home#index'
-  get 'live_player/show'
-  get 'code-of-conduct', to: "static_pages#code_of_conduct"
+  resources :discord_channels, only: [:index, :show]
 
   namespace 'results' do
-    root to: 'discord_channels#index'
-    resources :discord_channels, only: [:show]
-
     namespace :api, defaults: { format: :json } do
       namespace :v1 do
         resources :matches, only: [:create]

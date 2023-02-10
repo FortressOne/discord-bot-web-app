@@ -2,10 +2,14 @@
   <article>
     <header>
       <p>
-        <span style="text-align: left;"><%= match_location(match) %></span>
-        <span style="float: right;"><%= local_time(match.created_at) %><small> (<%= local_time_ago(match.created_at) %>)</small></span>
-        </br>
-        <%= match_summary(match) %>
+        <span style="float: right;"><%= match.id %><%= DELIMITER %><%= local_time(match.created_at) %><small> (<%= local_time_ago(match.created_at) %>)</small></span>
+        <% if match.server %>
+          Server: <%= link_to(match.server.name, "qw://#{match.server.address}", style: "text-align: left;") %></br>
+        <% end %>
+        <% if match.discord_channel %>
+          Discord: <%= link_to(match.discord_channel.name, match.discord_channel, style: "text-align: left;") %></br>
+        <% end %>
+        <h4><%= match_summary(match) %></h4>
       </p>
       <% if match.time_left %>
         <progress style='--progress-color: <%= match.result_colour %>;' value=<%= 1200 - match.time_left %> max="1200"></progress>
