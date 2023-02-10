@@ -10,6 +10,10 @@ class HomeController < ApplicationController
           :discord_channel_player_team_rounds,
           { discord_channel_player: :player },
         ]} },
-      ]).limit(1)
+      ])
+          .joins(:teams)
+          .group(:id)
+          .having("COUNT(teams.id) > 1")
+          .limit(1)
   end
 end
