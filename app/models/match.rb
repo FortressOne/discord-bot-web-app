@@ -14,6 +14,22 @@ class Match < ApplicationRecord
 
   scope :ratings_not_processed, -> { where(ratings_processed: nil) }
 
+  scope :completed, -> do
+    order(created_at: :desc)
+      .includes([
+        :discord_channel,
+        :server,
+        :game_map,
+        { teams: { discord_channel_player_teams: [
+          :discord_channel_player_team_rounds,
+          { discord_channel_player: :player },
+        ]} },
+      ])
+          .joins(:teams)
+          .group(:id)
+          .having("COUNT(teams.id) > 1")
+  end
+
   scope :history, -> do
     order(created_at: :desc)
       .includes(:game_map)
