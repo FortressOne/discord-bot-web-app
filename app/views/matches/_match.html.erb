@@ -22,7 +22,7 @@
             <% dcpt.images.each do |pc| %>
               <%= image_tag(pc[:url], alt: pc[:alt], style: "height: 44px;") %>
             <% end %>
-            <%= dcpt.name %>
+            <%= link_to(dcpt.name, dcpt.player) %>
             </br>
           <% end %>
         <% end %>
@@ -40,7 +40,7 @@
             <% dcpt.images.each do |pc| %>
               <%= image_tag(pc[:url], alt: pc[:alt], style: "height: 44px;") %>
             <% end %>
-            <%= dcpt.name %>
+            <%= link_to(dcpt.name, dcpt.player) %>
             </br>
           <% end %>
         <% end %>
