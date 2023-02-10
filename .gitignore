@@ -38,5 +38,7 @@ yarn-debug.log*
 latest.dump
 
 /config/credentials/production.key
-
 /config/credentials/development.key
+
+.env.production
+latest.dump*
