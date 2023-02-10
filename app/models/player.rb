@@ -57,7 +57,7 @@ class Player < ApplicationRecord
   end
 
   def last_match_date
-    teams.last { |team| team.created_at }.created_at
+    teams.any? && teams.last { |team| team.created_at }.created_at
   end
 
   def discord_channel_players_with_matches_played
