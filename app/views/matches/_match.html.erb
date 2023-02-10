@@ -14,15 +14,17 @@
     <div class="grid">
       <div style="margin: auto;">
         <% team1 = match.team(1) %>
-        <%= image_tag(team1.flag[:url], alt: team1.flag[:alt], style: "height: 44px;") %>
-        <strong><%= team1.description %></strong>
-        </br>
-        <% team1.discord_channel_player_teams.each do |dcpt| %>
-          <% dcpt.images.each do |pc| %>
-            <%= image_tag(pc[:url], alt: pc[:alt], style: "height: 44px;") %>
-          <% end %>
-          <%= dcpt.name %>
+        <% if team1 %>
+          <%= image_tag(team1.flag[:url], alt: team1.flag[:alt], style: "height: 44px;") %>
+          <strong><%= team1.description %></strong>
           </br>
+          <% team1.discord_channel_player_teams.each do |dcpt| %>
+            <% dcpt.images.each do |pc| %>
+              <%= image_tag(pc[:url], alt: pc[:alt], style: "height: 44px;") %>
+            <% end %>
+            <%= dcpt.name %>
+            </br>
+          <% end %>
         <% end %>
       </div>
       <div style="margin: auto;">
@@ -30,15 +32,17 @@
       </div>
       <div style="margin: auto;">
         <% team2 = match.team(2) %>
-        <%= image_tag(team2.flag[:url], alt: team2.flag[:alt], style: "height: 44px;") %>
-        <strong><%= team2.description %></strong>
-        </br>
-        <% team2.discord_channel_player_teams.each do |dcpt| %>
-          <% dcpt.images.each do |pc| %>
-            <%= image_tag(pc[:url], alt: pc[:alt], style: "height: 44px;") %>
-          <% end %>
-          <%= dcpt.name %>
+        <% if team2 %>
+          <%= image_tag(team2.flag[:url], alt: team2.flag[:alt], style: "height: 44px;") %>
+          <strong><%= team2.description %></strong>
           </br>
+          <% team2.discord_channel_player_teams.each do |dcpt| %>
+            <% dcpt.images.each do |pc| %>
+              <%= image_tag(pc[:url], alt: pc[:alt], style: "height: 44px;") %>
+            <% end %>
+            <%= dcpt.name %>
+            </br>
+          <% end %>
         <% end %>
       </div>
     </div>
