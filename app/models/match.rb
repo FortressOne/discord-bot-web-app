@@ -23,6 +23,8 @@ class Match < ApplicationRecord
   def description
     if drawn?
       "Draw"
+    elsif !winning_team
+      "Match underway"
     elsif winning_team.name == "1"
       if scores["1"] && scores["2"]
         "Blue wins by #{scores["1"] - scores["2"]} points"
