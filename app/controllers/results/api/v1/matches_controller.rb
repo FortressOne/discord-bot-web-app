@@ -257,6 +257,7 @@ class Results::Api::V1::MatchesController < ActionController::API
         name: "",
         value: [
           "[Summary](#{match_url})",
+          "[Stats](#{match.stats_uri})",
           "[Demo](#{match.demo_uri})",
         ].join(DELIMITER)
       )
