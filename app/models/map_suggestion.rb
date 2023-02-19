@@ -14,9 +14,9 @@ class MapSuggestion < ApplicationRecord
   def update_suggestion
     last_thirty_maps = discord_channel
       .matches
+      .completed
       .order(created_at: :desc)
       .limit(30)
-      .includes(:game_map)
       .map(&:game_map)
 
     recently_suggested_maps = MapSuggestion
@@ -26,9 +26,9 @@ class MapSuggestion < ApplicationRecord
       .map(&:game_map)
 
     recently_played_maps = Match
+      .completed
       .where(discord_channel: discord_channel)
-      .where("created_at > ?", 6.hours.ago)
-      .includes(:game_map)
+      .where("matches.created_at > ?", 6.hours.ago)
       .map(&:game_map)
 
     suggested_maps = last_thirty_maps - recently_suggested_maps - recently_played_maps
