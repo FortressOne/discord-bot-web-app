@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   namespace 'results' do
     namespace :api, defaults: { format: :json } do
       namespace :v1 do
+        resources :map_suggestions, only: [:create]
         resources :matches, only: [:create]
         post "fo_login", to: "fo_logins#create"
         post "matches/:id", to: "matches#update"

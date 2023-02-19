@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_08_120331) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_19_091305) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -90,6 +90,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_08_120331) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "map_suggestions", force: :cascade do |t|
+    t.bigint "game_map_id"
+    t.bigint "discord_channel_id", null: false
+    t.bigint "player_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discord_channel_id"], name: "index_map_suggestions_on_discord_channel_id"
+    t.index ["game_map_id"], name: "index_map_suggestions_on_game_map_id"
+    t.index ["player_id"], name: "index_map_suggestions_on_player_id"
   end
 
   create_table "matches", force: :cascade do |t|
@@ -173,6 +184,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_08_120331) do
   add_foreign_key "discord_channel_player_team_rounds", "rounds"
   add_foreign_key "discord_channel_players", "discord_channels"
   add_foreign_key "discord_channel_players", "players"
+  add_foreign_key "map_suggestions", "discord_channels"
+  add_foreign_key "map_suggestions", "game_maps"
+  add_foreign_key "map_suggestions", "players"
   add_foreign_key "matches", "discord_channels"
   add_foreign_key "matches", "game_maps"
   add_foreign_key "matches", "servers"
