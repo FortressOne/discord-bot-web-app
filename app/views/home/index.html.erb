@@ -215,11 +215,11 @@
     <h3>The low-down on each</h3>
     </hgroup>
 
-    <% Playerclass::PLAYERCLASSES.each do |_playerclass_id, playerclass| %>
+    <% Playerclass::PLAYERCLASSES.each do |playerclass_id, playerclass| %>
       <article>
         <div style="display: flex;">
           <div style="flex: 33%">
-            <h3><%= playerclass[:name] %></h3>
+            <h3><%= "#{playerclass_id}. #{playerclass[:name]}" %></h3>
             <% playerclass[:images].each do |_colour, image| %>
               <%= image_tag(image[:url], alt: image[:alt]) %>
             <% end %>
@@ -233,18 +233,16 @@
               <dt>Armour</dt>
               <dd><%= playerclass[:armour] %></dd>
             </dl>
-            <% if playerclass[:specials].any? %>
-              <dl>
-                <dt>Specials</dt>
-                <dd>
-                  <ol>
-                    <% playerclass[:specials].each do |weapon| %>
-                      <li><%= weapon %></li>
-                    <% end %>
-                  </ol>
-                </dd>
-              </dl>
-            <% end %>
+            <dl>
+              <dt>Specials</dt>
+              <dd>
+                <ol>
+                  <% playerclass[:specials].each do |special| %>
+                    <li><%= special %></li>
+                  <% end %>
+                </ol>
+              </dd>
+            </dl>
             <% if playerclass[:attributes].any? %>
               <dl>
                 <dt>Attributes</dt>

@@ -11,7 +11,7 @@ class Playerclass
       weapons: ["Nailgun", "Shotgun", nil, "Axe"],
       grenades: ["Flash / Caltrops", "Concussion"],
       specials: ["Dash", "Scanner"],
-      attributes: ["Can uncover enemy spies", "Can disarm detpacks"],
+      attributes: ["Uncover enemy spies", "Disarm detpacks"],
     },
     2 => {
       images: {
@@ -36,7 +36,7 @@ class Playerclass
       armour: "200 Red",
       weapons: ["Rocket Launcher", "Super Shotgun", "Shotgun", "Axe"],
       grenades: ["Frag", "Shock / Nail"],
-      specials: [],
+      specials: ["None", "Rocket jump"],
       attributes: [],
     },
     4 => {
@@ -88,8 +88,8 @@ class Playerclass
       armour: "150 Yellow",
       weapons: ["Flamethrower", "Incendiary Cannon", "Shotgun", "Axe"],
       grenades: ["Frag", "Napalm"],
-      specials: ["Airblast"],
-      attributes: ["Is resistant to fire"],
+      specials: ["Airblast", "Rocket jump"],
+      attributes: ["Enemies take +25% damage when alight", "Is resistant to fire"],
     },
     8 => {
       images: {
@@ -102,7 +102,7 @@ class Playerclass
       weapons: ["Nailgun", "Super Shotgun", "Tranq Gun", "Knife"],
       grenades: ["Frag", "Hallucinogenic Gas"],
       specials: ["Feign", "Disguise"],
-      attributes: ["Can uncover enemy spies"],
+      attributes: ["Uncover enemy spies"],
     },
     9 => {
       images: {
@@ -115,7 +115,7 @@ class Playerclass
       weapons: ["Railgun", "Super Shotgun", "Shotgun", "Spanner"],
       grenades: ["Frag", "EMP"],
       specials: ["Dispenser", "Sentry Gun"],
-      attributes: ["Can dismantle enemy Buildings"],
+      attributes: ["Dismantle enemy Buildings"],
     },
   }
 
