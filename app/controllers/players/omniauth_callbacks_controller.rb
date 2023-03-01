@@ -7,19 +7,19 @@ class Players::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def discord
     @player = Player.from_omniauth(request.env["omniauth.auth"])
 
-    server_member = JSON.parse(
-      Discordrb::API::Server.resolve_member(
-        "Bot #{Rails.application.credentials.discord[:token]}",
-        Rails.application.config.discord[:server_id],
-        request.env["omniauth.auth"]["uid"]
-      )
+    fo_discord_server_member = Discordrb::API::Server.resolve_member(
+      "Bot #{Rails.application.credentials.discord[:token]}",
+      Rails.application.config.discord[:server_id],
+      request.env["omniauth.auth"]["uid"]
     )
 
-    if server_member
-      name = if server_member["nick"]
-               server_member["nick"]
+    if fo_discord_server_member
+      json = JSON.parse(fo_discord_server_member)
+
+      name = if json["nick"]
+               json["nick"]
              else
-               server_member["user"]["username"]
+               json["user"]["username"]
              end
 
       @player.update(name: name)
