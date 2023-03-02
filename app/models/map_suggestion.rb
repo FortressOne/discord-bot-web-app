@@ -1,7 +1,7 @@
 class MapSuggestion < ApplicationRecord
-  belongs_to :game_map, optional: true
   belongs_to :discord_channel
-  belongs_to :player
+  belongs_to :game_map, optional: true
+  belongs_to :player, optional: true
 
   after_create :update_suggestion
 
@@ -32,6 +32,14 @@ class MapSuggestion < ApplicationRecord
       .map(&:game_map)
 
     suggested_maps = last_thirty_maps - recently_suggested_maps - recently_played_maps
+
+    if suggested_maps.empty?
+      suggested_maps = last_thirty_maps - recently_played_maps
+    end
+
+    if suggested_maps.empty?
+      suggested_maps = last_thirty_maps
+    end
 
     update(game_map: suggested_maps.sample)
   end
