@@ -12,7 +12,7 @@ class DiscordChannelsController < ApplicationController
     @discord_channel_players = DiscordChannelPlayer
       .where(discord_channel_id: @discord_channel.id)
       .joins(:teams)
-      .includes(:teams, :player, :trueskill_rating)
+      .includes(:teams, :player, :trueskill_rating, :discord_channel)
       .sort_by(&:last_match_date)
       .reverse
 
