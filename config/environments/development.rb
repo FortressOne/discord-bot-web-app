@@ -107,6 +107,7 @@ Rails.application.configure do
 
   config.after_initialize do
     Bullet.enable = true
+    Bullet.alert = true
     Bullet.console = true
     Bullet.skip_html_injection = false
   end

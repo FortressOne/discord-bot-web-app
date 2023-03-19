@@ -1,7 +1,31 @@
 class DiscordChannelPlayerTeam < ApplicationRecord
-  has_one :trueskill_rating, as: :trueskill_rateable, dependent: :destroy
   belongs_to :team
+  counter_culture :team
+
   belongs_to :discord_channel_player
+
+  counter_culture(
+    :discord_channel_player,
+    column_name: Proc.new do |dcp_team|
+      "winning_teams_count" if dcp_team.team.result == 'WIN'
+    end
+  )
+
+  counter_culture(
+    :discord_channel_player,
+    column_name: Proc.new do |dcp_team|
+      "losing_teams_count" if dcp_team.team.result == 'LOSE'
+    end
+  )
+
+  counter_culture(
+    :discord_channel_player,
+    column_name: Proc.new do |dcp_team|
+      "drawing_teams_count" if dcp_team.team.result == 'DRAW'
+    end
+  )
+
+  has_one :trueskill_rating, as: :trueskill_rateable, dependent: :destroy
   has_many :discord_channel_player_team_rounds, dependent: :destroy
   has_many :rounds, through: :discord_channel_player_team_round
 

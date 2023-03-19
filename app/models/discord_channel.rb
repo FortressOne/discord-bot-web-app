@@ -5,7 +5,7 @@ class DiscordChannel < ApplicationRecord
   has_many :players, through: :discord_channel_players
 
   def percentile(discord_channel_player)
-    100 - 100.0 * (rank(discord_channel_player)-1) / discord_channel_players.count
+    100 - 100.0 * (rank(discord_channel_player)-1) / discord_channel_players_count
   end
 
   def rank(discord_channel_player)

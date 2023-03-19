@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_02_123742) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_19_152632) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -72,6 +72,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_02_123742) do
     t.bigint "player_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "teams_count", default: 0, null: false
+    t.integer "winning_teams_count", default: 0, null: false
+    t.integer "losing_teams_count", default: 0, null: false
+    t.integer "drawing_teams_count", default: 0, null: false
     t.index ["discord_channel_id"], name: "index_discord_channel_players_on_discord_channel_id"
     t.index ["player_id"], name: "index_discord_channel_players_on_player_id"
   end
@@ -83,6 +87,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_02_123742) do
     t.datetime "updated_at", null: false
     t.boolean "rated", default: false, null: false
     t.string "invite_url"
+    t.integer "discord_channel_players_count", default: 0, null: false
     t.index ["channel_id"], name: "index_discord_channels_on_channel_id", unique: true
   end
 
@@ -163,6 +168,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_02_123742) do
     t.bigint "match_id", null: false
     t.string "name"
     t.integer "score"
+    t.integer "discord_channel_player_teams_count", default: 0, null: false
     t.index ["match_id"], name: "index_teams_on_match_id"
   end
 

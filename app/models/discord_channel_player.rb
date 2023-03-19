@@ -14,6 +14,7 @@ class DiscordChannelPlayer < ApplicationRecord
 
   has_one :trueskill_rating, as: :trueskill_rateable, dependent: :destroy
   belongs_to :discord_channel
+  counter_culture :discord_channel
   belongs_to :player
   has_many :discord_channel_player_teams
   has_many :discord_channel_player_rounds
@@ -81,19 +82,19 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   def match_count
-    teams.count
+    teams_count
   end
 
   def win_count
-    teams.where(result: WIN).count
+    winning_teams_count
   end
 
   def loss_count
-    teams.where(result: LOSS).count
+    losing_teams_count
   end
 
   def draw_count
-    teams.where(result: DRAW).count
+    drawing_teams_count
   end
 
   def trueskill_ratings_graph(int)

@@ -19,7 +19,7 @@ class Team < ApplicationRecord
   has_many :trueskill_ratings, through: :discord_channel_players
 
   def size
-    discord_channel_player_teams.count
+    discord_channel_player_teams_count
   end
 
   def description
