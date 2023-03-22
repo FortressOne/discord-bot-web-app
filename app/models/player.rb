@@ -70,24 +70,18 @@ class Player < ApplicationRecord
   end
 
   def match_count
-    teams.where.not(result: nil).count
+    win_count + loss_count + draw_count
   end
 
   def win_count
-    result_count(WIN)
+    discord_channel_players.sum { |dcp| dcp.winning_teams_count }
   end
 
   def loss_count
-    result_count(LOSS)
+    discord_channel_players.sum { |dcp| dcp.losing_teams_count }
   end
 
   def draw_count
-    result_count(DRAW)
-  end
-
-  private
-
-  def result_count(result)
-    teams.where(result: result).count
+    discord_channel_players.sum { |dcp| dcp.drawing_teams_count }
   end
 end
