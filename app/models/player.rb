@@ -88,6 +88,6 @@ class Player < ApplicationRecord
   private
 
   def result_count(result)
-    teams.where(result: result).size
+    teams.where(result: result).count
   end
 end
