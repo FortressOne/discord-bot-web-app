@@ -2,6 +2,7 @@ class DiscordChannelPlayerTeam < ApplicationRecord
   include ResultConstants
 
   belongs_to :team
+  counter_culture :team
   belongs_to :discord_channel_player
   has_one :trueskill_rating, as: :trueskill_rateable, dependent: :destroy
   has_many :discord_channel_player_team_rounds, dependent: :destroy
