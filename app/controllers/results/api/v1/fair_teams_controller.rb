@@ -31,11 +31,11 @@ class Results::Api::V1::FairTeamsController < ApplicationController
       teams = {}
 
       teams[team1] = team1.inject(0) do |sum, discord_channel_player|
-        sum + discord_channel_player.form_weighted_cse
+        sum + discord_channel_player.conservative_skill_estimate
       end
 
       teams[team2] = team2.inject(0) do |sum, discord_channel_player|
-        sum + discord_channel_player.form_weighted_cse
+        sum + discord_channel_player.conservative_skill_estimate
       end
 
       if discord_channel.matches.count.odd?

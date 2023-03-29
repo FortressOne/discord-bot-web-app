@@ -51,24 +51,6 @@ class DiscordChannelPlayer < ApplicationRecord
     trueskill_rating.conservative_skill_estimate
   end
 
-  # returns cse less form_period/cse of cse per in-a-row loss (ignoring draws).
-  # I.e with form_period 5, lost last match, returns 80% of cse, lost two last
-  # matches, returns 60% of cse. Won't set you below 0. Resets with a win.
-  def form_weighted_cse
-    if teams.empty? || conservative_skill_estimate <= 0
-      return conservative_skill_estimate
-    end
-
-    per_consecutive_loss_handicap = conservative_skill_estimate / FORM_PERIOD
-    form_period_teams = teams.last(FORM_PERIOD).reverse
-
-    form_period_teams.inject(conservative_skill_estimate) do |fwcse, team|
-      break fwcse if team.result == 1
-
-      fwcse -= per_consecutive_loss_handicap
-    end
-  end
-
   def leaderboard_sort_order
     if discord_channel.rated?
       trueskill_rating.conservative_skill_estimate * -1
