@@ -277,6 +277,11 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    sentry-rails (5.8.0)
+      railties (>= 5.0)
+      sentry-ruby (~> 5.8.0)
+    sentry-ruby (5.8.0)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
@@ -357,6 +362,8 @@ DEPENDENCIES
   redis (~> 4.0)
   sassc-rails (~> 2.1)
   selenium-webdriver
+  sentry-rails
+  sentry-ruby
   stimulus-rails (>= 0.4.0)
   trueskill!
   turbo-rails (>= 0.7.11)

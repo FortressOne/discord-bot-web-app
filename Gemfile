@@ -55,6 +55,8 @@ gem 'discordrb', github: "shardlab/discordrb", branch: "main"
 gem 'rails_same_site_cookie'
 gem 'pagy', '~> 6.0'
 gem 'counter_culture'
+gem "sentry-ruby"
+gem "sentry-rails"
 
 group :development, :test do
   gem 'pry'
