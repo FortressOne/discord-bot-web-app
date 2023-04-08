@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
   get 'live_player/show'
-  get 'code-of-conduct', to: "static_pages#code_of_conduct"
+  get 'code-of-conduct', to: 'static_pages#code_of_conduct'
 
   resources :players, only: [:index, :show] do
     get 'rotate_token', on: :member
@@ -19,9 +19,10 @@ Rails.application.routes.draw do
     namespace :api, defaults: { format: :json } do
       namespace :v1 do
         resources :map_suggestions, only: [:create]
+        post 'map_suggestions/vote', to: 'map_suggestions#vote'
         resources :matches, only: [:create]
-        post "fo_login", to: "fo_logins#create"
-        post "matches/:id", to: "matches#update"
+        post 'fo_login', to: 'fo_logins#create'
+        post 'matches/:id', to: 'matches#update'
         resources :fair_teams, only: [:new]
       end
     end
