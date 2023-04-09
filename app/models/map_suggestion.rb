@@ -3,21 +3,29 @@ class MapSuggestion < ApplicationRecord
   belongs_to :game_map, optional: true
   belongs_to :player, optional: true
 
-  def self.vote(discord_channel:, for_teamsize: 4)
+  def self.vote(attributes = {})
     [
-      create(
-        discord_channel: discord_channel,
-        for_teamsize: for_teamsize
-      ).suggestion,
-      create(
-        discord_channel: discord_channel,
-        for_teamsize: for_teamsize
-      ).suggestion,
-      create(
-        discord_channel: discord_channel,
-        for_teamsize: for_teamsize
-      ).suggestion
+      create(attributes).suggestion,
+      create(attributes).suggestion,
+      create(attributes).suggestion
     ]
+  end
+
+  def initialize(attributes = {})
+    if attributes[:discord_player_id]
+      attributes[:player_id] = Player.find_or_create_by(
+        discord_id: attributes[:discord_player_id],
+        name: attributes[:discord_player_name]
+      ).id
+    end
+
+    if attributes[:channel_id]
+      attributes[:discord_channel_id] = DiscordChannel.find_by(
+        channel_id: attributes.delete(:channel_id)
+      ).id
+    end
+
+    super(attributes)
   end
 
   def suggestion
