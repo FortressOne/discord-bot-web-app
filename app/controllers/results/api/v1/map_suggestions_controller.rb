@@ -14,6 +14,11 @@ class Results::Api::V1::MapSuggestionsController < ActionController::API
   def map_suggestion_params
     params
       .require(:map_suggestion)
-      .permit([:channel_id, :discord_player_id, :for_teamsize])
+      .permit([
+        :channel_id,
+        :discord_player_id,
+        :discord_channel_id,
+        :for_teamsize
+      ])
   end
 end

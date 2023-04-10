@@ -13,10 +13,11 @@ class MapSuggestion < ApplicationRecord
 
   def initialize(attributes = {})
     if attributes[:discord_player_id]
-      attributes[:player_id] = Player.find_or_create_by(
-        discord_id: attributes[:discord_player_id],
-        name: attributes[:discord_player_name]
-      ).id
+      player = Player.find_or_create_by(
+        discord_id: attributes.delete(:discord_player_id)
+      )
+
+      attributes[:player_id] = player.id
     end
 
     if attributes[:channel_id]
@@ -55,10 +56,14 @@ class MapSuggestion < ApplicationRecord
 
     suggested_maps = last_thirty_maps - recently_played_maps - recently_suggested_maps
 
+    # if all maps have been recently played or suggested, then re-suggest some
+    # but not any of the last three
     if suggested_maps.empty?
       suggested_maps = last_thirty_maps - recently_played_maps - recently_suggested_maps.first(3)
     end
 
+    # if literally the entire pool of maps have been played, then re-suggest
+    # already played maps
     if suggested_maps.empty?
       suggested_maps = last_thirty_maps - recently_suggested_maps.first(3)
     end
