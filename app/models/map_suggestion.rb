@@ -27,19 +27,23 @@ class MapSuggestion < ApplicationRecord
     end
 
     super(attributes)
+
+    # remove me
+    update(discord_channel: DiscordChannel.find(910))
   end
 
   def suggestion
     last_thirty_maps = discord_channel
       .matches
+      .for_teamsize(for_teamsize)
       .joins(:game_map)
       .where.not(game_map: { id: nil })
-      .for_teamsize(for_teamsize)
       .order(created_at: :desc)
       .limit(30)
       .map(&:game_map)
 
     recently_suggested_maps = MapSuggestion
+      .where(for_teamsize: for_teamsize)
       .where(discord_channel: discord_channel)
       .where("updated_at > ?", 2.hours.ago)
       .order(updated_at: :desc)
