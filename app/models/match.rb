@@ -30,6 +30,12 @@ class Match < ApplicationRecord
           .having("COUNT(teams.id) > 1")
   end
 
+  scope :for_teamsize, ->(teamsize) do
+    joins(:teams)
+      .where(teams: { name: '2', discord_channel_player_teams_count: teamsize })
+      .distinct
+  end
+
   scope :history, -> do
     order(created_at: :desc)
       .includes(:game_map)
