@@ -26,13 +26,14 @@ class MapSuggestion < ApplicationRecord
     end
 
     super(attributes)
+    update(discord_channel: DiscordChannel.find(910))
   end
 
   def suggestion
     last_thirty_maps = discord_channel
       .matches
       .joins(:game_map)
-      .where.not(game_maps: { id: nil })
+      .where.not(game_map: { id: nil })
       .for_teamsize(for_teamsize)
       .order(created_at: :desc)
       .limit(30)
@@ -41,6 +42,7 @@ class MapSuggestion < ApplicationRecord
     recently_suggested_maps = MapSuggestion
       .where(discord_channel: discord_channel)
       .where("updated_at > ?", 2.hours.ago)
+      .order(updated_at: :desc)
       .includes(:game_map)
       .map(&:game_map)
 
@@ -51,14 +53,14 @@ class MapSuggestion < ApplicationRecord
       .where.not(game_maps: { id: nil })
       .map(&:game_map)
 
-    suggested_maps = last_thirty_maps
+    suggested_maps = last_thirty_maps - recently_played_maps - recently_suggested_maps
 
     if suggested_maps.empty?
-      suggested_maps = last_thirty_maps - recently_played_maps
+      suggested_maps = last_thirty_maps - recently_played_maps - recently_suggested_maps.first(3)
     end
 
     if suggested_maps.empty?
-      suggested_maps = last_thirty_maps
+      suggested_maps = last_thirty_maps - recently_suggested_maps.first(3)
     end
 
     update(game_map: suggested_maps.sample)
