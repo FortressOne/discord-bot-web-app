@@ -27,7 +27,6 @@ class MapSuggestion < ApplicationRecord
     end
 
     super(attributes)
-    update(discord_channel: DiscordChannel.find(910))
   end
 
   def suggestion
