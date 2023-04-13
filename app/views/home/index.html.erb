@@ -48,7 +48,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="links">
     <div class="grid">
       <div>
         <hgroup>
@@ -108,7 +108,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="matches">
     <hgroup>
     <h2>Latest pick-up game result</h2>
     <h3>Games organised through Discord</h3>
@@ -117,9 +117,10 @@
     <% @matches.each do |match| %>
       <%= render match %>
     <% end %>
+    <a href="/matches">See all match results</a>
   </section>
 
-  <section>
+  <section id="screenshots">
     <hgroup>
     <h2>Screenshots</h2>
     <h3>Click to open</h3>
@@ -178,7 +179,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="testimonials">
     <hgroup>
     <h2>Words</h2>
     <h3>What people are saying about FortressOne</h3>
@@ -209,7 +210,7 @@
     </blockquote>
   </section>
 
-  <section data-nosnippet>
+  <section id="classes" data-nosnippet>
     <hgroup>
     <h2>Classes</h2>
     <h3>The low-down on each</h3>
@@ -283,7 +284,7 @@
     <% end %>
   </section>
 
-  <section>
+  <section id="controls">
     <hgroup>
     <h2>Controls</h2>
     <h3>There's a lot of buttons</h3>
@@ -291,7 +292,7 @@
     <%= image_tag(asset_path("home/controls.webp"), alt: "Default keyboard config") %>
   </section>
 
-  <section>
+  <section id="acknowledgements">
     <hgroup>
     <h2>Acknowledgments</h2>
     <h3>A true grassroots community project</h3>
