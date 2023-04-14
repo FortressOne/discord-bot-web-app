@@ -34,7 +34,6 @@ class MapSuggestion < ApplicationRecord
       .matches
       .for_teamsize(for_teamsize)
       .joins(:game_map)
-      .where.not(game_map: { id: nil })
       .order(created_at: :desc)
       .limit(30)
       .map(&:game_map)
@@ -51,7 +50,6 @@ class MapSuggestion < ApplicationRecord
       .where(discord_channel: discord_channel)
       .where("matches.created_at > ?", 6.hours.ago)
       .joins(:game_map)
-      .where.not(game_maps: { id: nil })
       .map(&:game_map)
 
     suggested_maps = last_thirty_maps - recently_played_maps - recently_suggested_maps
