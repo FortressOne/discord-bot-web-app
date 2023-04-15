@@ -32,8 +32,8 @@ class MapSuggestion < ApplicationRecord
   def suggestion
     last_thirty_maps = discord_channel
       .matches
-      .for_teamsize(for_teamsize)
       .joins(:game_map)
+      .for_teamsize(for_teamsize)
       .order(created_at: :desc)
       .limit(30)
       .map(&:game_map)
@@ -41,9 +41,9 @@ class MapSuggestion < ApplicationRecord
     recently_suggested_maps = MapSuggestion
       .where(for_teamsize: for_teamsize)
       .where(discord_channel: discord_channel)
-      .where("updated_at > ?", 2.hours.ago)
+      .where("map_suggestions.updated_at > ?", 2.hours.ago)
       .order(updated_at: :desc)
-      .includes(:game_map)
+      .joins(:game_map)
       .map(&:game_map)
 
     recently_played_maps = Match
@@ -64,6 +64,17 @@ class MapSuggestion < ApplicationRecord
     # already played maps
     if suggested_maps.empty?
       suggested_maps = last_thirty_maps - recently_suggested_maps.first(3)
+    end
+
+    # if there is still no map, just grab anything
+    if suggested_maps.empty?
+      suggestions_for_any_teamsize = MapSuggestion
+        .joins(:game_map)
+        .order(created_at: :desc)
+        .limit(30)
+        .map(&:game_map)
+
+      suggested_maps = suggestions_for_any_teamsize - recently_suggested_maps.first(3)
     end
 
     update(game_map: suggested_maps.sample)
