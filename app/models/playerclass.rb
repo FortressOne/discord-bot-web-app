@@ -1,5 +1,18 @@
 class Playerclass
   PLAYERCLASSES = {
+    0 => {
+      images: {
+        blue: { url: "home/classes/none.webp", alt: "Missing player class" },
+        red: { url: "home/classes/none.webp", alt: "Missing player class" },
+      },
+      name: "",
+      speed: "",
+      armour: "",
+      weapons: [],
+      grenades: [],
+      specials: [],
+      attributes: [],
+    },
     1 => {
       images: {
         blue: { url: "home/classes/blue_scout.webp", alt: "Blue scout icon" },
@@ -118,6 +131,10 @@ class Playerclass
       attributes: ["Dismantle enemy Buildings"],
     },
   }
+
+  def self.all
+    PLAYERCLASSES.except(0)
+  end
 
   def initialize(n)
     @playerclass = PLAYERCLASSES[n]
