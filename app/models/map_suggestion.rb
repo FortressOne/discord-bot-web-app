@@ -1,4 +1,6 @@
 class MapSuggestion < ApplicationRecord
+  RECENT_MAP_COUNT = 50
+
   belongs_to :discord_channel
   belongs_to :game_map, optional: true
   belongs_to :player, optional: true
@@ -35,7 +37,7 @@ class MapSuggestion < ApplicationRecord
       .joins(:game_map)
       .for_teamsize(for_teamsize)
       .order(created_at: :desc)
-      .limit(30)
+      .limit(RECENT_MAP_COUNT)
       .map(&:game_map)
 
     recently_suggested_maps = MapSuggestion
@@ -71,7 +73,7 @@ class MapSuggestion < ApplicationRecord
       suggestions_for_any_teamsize = MapSuggestion
         .joins(:game_map)
         .order(created_at: :desc)
-        .limit(30)
+        .limit(RECENT_MAP_COUNT)
         .map(&:game_map)
 
       suggested_maps = suggestions_for_any_teamsize - recently_suggested_maps.first(3)
