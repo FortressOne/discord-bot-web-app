@@ -7,23 +7,28 @@ class Players::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def discord
     @player = Player.from_omniauth(request.env["omniauth.auth"])
 
-    fo_discord_server_member = Discordrb::API::Server.resolve_member(
-      "Bot #{Rails.application.credentials.discord[:token]}",
-      Rails.application.config.discord[:server_id],
-      request.env["omniauth.auth"]["uid"]
-    )
-
-    if fo_discord_server_member
-      json = JSON.parse(fo_discord_server_member)
-
-      name = if json["nick"]
-               json["nick"]
-             else
-               json["user"]["username"]
-             end
-
-      @player.update(name: name)
+    discord_user = begin
+      Discordrb::API::Server.resolve_member(
+        "Bot #{Rails.application.credentials.discord[:token]}",
+        Rails.application.config.discord[:server_id],
+        request.env["omniauth.auth"]["uid"]
+      )
+    rescue Discordrb::Errors::UnknownMember
+      Discordrb::API::User.resolve(
+        "Bot #{Rails.application.credentials.discord[:token]}",
+        request.env["omniauth.auth"]["uid"]
+      )
     end
+
+    json = JSON.parse(discord_user)
+
+    name = json["nick"] ||
+      (json["user"] && json["user"]["username"]) ||
+      json["display_name"] ||
+      json["global_name"] ||
+      json["username"]
+
+    @player.update(name: name)
 
     if @player.persisted?
       remember_me(@player)
