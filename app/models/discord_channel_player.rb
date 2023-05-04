@@ -64,7 +64,7 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   def match_count
-    teams_count
+    winning_teams_count + losing_teams_count + drawing_teams_count
   end
 
   def win_count
