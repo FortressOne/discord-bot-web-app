@@ -1,5 +1,5 @@
 class MapSuggestion < ApplicationRecord
-  RECENT_MAP_COUNT = 50
+  RECENT_MAP_COUNT = 100
   CONSIDERED_TEAMSIZES = (2..6)
 
   belongs_to :discord_channel
