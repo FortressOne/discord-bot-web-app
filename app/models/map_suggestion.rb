@@ -1,9 +1,26 @@
 class MapSuggestion < ApplicationRecord
   RECENT_MAP_COUNT = 50
+  CONSIDERED_TEAMSIZES = (2..6)
 
   belongs_to :discord_channel
   belongs_to :game_map, optional: true
   belongs_to :player, optional: true
+
+  def self.index(channel_id:)
+    discord_channel = DiscordChannel.find_by(
+      channel_id: channel_id
+    )
+
+    CONSIDERED_TEAMSIZES.each_with_object({}) do |teamsize, h|
+      h[teamsize] = discord_channel
+        .matches
+        .joins(:game_map)
+        .for_teamsize(teamsize)
+        .limit(RECENT_MAP_COUNT)
+        .map { |ms| ms.game_map.name }
+        .uniq
+    end
+  end
 
   def self.vote(attributes = {})
     [

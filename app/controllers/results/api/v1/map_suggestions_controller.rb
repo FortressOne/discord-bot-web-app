@@ -1,22 +1,13 @@
 class Results::Api::V1::MapSuggestionsController < ActionController::API
-  def index
-    discord_channel = DiscordChannel.find_by(
-      channel_id: map_suggestion_params["discord_channel_id"]
-    )
+  RECENT_MAP_COUNT = 50
 
-    @map_suggestions = (2..6).each_with_object({}) do |teamsize, h|
-      h[teamsize] = discord_channel
-        .matches
-        .where.not(game_map_id: nil)
-        .for_teamsize(teamsize)
-        .includes(:game_map)
-        .last(30)
-        .map { |ms| ms.game_map.name }
-        .uniq
-    end
+  def index
+    json = MapSuggestion
+      .index(channel_id: map_suggestion_params["discord_channel_id"])
+      .to_json
 
     render(
-      json: @map_suggestions.to_json,
+      json: json,
       status: :ok
     )
   end
