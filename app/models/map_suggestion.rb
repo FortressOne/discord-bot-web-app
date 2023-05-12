@@ -12,13 +12,16 @@ class MapSuggestion < ApplicationRecord
     )
 
     CONSIDERED_TEAMSIZES.each_with_object({}) do |teamsize, h|
-      h[teamsize] = discord_channel
+      maps = discord_channel
         .matches
         .joins(:game_map)
         .for_teamsize(teamsize)
         .limit(RECENT_MAP_COUNT)
         .map { |ms| ms.game_map.name }
+
+      h[teamsize] = maps
         .uniq
+        .sort_by { |element| -maps.count(element) }
     end
   end
 
