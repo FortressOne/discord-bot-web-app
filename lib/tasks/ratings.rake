@@ -5,6 +5,9 @@ namespace :ratings do
   task build: :environment do
     include Saulabs::TrueSkill
 
+    unfinished_matches = Match.select { |m| m.teams.any? { |t| t.result.nil? } }
+    unfinished_matches.each { |m| m.destroy }
+
     TrueskillRating.destroy_all
 
     DiscordChannelPlayer.all.each do |dcp|
@@ -14,5 +17,9 @@ namespace :ratings do
     Match.order(:created_at).each do |match|
       match.update_trueskill_ratings
     end
+
+    # recalculate counter_caches
+    DiscordChannelPlayer.counter_culture_fix_counts
+    DiscordChannelPlayerTeam.counter_culture_fix_counts
   end
 end
