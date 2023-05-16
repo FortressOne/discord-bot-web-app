@@ -51,10 +51,6 @@ class Results::Api::V1::MatchesController < ActionController::API
       end
     end
 
-    if match.teams.all? { |team| team.result != nil }
-      match.update_trueskill_ratings
-    end
-
     embed = Discordrb::Webhooks::Embed.new
 
     embed.author = Discordrb::Webhooks::EmbedAuthor.new(
