@@ -1,6 +1,6 @@
 class MapSuggestion < ApplicationRecord
   RECENT_MAP_COUNT = 100
-  CONSIDERED_TEAMSIZES = (2..6)
+  CONSIDERED_TEAMSIZES = (1..6)
 
   belongs_to :discord_channel
   belongs_to :game_map, optional: true
@@ -14,6 +14,7 @@ class MapSuggestion < ApplicationRecord
     CONSIDERED_TEAMSIZES.each_with_object({}) do |teamsize, h|
       maps = discord_channel
         .matches
+        .order(created_at: :desc)
         .joins(:game_map)
         .for_teamsize(teamsize)
         .limit(RECENT_MAP_COUNT)
