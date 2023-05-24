@@ -79,8 +79,8 @@ class DiscordChannelPlayer < ApplicationRecord
     drawing_teams_count
   end
 
-  def trueskill_ratings_graph(int)
-    recent_teams = teams.where.not(result: nil).order(:created_at).last(30)
+  def trueskill_ratings_graph(n)
+    recent_teams = teams.where.not(result: nil).order(:created_at).last(n)
 
     dcpts = recent_teams.map do |team|
       DiscordChannelPlayerTeam.find_by(

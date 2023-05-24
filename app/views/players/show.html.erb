@@ -82,12 +82,12 @@
         </table>
         <% if @player.public_ratings || @player == current_player  || current_player&.admin? %>
           <%= area_chart(
-            dcp.trueskill_ratings_graph(30),
+            dcp.trueskill_ratings_graph(60),
             xmin: 1,
-            xmax: 30,
+            xmax: 60,
             height: "300px",
             min: nil,
-            xtitle: "Last 30 matches",
+            xtitle: "Last 60 matches",
             ytitle: "Conservative skill estimate") %>
       </figure>
     <% end %>
