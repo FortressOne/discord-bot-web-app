@@ -22,6 +22,15 @@
       at the console.
       <%= link_to("Rotate token", rotate_token_player_path, data: {turbo: false}) %>
     </p>
+
+    <fieldset>
+      <label for="public_ratings">
+        <div data-controller="toggle" data-toggle-url="<%= player_path(@player) %>" data-toggle-value="<%= @player.public_ratings %>">
+          <input name="public_ratings" type="checkbox" data-action="click->toggle#toggle" data-toggle-target="checkbox">
+          Publish ratings? Checking this box also allows you to see other public ratings.
+        </div>
+      </label>
+    </fieldset>
   <% end %>
 
   <figure>

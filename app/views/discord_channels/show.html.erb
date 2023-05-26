@@ -8,17 +8,17 @@
         <tr>
           <th style="width: 1.5rem;"></th>
           <th>Name</th>
-          <% if @discord_channel.rated? || current_player&.admin? %>
-            <th data-sort-method='number'>CSE</th>
+          <% if current_player&.admin? || current_player&.public_ratings? %>
             <th>Tier</th>
+            <th data-sort-method='number'>CSE</th>
             <th data-sort-method='number'>Rank</th>
-            <th data-sort-method='dotsep'>Percentile</th>
+            <th data-sort-method='dotsep'>P<sup>th</sup></th>
           <% end %>
-          <th data-sort-method='number'>Played</th>
-          <th data-sort-method='number'>Wins</th>
-          <th data-sort-method='number'>Losses</th>
-          <th data-sort-method='number'>Draws</th>
-          <th data-sort-method='number'>Last Match Date</th>
+          <th data-sort-method='number'>P</th>
+          <th data-sort-method='number'>W</th>
+          <th data-sort-method='number'>L</th>
+          <th data-sort-method='number'>D</th>
+          <th data-sort-method='number'>Last played</th>
         </tr>
       </thead>
       <tbody>
@@ -30,14 +30,17 @@
                 <%= image_tag dcp.player.image, style: "max-width: 1.5rem; border-radius: 50%;" %>
               <% end %>
             </td>
-            <td>
-              <%= link_to(dcp.player.name, dcp.player) %>
-            </td>
-            <% if @discord_channel.rated? || current_player&.admin? %>
-              <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
+            <td><%= link_to(dcp.player.name, dcp.player) %></td>
+            <% if current_player&.admin? || current_player&.public_ratings? && dcp.public_ratings? %>
               <td><%= dcp.tier %></td>
+              <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
               <td><%= dcp.rank %>/<%= dcp.discord_channel.discord_channel_players_count %></td>
-              <td><%= dcp.percentile.to_i.ordinalize %></td>
+              <td><%= raw percentile(dcp.percentile) %></td>
+            <% else %>
+              <td>?</td>
+              <td>?</td>
+              <td>?</td>
+              <td>?</td>
             <% end %>
             <td><%= dcp.match_count %></td>
             <td><%= dcp.win_count %></td>

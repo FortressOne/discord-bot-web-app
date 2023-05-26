@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get 'live_player/show'
   get 'code-of-conduct', to: 'static_pages#code_of_conduct'
 
-  resources :players, only: [:index, :show] do
+  resources :players, only: [:index, :show, :update] do
     get 'rotate_token', on: :member
   end
 

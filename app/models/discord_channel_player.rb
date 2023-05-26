@@ -32,6 +32,7 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   delegate :name, to: :player
+  delegate :public_ratings?, to: :player
 
   def tier
     TIERS.each do |emoji, limit|
