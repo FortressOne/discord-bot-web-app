@@ -31,16 +31,18 @@
               <% end %>
             </td>
             <td><%= link_to(dcp.player.name, dcp.player) %></td>
-            <% if current_player&.admin? || current_player&.public_ratings? && dcp.public_ratings? %>
-              <td><%= dcp.tier %></td>
-              <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
-              <td><%= dcp.rank %>/<%= dcp.discord_channel.discord_channel_players_count %></td>
-              <td><%= raw percentile(dcp.percentile) %></td>
-            <% else %>
-              <td>?</td>
-              <td>?</td>
-              <td>?</td>
-              <td>?</td>
+            <% if current_player&.admin? || current_player&.public_ratings? %>
+              <% if current_player&.admin? || dcp&.public_ratings? %>
+                <td><%= dcp.tier %></td>
+                <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
+                <td><%= dcp.rank %>/<%= dcp.discord_channel.discord_channel_players_count %></td>
+                <td><%= raw percentile(dcp.percentile) %></td>
+              <% else %>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+                <td>?</td>
+              <% end %>
             <% end %>
             <td><%= dcp.match_count %></td>
             <td><%= dcp.win_count %></td>
