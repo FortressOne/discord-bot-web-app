@@ -62,7 +62,7 @@
         <table id="player_discord_channels_table" style="white-space: nowrap;" role="grid">
           <thead>
             <tr>
-              <% if @player.public_ratings || @player == current_player || current_player&.admin?  %>
+              <% if (current_player&.public_ratings? && @player.public_ratings?) || @player == current_player || current_player&.admin? %>
                 <th data-sort-method='number'>CSE</th>
                 <th>Tier</th>
                 <th data-sort-method='number'>Rank</th>
@@ -76,7 +76,7 @@
           </thead>
           <tbody>
             <tr>
-              <% if @player.public_ratings || @player == current_player  || current_player&.admin? %>
+              <% if (current_player&.public_ratings? && @player.public_ratings?) || @player == current_player || current_player&.admin? %>
                 <td><%= number_with_precision(dcp.conservative_skill_estimate, precision: 2) %></td>
                 <td><%= dcp.tier %></td>
                 <td><%= dcp.rank %>/<%= dcp.discord_channel.discord_channel_players.count %></td>
@@ -89,7 +89,7 @@
             </tr>
           </tbody>
         </table>
-        <% if @player.public_ratings || @player == current_player  || current_player&.admin? %>
+          <% if (current_player&.public_ratings? && @player.public_ratings?) || @player == current_player || current_player&.admin? %>
           <%= area_chart(
             dcp.trueskill_ratings_graph(60),
             xmin: 1,
