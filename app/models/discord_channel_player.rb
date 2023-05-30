@@ -12,7 +12,7 @@ class DiscordChannelPlayer < ApplicationRecord
     ["👑",100.0]
   ]
 
-  has_one :trueskill_rating, as: :trueskill_rateable, dependent: :destroy
+  # has_one :trueskill_rating, as: :trueskill_rateable, dependent: :destroy
   belongs_to :discord_channel
   counter_culture :discord_channel
   belongs_to :player
@@ -20,8 +20,6 @@ class DiscordChannelPlayer < ApplicationRecord
   has_many :discord_channel_player_rounds
   has_many :teams, through: :discord_channel_player_teams
   has_many :rounds, through: :discord_channel_player_rounds
-
-  after_create :create_trueskill_rating
 
   scope :leaderboard, -> do
     joins(:player)
@@ -33,6 +31,14 @@ class DiscordChannelPlayer < ApplicationRecord
 
   delegate :name, to: :player
   delegate :public_ratings?, to: :player
+
+  def trueskill_rating
+    binding.pry
+    puts "foo"
+    OpenStruct.new(
+      { conservative_skill_estimate: 0 }
+    )
+  end
 
   def tier
     TIERS.each do |emoji, limit|
@@ -81,17 +87,13 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   def trueskill_ratings_graph(n)
-    recent_teams = teams.where.not(result: nil).order(:created_at).last(n)
-
-    dcpts = recent_teams.map do |team|
-      DiscordChannelPlayerTeam.find_by(
-        discord_channel_player_id: id,
-        team_id: team.id
-      )
-    end
+    dcpts = discord_channel_player_teams
+      .order(:created_at)
+      .reject { |dcpt| dcpt.result.nil? }
+      .last(n)
 
     dcpts.map.with_index do |dcpt, i|
-      [i+1, dcpt.trueskill_rating.conservative_skill_estimate]
+      [i+1, dcpt.conservative_skill_estimate]
     end
   end
 end

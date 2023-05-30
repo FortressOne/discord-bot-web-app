@@ -8,13 +8,22 @@ class Results::Api::V1::MatchesController < ActionController::API
   PENULTIMATE_ROUND = 2
 
   def create
+    reasons_to_bail = [
+      match_params[:teams].map { |_team_name, attrs| attrs[:players].count }.uniq > 1,
+      match_params[:teams].any { |_team_name, attrs| attrs[:players].count == 0 }
+    ]
+
+    if reasons_to_bail.any?
+      render json: { error: 'Invalid teams' }, status: :unprocessable_entity
+      return
+    end
+
     discord_channel = DiscordChannel.find_or_create_by(
       channel_id: discord_channel_params[:channel_id]
     )
 
     server = Server.find_or_create_by(address: server_params[:address])
     server.update(name: server_params[:name])
-
     game_map = GameMap.find_or_create_by(name: map_params)
 
     match = Match.create(
@@ -211,7 +220,6 @@ class Results::Api::V1::MatchesController < ActionController::API
       end
 
       match.update_trueskill_ratings
-
       scores = match.scores
 
       embed.description = [

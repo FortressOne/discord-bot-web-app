@@ -27,11 +27,11 @@ class DiscordChannelPlayerTeam < ApplicationRecord
 
     counter_culture :discord_channel_player, column_name: 'teams_count'
 
-    after_create :create_trueskill_rating
-
     delegate :name, to: :discord_channel_player
     delegate :player, to: :discord_channel_player
     delegate :match, to: :team
+    delegate :result, to: :team
+    delegate :conservative_skill_estimate, to: :trueskill_rating
 
     def emojis
       discord_channel_player_team_rounds.map(&:emoji).join("")
