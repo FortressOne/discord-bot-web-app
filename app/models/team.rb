@@ -42,28 +42,22 @@ class Team < ApplicationRecord
     Rails.application.config.team_emojis[number]
   end
 
-  def trueskill_ratings_rating_objs
-    trueskill_ratings.order(:created_at).map(&:to_rating)
+  def initial_trueskill_rating_objs
+    discord_channel_player_teams.order(:id).map do |dcpt|
+      dcp = dcpt.discord_channel_player
+      tr = dcp&.trueskill_rating || TrueskillRating.new
+      tr.to_rating
+    end
   end
 
   def update_ratings(player_ratings)
-    trueskill_ratings.order(:created_at).each_with_index do |tr, i|
-      rating = player_ratings[i]
-      tr.mean = rating.mean
-      tr.deviation = rating.deviation
-      tr.save
+    discord_channel_player_teams.order(:id).each_with_index do |dcpt, i|
+      new_rating = player_ratings[i]
 
-      dcpt = discord_channel_player_teams.find_by(
-        discord_channel_player: tr.trueskill_rateable
+      dcpt.create_trueskill_rating(
+        mean: new_rating.mean,
+        deviation: new_rating.deviation
       )
-
-      if dcpt.trueskill_rating.nil?
-        dcpt.create_trueskill_rating
-      end
-
-      dcpt
-        .trueskill_rating
-        .update(mean: rating.mean, deviation: rating.deviation)
     end
   end
 

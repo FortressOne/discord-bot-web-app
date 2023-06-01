@@ -31,7 +31,10 @@ class DiscordChannelPlayerTeam < ApplicationRecord
     delegate :player, to: :discord_channel_player
     delegate :match, to: :team
     delegate :result, to: :team
-    delegate :conservative_skill_estimate, to: :trueskill_rating
+
+    def conservative_skill_estimate
+      trueskill_rating && trueskill_rating.conservative_skill_estimate
+    end
 
     def emojis
       discord_channel_player_team_rounds.map(&:emoji).join("")

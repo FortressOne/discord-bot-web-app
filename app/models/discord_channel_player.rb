@@ -20,6 +20,12 @@ class DiscordChannelPlayer < ApplicationRecord
   has_many :discord_channel_player_rounds
   has_many :teams, through: :discord_channel_player_teams
   has_many :rounds, through: :discord_channel_player_rounds
+  has_many :trueskill_ratings, through: :discord_channel_player_teams
+  has_one :latest_rated_discord_channel_player_team, -> { joins(:trueskill_rating).order(id: :desc) }, class_name: 'DiscordChannelPlayerTeam'
+  has_one :trueskill_rating, through: :latest_rated_discord_channel_player_team
+  has_one :latest_discord_channel_player_team, -> { order(id: :desc) }, class_name: 'DiscordChannelPlayerTeam'
+  has_one :team, through: :latest_discord_channel_player_team
+
 
   scope :leaderboard, -> do
     joins(:player)
@@ -31,14 +37,6 @@ class DiscordChannelPlayer < ApplicationRecord
 
   delegate :name, to: :player
   delegate :public_ratings?, to: :player
-
-  def trueskill_rating
-    binding.pry
-    puts "foo"
-    OpenStruct.new(
-      { conservative_skill_estimate: 0 }
-    )
-  end
 
   def tier
     TIERS.each do |emoji, limit|
@@ -55,7 +53,7 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   def conservative_skill_estimate
-    trueskill_rating.conservative_skill_estimate
+    trueskill_rating && trueskill_rating.conservative_skill_estimate
   end
 
   def leaderboard_sort_order
@@ -67,7 +65,7 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   def last_match_date
-    teams.sort_by(&:created_at).last&.created_at
+    team&.created_at
   end
 
   def match_count
@@ -88,7 +86,7 @@ class DiscordChannelPlayer < ApplicationRecord
 
   def trueskill_ratings_graph(n)
     dcpts = discord_channel_player_teams
-      .order(:created_at)
+      .order(:id)
       .reject { |dcpt| dcpt.result.nil? }
       .last(n)
 
