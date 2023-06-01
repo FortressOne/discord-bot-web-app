@@ -12,7 +12,6 @@ class DiscordChannelPlayer < ApplicationRecord
     ["👑",100.0]
   ]
 
-  # has_one :trueskill_rating, as: :trueskill_rateable, dependent: :destroy
   belongs_to :discord_channel
   counter_culture :discord_channel
   belongs_to :player
