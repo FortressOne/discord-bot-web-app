@@ -44,7 +44,7 @@ class MapSuggestion < ApplicationRecord
     end
 
     if attributes[:channel_id]
-      attributes[:discord_channel_id] = DiscordChannel.find_by(
+      attributes[:discord_channel_id] = DiscordChannel.find_or_create_by(
         channel_id: attributes.delete(:channel_id)
       ).id
     end

@@ -67,18 +67,26 @@ class Match < ApplicationRecord
   end
 
   def update_trueskill_ratings
+    if result.nil?
+      puts "no result for id: #{id}" && nil
+      return nil
+    end
+
     puts "updating match id: #{id}"
 
-    team1_player_ratings = team(1).trueskill_ratings_rating_objs
-    team2_player_ratings = team(2).trueskill_ratings_rating_objs
+    team1 = team(1)
+    team2 = team(2)
+
+    team1_player_ratings = team1.initial_trueskill_rating_objs
+    team2_player_ratings = team2.initial_trueskill_rating_objs
 
     FactorGraph.new(
-      team1_player_ratings => team(1).rank,
-      team2_player_ratings => team(2).rank
+      team1_player_ratings => team1.rank,
+      team2_player_ratings => team2.rank
     ).update_skills
 
-    team(1).update_ratings(team1_player_ratings)
-    team(2).update_ratings(team2_player_ratings)
+    team1.update_ratings(team1_player_ratings)
+    team2.update_ratings(team2_player_ratings)
 
     ratings_processed = true
     save
@@ -99,11 +107,11 @@ class Match < ApplicationRecord
   end
 
   def winning_team
-    teams.find { |team| team.result == WIN }
+    teams.present? && teams.find { |team| team.result == WIN }
   end
 
   def drawn?
-    teams.all? { |team| team.result == DRAW }
+    teams.present? && teams.all? { |team| team.result == DRAW }
   end
 
   def map_name
@@ -118,6 +126,13 @@ class Match < ApplicationRecord
     return COLOUR[:draw] if drawn?
     return COLOUR[:blue] if winning_team.name == "1"
     return COLOUR[:red] if winning_team.name == "2"
+  end
+
+  def result
+    return nil if teams.empty?
+    return "draw" if drawn?
+    return "blue wins" if winning_team.name == "1"
+    return "red wins" if winning_team.name == "2"
   end
 
   private

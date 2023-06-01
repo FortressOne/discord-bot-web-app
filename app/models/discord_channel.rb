@@ -1,7 +1,7 @@
 class DiscordChannel < ApplicationRecord
   has_many :matches, dependent: :destroy
   has_many :discord_channel_players, dependent: :destroy
-  has_many :trueskill_ratings, through: :discord_channel_players
+  has_many :discord_channel_player_teams, through: :discord_channel_players
   has_many :players, through: :discord_channel_players
 
   def percentile(discord_channel_player)
@@ -20,5 +20,11 @@ class DiscordChannel < ApplicationRecord
 
   def to_param
     channel_id
+  end
+
+  private
+
+  def trueskill_ratings
+    discord_channel_players.map(&:trueskill_rating).compact
   end
 end

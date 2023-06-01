@@ -8,17 +8,15 @@ namespace :ratings do
     unfinished_matches = Match.select { |m| m.teams.any? { |t| t.result.nil? } }
     unfinished_matches.each { |m| m.destroy }
 
+    puts "destroying all ratings"
     TrueskillRating.destroy_all
 
-    DiscordChannelPlayer.all.each do |dcp|
-      dcp.create_trueskill_rating
-    end
-
+    puts "rating matches"
     Match.order(:created_at).each do |match|
       match.update_trueskill_ratings
     end
 
-    # recalculate counter_caches
+    puts "recalculating counter caches"
     DiscordChannelPlayer.counter_culture_fix_counts
     DiscordChannelPlayerTeam.counter_culture_fix_counts
   end

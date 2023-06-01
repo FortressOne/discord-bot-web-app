@@ -23,7 +23,6 @@
       </thead>
       <tbody>
         <% @discord_channel_players.each do |dcp| %>
-          <% trueskill_rating = dcp.trueskill_rating %>
           <tr>
             <td>
               <% if dcp.player.image %>
@@ -34,7 +33,7 @@
             <% if current_player&.admin? || current_player&.public_ratings? %>
               <% if current_player&.admin? || dcp&.public_ratings? %>
                 <td><%= dcp.tier %></td>
-                <td><%= number_with_precision(trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
+                <td><%= number_with_precision(dcp.trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
                 <td><%= dcp.rank %>/<%= dcp.discord_channel.discord_channel_players_count %></td>
                 <td><%= raw percentile(dcp.percentile) %></td>
               <% else %>

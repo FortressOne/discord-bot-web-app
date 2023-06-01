@@ -12,7 +12,6 @@ class DiscordChannelPlayer < ApplicationRecord
     ["👑",100.0]
   ]
 
-  has_one :trueskill_rating, as: :trueskill_rateable, dependent: :destroy
   belongs_to :discord_channel
   counter_culture :discord_channel
   belongs_to :player
@@ -20,8 +19,12 @@ class DiscordChannelPlayer < ApplicationRecord
   has_many :discord_channel_player_rounds
   has_many :teams, through: :discord_channel_player_teams
   has_many :rounds, through: :discord_channel_player_rounds
+  has_many :trueskill_ratings, through: :discord_channel_player_teams
+  has_one :latest_rated_discord_channel_player_team, -> { joins(:trueskill_rating).order(id: :desc) }, class_name: 'DiscordChannelPlayerTeam'
+  has_one :trueskill_rating, through: :latest_rated_discord_channel_player_team
+  has_one :latest_discord_channel_player_team, -> { order(id: :desc) }, class_name: 'DiscordChannelPlayerTeam'
+  has_one :team, through: :latest_discord_channel_player_team
 
-  after_create :create_trueskill_rating
 
   scope :leaderboard, -> do
     joins(:player)
@@ -49,7 +52,7 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   def conservative_skill_estimate
-    trueskill_rating.conservative_skill_estimate
+    trueskill_rating && trueskill_rating.conservative_skill_estimate
   end
 
   def leaderboard_sort_order
@@ -61,7 +64,7 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   def last_match_date
-    teams.sort_by(&:created_at).last&.created_at
+    team&.created_at
   end
 
   def match_count
@@ -81,17 +84,13 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   def trueskill_ratings_graph(n)
-    recent_teams = teams.where.not(result: nil).order(:created_at).last(n)
-
-    dcpts = recent_teams.map do |team|
-      DiscordChannelPlayerTeam.find_by(
-        discord_channel_player_id: id,
-        team_id: team.id
-      )
-    end
+    dcpts = discord_channel_player_teams
+      .order(:id)
+      .reject { |dcpt| dcpt.result.nil? }
+      .last(n)
 
     dcpts.map.with_index do |dcpt, i|
-      [i+1, dcpt.trueskill_rating.conservative_skill_estimate]
+      [i+1, dcpt.conservative_skill_estimate]
     end
   end
 end

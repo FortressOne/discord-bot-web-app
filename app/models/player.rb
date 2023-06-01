@@ -31,7 +31,8 @@ class Player < ApplicationRecord
 
   has_many :discord_channel_players, dependent: :destroy
   has_many :discord_channels, through: :discord_channel_players
-  has_many :teams, through: :discord_channel_players
+  has_many :discord_channel_player_teams, through: :discord_channel_players
+  has_many :teams, through: :discord_channel_player_teams
   has_many :matches, through: :teams
 
   has_secure_token :auth_token
