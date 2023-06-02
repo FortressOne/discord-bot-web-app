@@ -15,10 +15,15 @@ class PlayersController < ApplicationController
   end
 
   def show
-    @player = Player.includes(
-        :discord_channels,
-        :teams,
-        discord_channel_players: [ :discord_channel_player_teams, :trueskill_ratings ]
+    @player = Player
+      .includes(
+        [
+          { discord_channel_players: [
+            :trueskill_ratings,
+            { discord_channel: { discord_channel_players: [:trueskill_rating] } },
+            { discord_channel_player_teams: [:team, :trueskill_rating] }
+          ] },
+        ]
       ).find(params[:id])
 
     add_breadcrumb "Players", players_path
