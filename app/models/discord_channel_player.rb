@@ -52,7 +52,7 @@ class DiscordChannelPlayer < ApplicationRecord
   end
 
   def conservative_skill_estimate
-    trueskill_rating && trueskill_rating.conservative_skill_estimate
+    trueskill_rating ? trueskill_rating.conservative_skill_estimate : 0
   end
 
   def leaderboard_sort_order
