@@ -139,7 +139,7 @@ class Match < ApplicationRecord
 
   def progress_value
     if result == "blue wins" && scores.values.any?
-      scores["2"].to_f / scores["1"] * 1200
+      600 + (scores["2"].to_f / scores["1"] * 600)
     elsif result == "red wins" && time_left
       1200 - time_left
     else
