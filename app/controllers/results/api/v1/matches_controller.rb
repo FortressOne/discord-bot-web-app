@@ -8,9 +8,11 @@ class Results::Api::V1::MatchesController < ActionController::API
   PENULTIMATE_ROUND = 2
 
   def create
+    teams = match_params[:teams].to_hash
+
     reasons_to_bail = [
-      match_params[:teams].map { |_team_name, attrs| attrs[:players].count }.uniq > 1,
-      match_params[:teams].any { |_team_name, attrs| attrs[:players].count == 0 }
+      teams.map { |_team_name, attrs| attrs["players"].count }.uniq.count > 1,
+      teams.any? { |_team_name, attrs| attrs["players"].count == 0 }
     ]
 
     if reasons_to_bail.any?
