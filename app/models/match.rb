@@ -123,6 +123,7 @@ class Match < ApplicationRecord
   end
 
   def result_colour
+    return COLOUR[:in_progress] if in_progress?
     return COLOUR[:draw] if drawn?
     return COLOUR[:blue] if winning_team.name == "1"
     return COLOUR[:red] if winning_team.name == "2"
@@ -130,6 +131,7 @@ class Match < ApplicationRecord
 
   def result
     return nil if teams.empty?
+    return "in progress" if in_progress?
     return "draw" if drawn?
     return "blue wins" if winning_team.name == "1"
     return "red wins" if winning_team.name == "2"
@@ -146,6 +148,10 @@ class Match < ApplicationRecord
   end
 
   private
+
+  def in_progress?
+    teams.present? && teams.none?(&:result)
+  end
 
   def seconds_to_str(seconds)
     ["#{seconds / 3600}h", "#{seconds / 60 % 60}m", "#{seconds % 60}s"]

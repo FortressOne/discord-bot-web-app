@@ -7,5 +7,6 @@ module ResultConstants
     blue: "#4D66B3",
     red: "#B3664D",
     draw: "#664DB3",
+    in_progress: "gray",
   }
 end
