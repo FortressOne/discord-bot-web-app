@@ -11,13 +11,8 @@
         <% end %>
         <h4><%= match_summary(match) %></h4>
       </p>
-      <% if match.result %>
-        <% if match.result == "blue wins" %>
-          <progress style='--progress-color: <%= match.result_colour %>;' value=<%= match.scores["2"].to_f / match.scores["1"] %> max="1"></progress>
-        <% else %>
-          <progress style='--progress-color: <%= match.result_colour %>;' value=<%= 1200 - match.time_left %> max="1200"></progress>
-        <% end %>
-      <% end %>
+
+      <progress style='--progress-color: <%= match.result_colour %>;' value=<%= match.progress_value %> max="1200"></progress>
     </header>
     <div class="grid">
       <div style="margin: auto;">

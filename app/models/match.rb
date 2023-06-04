@@ -135,6 +135,16 @@ class Match < ApplicationRecord
     return "red wins" if winning_team.name == "2"
   end
 
+  def progress_value
+    if result == "blue wins" && scores.values.any?
+      scores["2"].to_f / scores["1"] * 1200
+    elsif result == "red wins" && time_left
+      1200 - time_left
+    else
+      1200
+    end
+  end
+
   private
 
   def seconds_to_str(seconds)
