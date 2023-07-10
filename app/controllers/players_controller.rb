@@ -40,7 +40,7 @@ class PlayersController < ApplicationController
 
   def rotate_token
     current_player.regenerate_auth_token
-    render :show
+    redirect_to player_path(@player), notice: "Token has been rotated."
   end
 
   private
