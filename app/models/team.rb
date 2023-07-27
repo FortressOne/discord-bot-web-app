@@ -18,6 +18,8 @@ class Team < ApplicationRecord
   has_many :players, through: :discord_channel_players
   has_many :trueskill_ratings, through: :discord_channel_player_teams
 
+  after_save :fix_counts
+
   def size
     discord_channel_player_teams_count
   end
@@ -63,5 +65,11 @@ class Team < ApplicationRecord
 
   def flag
     FLAGS.fetch(number, DEFAULT_FLAG)
+  end
+
+  private
+
+  def fix_counts
+    discord_channel_player_teams.each(&:counter_culture_fix_counts)
   end
 end
