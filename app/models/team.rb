@@ -69,7 +69,7 @@ class Team < ApplicationRecord
 
   private
 
-  def fix_counts
-    discord_channel_player_teams.each(&:counter_culture_fix_counts)
+  def fix_counts # should cause counter_culture to recache
+    discord_channel_player_teams.update_all(updated_at: Time.current)
   end
 end

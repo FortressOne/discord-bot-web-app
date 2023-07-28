@@ -26,7 +26,6 @@ class DiscordChannelPlayerTeam < ApplicationRecord
     }
   )
 
-
   delegate :name, to: :discord_channel_player
   delegate :player, to: :discord_channel_player
   delegate :match, to: :team
