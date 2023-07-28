@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_13_025459) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_28_040717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -65,6 +65,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_13_025459) do
   create_table "discord_channel_player_teams", force: :cascade do |t|
     t.bigint "discord_channel_player_id", null: false
     t.bigint "team_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "discord_channel_players", force: :cascade do |t|

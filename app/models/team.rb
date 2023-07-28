@@ -18,7 +18,7 @@ class Team < ApplicationRecord
   has_many :players, through: :discord_channel_players
   has_many :trueskill_ratings, through: :discord_channel_player_teams
 
-  after_save :fix_counts
+  after_update :fix_counts
 
   def size
     discord_channel_player_teams_count
@@ -69,7 +69,7 @@ class Team < ApplicationRecord
 
   private
 
-  def fix_counts # should cause counter_culture to recache
-    discord_channel_player_teams.update_all(updated_at: Time.current)
+  def fix_counts
+    DiscordChannelPlayerTeam.counter_culture_fix_counts
   end
 end
