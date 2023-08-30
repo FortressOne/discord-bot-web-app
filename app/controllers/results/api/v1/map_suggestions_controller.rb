@@ -18,7 +18,7 @@ class Results::Api::V1::MapSuggestionsController < ActionController::API
   end
 
   def vote
-    @map_suggestions = MapSuggestion.vote(map_suggestion_params)
+    @map_suggestions = MapSuggestion.vote(map_suggestion_params, size_params)
     render json: @map_suggestions.to_json, status: :ok
   end
 
@@ -33,5 +33,10 @@ class Results::Api::V1::MapSuggestionsController < ActionController::API
         :discord_channel_id,
         :for_teamsize
       ])
+  end
+
+  def size_params
+    params
+      .require(:size)
   end
 end

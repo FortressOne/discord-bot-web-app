@@ -26,12 +26,8 @@ class MapSuggestion < ApplicationRecord
     end
   end
 
-  def self.vote(attributes = {})
-    [
-      create(attributes).suggestion,
-      create(attributes).suggestion,
-      create(attributes).suggestion
-    ]
+  def self.vote(attributes = {}, size)
+    size.times.map { create(attributes).suggestion }
   end
 
   def initialize(attributes = {})
