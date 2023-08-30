@@ -6,10 +6,7 @@ class Results::Api::V1::MapSuggestionsController < ActionController::API
       .index(channel_id: map_suggestion_params["discord_channel_id"])
       .to_json
 
-    render(
-      json: json,
-      status: :ok
-    )
+    render(json: json, status: :ok)
   end
 
   def create
@@ -18,8 +15,13 @@ class Results::Api::V1::MapSuggestionsController < ActionController::API
   end
 
   def vote
-    @map_suggestions = MapSuggestion.vote(map_suggestion_params, size_params)
-    render json: @map_suggestions.to_json, status: :ok
+    map_suggestions = MapSuggestion.vote(
+      attributes: map_suggestion_params,
+      size: params[:size],
+      except: params[:except]
+    )
+
+    render json: map_suggestions.to_json, status: :ok
   end
 
   private
@@ -33,10 +35,5 @@ class Results::Api::V1::MapSuggestionsController < ActionController::API
         :discord_channel_id,
         :for_teamsize
       ])
-  end
-
-  def size_params
-    params
-      .require(:size)
   end
 end

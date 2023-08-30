@@ -26,8 +26,10 @@ class MapSuggestion < ApplicationRecord
     end
   end
 
-  def self.vote(attributes = {}, size)
-    size.times.map { create(attributes).suggestion }
+  def self.vote(attributes: {}, size: 3, except: [])
+    size.times.map do
+      create(attributes).suggestion(except)
+    end
   end
 
   def initialize(attributes = {})
@@ -48,10 +50,11 @@ class MapSuggestion < ApplicationRecord
     super(attributes)
   end
 
-  def suggestion
+  def suggestion(except = [])
     last_thirty_maps = discord_channel
       .matches
       .joins(:game_map)
+      .where.not(game_maps: { name: except })
       .for_teamsize(for_teamsize)
       .order(created_at: :desc)
       .limit(RECENT_MAP_COUNT)
@@ -63,12 +66,15 @@ class MapSuggestion < ApplicationRecord
       .where("map_suggestions.updated_at > ?", 2.hours.ago)
       .order(updated_at: :desc)
       .joins(:game_map)
+      .where.not(game_maps: { name: except })
       .map(&:game_map)
 
     recently_played_maps = Match
       .where(discord_channel: discord_channel)
       .where("matches.created_at > ?", 6.hours.ago)
+      .where.not(game_maps: { name: except })
       .joins(:game_map)
+      .where.not(game_maps: { name: except })
       .map(&:game_map)
 
     suggested_maps = last_thirty_maps - recently_played_maps - recently_suggested_maps
@@ -89,6 +95,7 @@ class MapSuggestion < ApplicationRecord
     if suggested_maps.empty?
       suggestions_for_any_teamsize = MapSuggestion
         .joins(:game_map)
+        .where.not(game_maps: { name: except })
         .order(created_at: :desc)
         .limit(RECENT_MAP_COUNT)
         .map(&:game_map)
