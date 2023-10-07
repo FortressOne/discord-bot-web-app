@@ -25,7 +25,6 @@ class DiscordChannelPlayer < ApplicationRecord
   has_one :latest_discord_channel_player_team, -> { order(id: :desc) }, class_name: 'DiscordChannelPlayerTeam'
   has_one :team, through: :latest_discord_channel_player_team
 
-
   scope :leaderboard, -> do
     joins(:player)
       .joins(:teams)
