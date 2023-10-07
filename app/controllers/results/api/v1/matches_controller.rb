@@ -31,13 +31,16 @@ class Results::Api::V1::MatchesController < ActionController::API
     game_map = GameMap.find_or_create_by(name: map_params)
 
     match = Match.create(
-      rated: rated_params,
       discord_channel_id: discord_channel.id,
       server_id: server.id,
       demo_uri: demo_uri_params,
       stats_uri: stats_uri_params,
       game_map_id: game_map.id
     )
+
+    if rated_params
+      match.update(rated: rated_params)
+    end
 
     round = Round.create(match_id: match.id, number: PENULTIMATE_ROUND)
 
