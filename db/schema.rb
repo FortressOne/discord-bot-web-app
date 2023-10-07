@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_28_040717) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_07_131830) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -121,6 +121,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_040717) do
     t.bigint "server_id"
     t.string "demo_uri"
     t.string "stats_uri"
+    t.boolean "rated", default: true, null: false
     t.index ["discord_channel_id"], name: "index_matches_on_discord_channel_id"
     t.index ["game_map_id"], name: "index_matches_on_game_map_id"
     t.index ["server_id"], name: "index_matches_on_server_id"

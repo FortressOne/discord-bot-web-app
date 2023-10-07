@@ -9,14 +9,10 @@ class Results::Api::V1::FairTeamsController < ApplicationController
     )
 
     discord_channel_players = players_params.map do |discord_id|
-      player = Player.find_or_create_by(discord_id: discord_id)
-
-      discord_channel_player = DiscordChannelPlayer.find_or_create_by(
-        player_id: player.id,
+      DiscordChannelPlayer.find_or_create_by(
+        player_id: Player.find_or_create_by(discord_id: discord_id).id,
         discord_channel_id: discord_channel.id
       )
-
-      discord_channel_player
     end
 
     teamsize = discord_channel_players.size / 2

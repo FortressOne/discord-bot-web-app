@@ -31,6 +31,7 @@ class Results::Api::V1::MatchesController < ActionController::API
     game_map = GameMap.find_or_create_by(name: map_params)
 
     match = Match.create(
+      rated: rated_params,
       discord_channel_id: discord_channel.id,
       server_id: server.id,
       demo_uri: demo_uri_params,
@@ -304,11 +305,16 @@ class Results::Api::V1::MatchesController < ActionController::API
     match_params[:stats_uri]
   end
 
+  def rated_params
+    match_params[:rated]
+  end
+
   def match_params
     params
       .require(:match)
       .permit(
         :id,
+        :rated,
         :winner,
         :timeleft,
         :map,
