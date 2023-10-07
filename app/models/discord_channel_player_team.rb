@@ -30,6 +30,7 @@ class DiscordChannelPlayerTeam < ApplicationRecord
   delegate :player, to: :discord_channel_player
   delegate :match, to: :team
   delegate :result, to: :team
+  delegate :rated, to: :team
 
   def conservative_skill_estimate
     trueskill_rating && trueskill_rating.conservative_skill_estimate

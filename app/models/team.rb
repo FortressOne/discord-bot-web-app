@@ -20,6 +20,8 @@ class Team < ApplicationRecord
 
   after_update :fix_counts
 
+  delegate :rated, to: :match
+
   def size
     discord_channel_player_teams_count
   end

@@ -85,7 +85,7 @@ class DiscordChannelPlayer < ApplicationRecord
 
   def trueskill_ratings_graph(n)
     dcpts = discord_channel_player_teams
-      .reject { |dcpt| dcpt.result.nil? }
+      .reject { |dcpt| dcpt.result.nil? || !dcpt.rated }
       .sort_by(&:id)
       .last(n)
 

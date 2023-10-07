@@ -68,7 +68,12 @@ class Match < ApplicationRecord
 
   def update_trueskill_ratings
     if result.nil?
-      puts "no result for id: #{id}" && nil
+      puts "no result for id: #{id}"
+      return nil
+    end
+
+    if !rated
+      puts "match id: #{id} not rated"
       return nil
     end
 
