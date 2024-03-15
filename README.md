@@ -45,3 +45,12 @@ heroku pg:backups:capture
 heroku pg:backups:download
 pg_restore --verbose --clean --no-acl --no-owner -h localhost -U $USER -d discord_bot_web_app_development latest.dump
 ```
+
+Example of manually adjust someone's rating:
+
+```ruby
+bvr = Player.find_by(discord_id: 130263999106252800)
+europe = DiscordChannel.find_by(channel_id: 513699536846323712)
+eu_bvr = DiscordChannelPlayer.find_by(player: bvr, discord_channel: europe)
+eu_bvr.trueskill_rating.update(mean: 24.03761382208332)
+```
