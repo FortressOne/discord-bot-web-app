@@ -25,6 +25,10 @@ Rails.application.routes.draw do
         post 'matches/:id', to: 'matches#update'
         resources :fair_teams, only: [:new]
       end
+
+      namespace :v2 do
+        post 'fo_login', to: 'fo_logins#create'
+      end
     end
   end
 end
