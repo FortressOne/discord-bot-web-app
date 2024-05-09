@@ -48,7 +48,7 @@ class Results::Api::V1::MatchesController < ActionController::API
       team = Team.create(match_id: match.id, name: team_name)
 
       attrs[:players].each do |player_attrs|
-        player = Player.find_by(auth_token: player_attrs[:auth_token])
+        player = Player.find(player_attrs[:id].split("#").last)
 
         discord_channel_player = DiscordChannelPlayer.find_or_create_by(
           player_id: player.id,
@@ -138,7 +138,7 @@ class Results::Api::V1::MatchesController < ActionController::API
         team = Team.find_by(match_id: match.id, name: team_name)
 
         attrs[:players].each do |player_attrs|
-          player = Player.find_by(auth_token: player_attrs[:auth_token])
+          player = Player.find(player_attrs[:id].split("#").last)
 
           discord_channel_player = DiscordChannelPlayer.find_by(
             player_id: player.id,
