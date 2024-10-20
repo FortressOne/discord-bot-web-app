@@ -110,7 +110,9 @@ class Results::Api::V1::MatchesController < ActionController::API
       embed,
     )
 
-    render json: match.id.to_json, status: :ok
+    response_json = match.id.to_json
+    Rails.logger.info("Response: #{response_json}")
+    render json: response_json, status: :ok
   end
 
   def update
@@ -283,7 +285,9 @@ class Results::Api::V1::MatchesController < ActionController::API
       )
     end
 
-    render json: match.id.to_json, status: :ok
+    response_json = match.id.to_json
+    Rails.logger.info("Response: #{response_json}")
+    render json: response_json, status: :ok
   end
 
   private
