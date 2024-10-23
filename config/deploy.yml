@@ -1,5 +1,5 @@
 # Name of your application. Used to uniquely configure containers.
-service: discord_bot_web_app
+service: discord-bot-web-app
 
 # Name of the container image.
 image: fortressone/discord-bot-web-app
