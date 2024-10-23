@@ -81,4 +81,4 @@ test:
 #
 production:
   <<: *default
-  url: <%= ENV['DB_HOST'] || `heroku config:get DATABASE_URL`.chomp %>
+  url: <%= ENV['DB_HOST'] %>
