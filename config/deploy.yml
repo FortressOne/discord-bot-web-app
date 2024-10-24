@@ -39,10 +39,9 @@ builder:
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 #
 env:
-  clear:
-    DB_HOST: discord-bot-web-app.czegcwyyi7by.ap-southeast-2.rds.amazonaws.com
   secret:
     - RAILS_MASTER_KEY
+    - DATABASE_URL
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
