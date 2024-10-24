@@ -23,5 +23,7 @@ module FortressoneWebapp
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    puts "DATABASE_URL: #{ENV['DATABASE_URL']}"
   end
 end
