@@ -52,10 +52,7 @@ Rails.application.configure do
   config.force_ssl = true
 
   # Skip http-to-https redirect for the default health check endpoint.
-  config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
-
-  # Skip DNS rebinding protection for the default health check endpoint.
-  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
   # Log to STDOUT by default
   config.logger = ActiveSupport::Logger.new(STDOUT)
@@ -77,6 +74,8 @@ Rails.application.configure do
   # config.active_job.queue_adapter = :resque
   # config.active_job.queue_name_prefix = "discord_bot_web_app_production"
 
+  # Disable caching for Action Mailer templates even if Action Controller
+  # caching is enabled.
   config.action_mailer.perform_caching = false
 
   config.action_mailer.default_url_options = { host: "fortressone.org" }
