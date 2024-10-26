@@ -13,7 +13,7 @@ gem "sprockets-rails"
 gem "pg"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 5.0"
+gem "puma"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
@@ -47,7 +47,7 @@ gem 'trueskill', github: 'FortressOne/trueskill'
 gem 'twitch-api'
 gem 'faraday'
 gem "breadcrumbs_on_rails"
-gem "devise"
+gem "devise", "~> 4.8"
 gem 'omniauth-discord'
 gem 'omniauth-rails_csrf_protection'
 gem "chartkick"
