@@ -51,7 +51,7 @@ gem "devise", "~> 4.8"
 gem 'omniauth-discord'
 gem 'omniauth-rails_csrf_protection'
 gem "chartkick"
-gem 'discordrb', github: "shardlab/discordrb", branch: "main"
+gem 'discordrb', github: "shardlab/discordrb", tag: 'v3.4.2'
 gem 'rails_same_site_cookie'
 gem 'pagy', '~> 6.0'
 gem 'counter_culture'
