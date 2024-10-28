@@ -48,7 +48,7 @@ gem 'twitch-api'
 gem 'faraday'
 gem "breadcrumbs_on_rails"
 gem "devise", "4.8.1"
-gem 'omniauth-discord'
+gem 'omniauth-discord', "1.0.2"
 gem 'omniauth-rails_csrf_protection'
 gem "chartkick"
 gem 'discordrb', github: "shardlab/discordrb", tag: 'v3.4.2'
