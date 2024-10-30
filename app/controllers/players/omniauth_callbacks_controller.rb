@@ -31,7 +31,6 @@ class Players::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @player.update(name: name)
 
     if @player.persisted?
-      remember_me(@player)
       sign_in_and_redirect @player, event: :authentication # this will throw if @player is not activated
       set_flash_message(:notice, :success, kind: "discord") if is_navigational_format?
     else

@@ -81,4 +81,6 @@ test:
 #
 production:
   <<: *default
-  url: <%= ENV['DATABASE_URL'] || `heroku config:get DATABASE_URL`.chomp %>
+  database: discord_bot_web_app_production
+  username: discord_bot_web_app
+  password: <%= ENV["DISCORD_BOT_WEB_APP_DATABASE_PASSWORD"] %>

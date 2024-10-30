@@ -275,9 +275,9 @@ Devise.setup do |config|
 
   config.omniauth(
     :discord,
-    Rails.application.credentials.discord[:client_id],
-    Rails.application.credentials.discord[:client_secret],
-    callback_url: Rails.application.credentials.discord[:callback_url],
+    Rails.application.credentials.dig(:discord, :client_id),
+    Rails.application.credentials.dig(:discord, :client_secret),
+    callback_url: Rails.application.credentials.dig(:discord, :callback_url),
     prompt: "none",
     scope: "email identify"
   )

@@ -102,6 +102,11 @@ class Results::Api::V1::MatchesController < ActionController::API
       ].join(DELIMITER)
     )
 
+    Rails.logger.info("Embed Object: #{embed.to_json}") # Assuming `embed` responds to `to_json` or similar method
+
+    token = Rails.application.credentials.discord[:token]
+    Rails.logger.info("Discord Token (masked): #{token[0..3]}...#{token[-4..-1]}") # Only show the first and last few characters for security
+
     Discordrb::API::Channel.create_message(
       "Bot #{Rails.application.credentials.discord[:token]}",
       discord_channel.channel_id,
