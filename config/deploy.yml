@@ -7,7 +7,7 @@ image: fortressone/discord-bot-web-app
 # Deploy to these servers.
 servers:
   web:
-    - 13.211.212.14
+    - 13.238.32.34
   # job:
   #   hosts:
   #     - 192.168.0.1
