@@ -49,6 +49,10 @@ class Results::Api::V1::FairTeamsController < ApplicationController
       results << Matchup.new(matchup).teams
     end
 
+    puts("==============================")
+    puts(results.to_json)
+    puts("==============================")
+
     render json: results.to_json, status: :ok
   end
 
