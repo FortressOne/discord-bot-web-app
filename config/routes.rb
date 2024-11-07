@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   resources :discord_channels, only: [:index, :show]
 
   namespace 'results' do
-    namespace :api, defaults: { format: :json } do
+    namespace :api do
       namespace :v1 do
         resources :map_suggestions, only: [:index, :create]
         post 'map_suggestions/vote', to: 'map_suggestions#vote'
