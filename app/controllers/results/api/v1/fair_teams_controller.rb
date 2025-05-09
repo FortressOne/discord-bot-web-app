@@ -4,13 +4,9 @@ class Results::Api::V1::FairTeamsController < ApplicationController
   include Saulabs::TrueSkill
 
   def new
-    Rails.logger.info("AAAAAAAAAAAAAAAAAAAAAAA")
-
     discord_channel = DiscordChannel.find_or_create_by(
       channel_id: discord_channel_id_params
     )
-
-    Rails.logger.info("BBBBBBBBBBBBBBBBBBBB")
 
     discord_channel_players = players_params.map do |discord_id|
       DiscordChannelPlayer.find_or_create_by(
@@ -21,12 +17,8 @@ class Results::Api::V1::FairTeamsController < ApplicationController
 
     teamsize = discord_channel_players.size / 2
 
-    Rails.logger.info("CCCCCCCCCCCCCCCCCCCCcc")
-
     player1 = discord_channel_players.shift
     team1_combinations = discord_channel_players.combination(teamsize - 1)
-
-    Rails.logger.info("DDDDDDDDDDDDDDDDDDDDDDD")
 
     matchups = team1_combinations.inject([]) do |matchups, combo|
       team1 = combo + [player1]
@@ -49,23 +41,13 @@ class Results::Api::V1::FairTeamsController < ApplicationController
       matchups << teams
     end
 
-    Rails.logger.info("EEEEEEEEEEEEEEEEEEEEEEEEEEE")
-
     sorted_matchups = matchups.sort_by do |matchup|
       Matchup.new(matchup).difference
     end
 
-    Rails.logger.info("FFFFFFFFFFFFFFFFFFFFFFF")
-
     results = sorted_matchups.inject([]) do |results, matchup|
       results << Matchup.new(matchup).teams
     end
-
-    Rails.logger.info("GGGGGGGGGGGGGGGGGGGGGGGGGGG")
-
-    Rails.logger.info("==============================")
-    Rails.logger.info(results.to_json)
-    Rails.logger.info("==============================")
 
     render json: results.to_json, status: :ok
   end
