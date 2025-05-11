@@ -7,7 +7,7 @@ image: fortressone/discord-bot-web-app
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.1.50
+    - home.sheldonjohnson.net
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -102,7 +102,7 @@ ssh:
 accessories:
   db:
     image: postgres:16.8
-    host: 192.168.1.50
+    host: home.sheldonjohnson.net
     # Change to 5432 to expose port to the world instead of just local network.
     port: "0.0.0.0:5432:5432"
     env:
