@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_23_013603) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_04_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -110,6 +110,19 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_013603) do
     t.index ["discord_channel_id"], name: "index_map_suggestions_on_discord_channel_id"
     t.index ["game_map_id"], name: "index_map_suggestions_on_game_map_id"
     t.index ["player_id"], name: "index_map_suggestions_on_player_id"
+  end
+
+  create_table "match_reports", force: :cascade do |t|
+    t.string "game_token", null: false
+    t.string "report_type", null: false
+    t.string "map"
+    t.string "server_name"
+    t.string "server_address"
+    t.jsonb "payload", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_token"], name: "index_match_reports_on_game_token"
+    t.index ["report_type"], name: "index_match_reports_on_report_type"
   end
 
   create_table "matches", force: :cascade do |t|

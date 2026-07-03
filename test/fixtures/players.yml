@@ -1,11 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  discord_id: 9.99
-  name: MyString
-  email: MyString
+  discord_id: 200000000000000001
+  name: zel
+  email: zel@example.com
 
 two:
-  discord_id: 9.99
-  name: MyString
-  email: MyString
+  discord_id: 200000000000000002
+  name: newby
+  email: newby@example.com

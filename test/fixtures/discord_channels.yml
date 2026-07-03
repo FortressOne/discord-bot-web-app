@@ -1,11 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  channel_id: MyString
-  name: MyString
-  match: one
+  channel_id: "100000000000000001"
+  name: pug-oceania
 
 two:
-  channel_id: MyString
-  name: MyString
-  match: two
+  channel_id: "100000000000000002"
+  name: pug-europe

@@ -1,7 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  winner: 
+  match: one
+  name: blue
+  score: 5
 
 two:
-  winner: 
+  match: two
+  name: red
+  score: 3

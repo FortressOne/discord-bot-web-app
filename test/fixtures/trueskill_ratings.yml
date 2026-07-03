@@ -3,9 +3,9 @@
 one:
   mean: 9.99
   deviation: 9.99
-  player: one
+  trueskill_rateable: one (Player)
 
 two:
   mean: 9.99
   deviation: 9.99
-  player: two
+  trueskill_rateable: two (Player)

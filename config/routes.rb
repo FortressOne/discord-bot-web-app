@@ -19,6 +19,14 @@ Rails.application.routes.draw do
   resources :matches, only: [:index, :show]
   resources :discord_channels, only: [:index, :show]
 
+  # API consumed by QWTF-Live progs (server-qwprogs ssqc/json.qc). The game
+  # server's tfl_endpoint localinfo must point at this app's root URL.
+  namespace :api, defaults: { format: :json } do
+    post 'login', to: 'logins#create'
+    post 'report', to: 'reports#create'
+    post 'token', to: 'tokens#create'
+  end
+
   namespace 'results' do
     namespace :api, defaults: { format: :json } do
       namespace :v1 do

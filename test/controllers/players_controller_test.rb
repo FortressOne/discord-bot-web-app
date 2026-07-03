@@ -2,7 +2,7 @@ require "test_helper"
 
 class PlayersControllerTest < ActionDispatch::IntegrationTest
   test "should get show" do
-    get players_show_url
+    get player_url(players(:one))
     assert_response :success
   end
 end
