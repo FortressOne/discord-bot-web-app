@@ -16,6 +16,10 @@ Rails.application.routes.draw do
     get 'rotate_token', on: :member
   end
 
+  # Browser half of the in-game Discord sign-in (device-pairing) flow.
+  get 'link(/:code)', to: 'links#show', as: :link
+  post 'link', to: 'links#create'
+
   resources :matches, only: [:index, :show]
   resources :discord_channels, only: [:index, :show]
 
@@ -25,6 +29,9 @@ Rails.application.routes.draw do
     post 'login', to: 'logins#create'
     post 'report', to: 'reports#create'
     post 'token', to: 'tokens#create'
+    # In-game device-pairing (menu QC polls these; plain-text responses).
+    post 'device', to: 'devices#create'
+    get 'device/:code', to: 'devices#show'
   end
 
   namespace 'results' do

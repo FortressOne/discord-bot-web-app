@@ -1,0 +1,28 @@
+<article>
+  <header>
+    <h1>Link your game</h1>
+  </header>
+
+  <% if player_signed_in? %>
+    <p>
+      Approve the sign-in code shown in your FortressOne game menu.
+      Your game will be signed in as <strong><%= current_player.name %></strong>.
+    </p>
+    <%= form_with url: link_path, method: :post, data: { turbo: false } do |f| %>
+      <%= f.text_field :code, value: @code, placeholder: "ABCD-1234", autofocus: @code.blank?,
+                       autocomplete: "off", style: "text-transform: uppercase; max-width: 14rem;" %>
+      <%= f.submit "Approve this game client" %>
+    <% end %>
+    <p><small>Only approve codes you got from your own game. Anyone holding an approved
+    code can play as you.</small></p>
+  <% else %>
+    <p>Sign in with Discord to approve the code shown in your FortressOne game menu.</p>
+    <%= button_to(
+      "Sign in with Discord",
+      player_discord_omniauth_authorize_path,
+      data: { turbo: false },
+      role: :button,
+      class: "secondary"
+    ) %>
+  <% end %>
+</article>
