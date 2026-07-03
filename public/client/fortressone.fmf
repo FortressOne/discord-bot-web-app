@@ -1,0 +1,14 @@
+//documentation on this file can be found at https://sourceforge.net/p/fteqw/code/HEAD/tree/trunk/specs/fte_manifests.txt
+
+FTEMANIFEST 1
+game quake
+name "FortressOne"
+protocolname "FortressOne"
+basegame id1
+gamedir fortress
+disablehomedir 1
+
+//lets installed clients discover content updates without a new client
+//release (the engine re-fetches this manifest from here); the hosted copy
+//can add signed package entries later.
+updateurl "https://www.fortressone.org/client/fortressone.fmf"
