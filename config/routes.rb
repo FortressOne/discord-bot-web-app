@@ -38,6 +38,8 @@ Rails.application.routes.draw do
     # In-game device-pairing (menu QC polls these; plain-text responses).
     post 'device', to: 'devices#create'
     get 'device/:code', to: 'devices#show'
+    # Identity for the menu's signed-in widget (plain text).
+    post 'whoami', to: 'whoami#create'
   end
 
   namespace 'results' do
