@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_04_120000) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_05_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -136,6 +136,32 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_04_120000) do
     t.index ["report_type"], name: "index_match_reports_on_report_type"
   end
 
+  create_table "match_stats", force: :cascade do |t|
+    t.string "s3_key", null: false
+    t.string "region"
+    t.string "game_mode"
+    t.string "map_name"
+    t.datetime "played_at"
+    t.integer "duration_seconds"
+    t.string "team1_name"
+    t.string "team2_name"
+    t.integer "team1_score"
+    t.integer "team2_score"
+    t.integer "winning_team"
+    t.integer "player_count"
+    t.string "demo_filename"
+    t.string "status", default: "pending", null: false
+    t.string "error_message"
+    t.bigint "match_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["map_name"], name: "index_match_stats_on_map_name"
+    t.index ["match_id"], name: "index_match_stats_on_match_id"
+    t.index ["played_at"], name: "index_match_stats_on_played_at"
+    t.index ["region", "game_mode"], name: "index_match_stats_on_region_and_game_mode"
+    t.index ["s3_key"], name: "index_match_stats_on_s3_key", unique: true
+  end
+
   create_table "matches", force: :cascade do |t|
     t.bigint "game_map_id"
     t.datetime "created_at", null: false
@@ -150,6 +176,32 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_04_120000) do
     t.index ["discord_channel_id"], name: "index_matches_on_discord_channel_id"
     t.index ["game_map_id"], name: "index_matches_on_game_map_id"
     t.index ["server_id"], name: "index_matches_on_server_id"
+  end
+
+  create_table "player_match_stats", force: :cascade do |t|
+    t.bigint "match_stat_id", null: false
+    t.string "name", null: false
+    t.integer "team"
+    t.integer "kills", default: 0, null: false
+    t.integer "deaths", default: 0, null: false
+    t.integer "teamkills", default: 0, null: false
+    t.integer "suicides", default: 0, null: false
+    t.integer "sentries_destroyed", default: 0, null: false
+    t.integer "damage_given", default: 0, null: false
+    t.integer "damage_taken", default: 0, null: false
+    t.integer "team_damage", default: 0, null: false
+    t.integer "flag_touches", default: 0, null: false
+    t.integer "flag_caps", default: 0, null: false
+    t.integer "flag_drops", default: 0, null: false
+    t.integer "flag_throws", default: 0, null: false
+    t.integer "flag_stops", default: 0, null: false
+    t.integer "flag_carry_seconds", default: 0, null: false
+    t.jsonb "class_seconds", default: {}, null: false
+    t.jsonb "weapon_stats", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["match_stat_id"], name: "index_player_match_stats_on_match_stat_id"
+    t.index ["name"], name: "index_player_match_stats_on_name"
   end
 
   create_table "players", force: :cascade do |t|
@@ -224,9 +276,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_04_120000) do
   add_foreign_key "map_suggestions", "discord_channels"
   add_foreign_key "map_suggestions", "game_maps"
   add_foreign_key "map_suggestions", "players"
+  add_foreign_key "match_stats", "matches"
   add_foreign_key "matches", "discord_channels"
   add_foreign_key "matches", "game_maps"
   add_foreign_key "matches", "servers"
+  add_foreign_key "player_match_stats", "match_stats"
   add_foreign_key "rounds", "matches"
   add_foreign_key "teams", "matches"
 end
