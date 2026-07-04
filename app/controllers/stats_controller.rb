@@ -1,0 +1,100 @@
+# JSON API for browsing per-match stats. Designed to be consumable from FTE
+# menuqc (uri_get + json_parse builtins): flat arrays of rows, stable keys,
+# and pre-formatted display strings alongside raw values so the client does
+# no string math.
+class StatsController < ApplicationController
+  PAGE_ITEMS = 50
+
+  def index
+    scope = MatchStat.browsable
+    scope = scope.for_map(params[:map]) if params[:map].present?
+    scope = scope.for_region(params[:region]) if params[:region].present?
+    scope = scope.for_game_mode(params[:mode]) if params[:mode].present?
+    scope = scope.for_player(params[:player]) if params[:player].present?
+
+    @pagy, match_stats = pagy(scope.includes(:player_match_stats), items: PAGE_ITEMS)
+
+    render json: {
+      stats: match_stats.map { |match_stat| index_row(match_stat) },
+      page: @pagy.page,
+      pages: @pagy.pages,
+      count: @pagy.count
+    }
+  end
+
+  def show
+    match_stat = MatchStat.includes(:player_match_stats).find(params[:id])
+
+    render json: {
+      **index_row(match_stat),
+      s3_key: match_stat.s3_key,
+      json_url: match_stat.json_url,
+      demo_filename: match_stat.demo_filename,
+      players: match_stat.player_match_stats
+                         .sort_by { |player| [player.team.to_i, -player.kills] }
+                         .map { |player| player_row(player) }
+    }
+  end
+
+  private
+
+  def index_row(match_stat)
+    {
+      id: match_stat.id,
+      played_at: match_stat.played_at&.iso8601,
+      played_at_display: match_stat.played_at&.strftime("%Y-%m-%d %H:%M"),
+      map: match_stat.map_name,
+      region: match_stat.region,
+      mode: match_stat.game_mode,
+      score: match_stat.score,
+      team1_score: match_stat.team1_score,
+      team2_score: match_stat.team2_score,
+      winning_team: match_stat.winning_team,
+      drawn: match_stat.drawn?,
+      duration_seconds: match_stat.duration_seconds,
+      duration_display: match_stat.duration_display,
+      player_count: match_stat.player_count,
+      match_id: match_stat.match_id,
+      player_names: match_stat.player_match_stats.map(&:name).sort
+    }
+  end
+
+  def player_row(player)
+    {
+      name: player.name,
+      team: player.team,
+      kills: player.kills,
+      deaths: player.deaths,
+      kd_display: player.kd_ratio.to_s,
+      teamkills: player.teamkills,
+      suicides: player.suicides,
+      sentries_destroyed: player.sentries_destroyed,
+      damage_given: player.damage_given,
+      damage_taken: player.damage_taken,
+      team_damage: player.team_damage,
+      flag_touches: player.flag_touches,
+      flag_caps: player.flag_caps,
+      flag_drops: player.flag_drops,
+      flag_throws: player.flag_throws,
+      flag_stops: player.flag_stops,
+      flag_carry_seconds: player.flag_carry_seconds,
+      flag_carry_display: player.flag_carry_display,
+      classes_display: player.class_breakdown,
+      class_seconds: player.class_seconds,
+      weapons: player.weapon_stats.map { |weapon, stats| weapon_row(weapon, stats) }
+    }
+  end
+
+  def weapon_row(weapon, stats)
+    shots = stats["shots"].to_i
+    hits = stats["hits"].to_i
+    {
+      weapon: weapon,
+      shots: shots,
+      hits: hits,
+      accuracy_display: shots.positive? ? "#{(100.0 * hits / shots).round}%" : "",
+      damage: stats["damage"].to_i,
+      kills: stats["kills"].to_i
+    }
+  end
+end
