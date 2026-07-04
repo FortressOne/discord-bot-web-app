@@ -23,11 +23,10 @@ Rails.application.routes.draw do
   resources :matches, only: [:index, :show]
   resources :discord_channels, only: [:index, :show]
 
-  # Per-match stats parsed from the fortressone-stats S3 archive. JSON is the
-  # canonical representation: the FTE client's menuqc stats browser consumes
-  # it via uri_get + json_parse, and the (future) HTML views are a second skin
-  # over the same data.
-  resources :stats, only: [:index, :show], defaults: { format: :json }
+  # Per-match stats parsed from the fortressone-stats S3 archive. HTML and
+  # JSON render the same data: the FTE client's menuqc stats browser consumes
+  # the .json variant via uri_get + json_parse.
+  resources :stats, only: [:index, :show]
 
   # API consumed by QWTF-Live progs (server-qwprogs ssqc/json.qc). The game
   # server's tfl_endpoint localinfo must point at this app's root URL.

@@ -9,6 +9,9 @@ document.addEventListener("turbo:load", function() {
 	if(document.getElementById('players_table')) {
 		new Tablesort(document.getElementById('players_table'));
 	}
+	if(document.getElementById('stats_players_table')) {
+		new Tablesort(document.getElementById('stats_players_table'), { descending: true });
+	}
 })
 
 import "chartkick"

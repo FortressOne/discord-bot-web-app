@@ -1,0 +1,139 @@
+<div class="container">
+  <p><%= link_to "← Match stats", stats_path %></p>
+
+  <article>
+    <header>
+      <span style="float: right;"><%= @match_stat.played_at&.strftime("%Y-%m-%d %H:%M") %> UTC</span>
+      <h2><%= @match_stat.map_name %></h2>
+      <p>
+        <%= stats_filter_link(@match_stat.region, :region, @match_stat.region) %> /
+        <%= stats_filter_link(@match_stat.game_mode, :mode, @match_stat.game_mode) %>
+        &middot; <%= @match_stat.duration_display %> min
+        <% if @match_stat.match %>
+          &middot; <%= link_to "PUG result", @match_stat.match %>
+        <% end %>
+      </p>
+    </header>
+
+    <div class="grid" style="text-align: center;">
+      <div>
+        <h3 style="color: <%= team_colour_code(1) %>;"><%= @match_stat.team1_name&.capitalize || "Blue" %></h3>
+      </div>
+      <div>
+        <h1>
+          <span style="color: <%= team_colour_code(1) %>;"><%= @match_stat.team1_score %></span>
+          &ndash;
+          <span style="color: <%= team_colour_code(2) %>;"><%= @match_stat.team2_score %></span>
+        </h1>
+        <p><strong><%= @match_stat.drawn? ? "Draw!" : "#{(@match_stat.winning_team == 1 ? @match_stat.team1_name : @match_stat.team2_name)&.capitalize} wins" %></strong></p>
+      </div>
+      <div>
+        <h3 style="color: <%= team_colour_code(2) %>;"><%= @match_stat.team2_name&.capitalize || "Red" %></h3>
+      </div>
+    </div>
+
+    <footer>
+      <%= link_to "Raw event log", @match_stat.json_url %>
+      <% if @match_stat.demo_filename.present? && @match_stat.match&.demo_uri.present? %>
+        &middot; <%= link_to "Demo", @match_stat.match.demo_uri %>
+      <% end %>
+    </footer>
+  </article>
+
+  <% if @awards.any? %>
+    <h3>Awards</h3>
+    <div class="grid">
+      <% @awards.each_slice((@awards.size / 2.0).ceil).each do |column| %>
+        <div>
+          <table>
+            <tbody>
+              <% column.each do |award| %>
+                <tr>
+                  <td><strong><%= award.title %></strong><br><small><%= award.description %></small></td>
+                  <td><%= award.player %><br><small><%= award.value %></small></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <h3>Players</h3>
+  <figure>
+    <table role="grid" id="stats_players_table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Classes</th>
+          <th title="Kills">K</th>
+          <th title="Deaths">D</th>
+          <th title="Kills per death">K/D</th>
+          <th title="Teamkills">TK</th>
+          <th title="Suicides">Sui</th>
+          <th title="Sentries destroyed">SG</th>
+          <th title="Damage given">Dmg</th>
+          <th title="Damage taken">Dmg&nbsp;T</th>
+          <th title="Friendly fire damage">FF</th>
+          <th title="Flag touches">Took</th>
+          <th title="Flag captures">Caps</th>
+          <th title="Flag throws">Throw</th>
+          <th title="Flag stops">Stop</th>
+          <th title="Flag carry time">Carry</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @players.each do |player| %>
+          <tr>
+            <td><strong><%= stats_filter_link(player.name, :player, player.name, style: "color: #{team_colour_code(player.team)};") %></strong></td>
+            <td><%= stats_class_icons(player) %></td>
+            <td><%= player.kills %></td>
+            <td><%= player.deaths %></td>
+            <td><%= player.kd_ratio %></td>
+            <td><%= player.teamkills %></td>
+            <td><%= player.suicides %></td>
+            <td><%= player.sentries_destroyed %></td>
+            <td><%= player.damage_given %></td>
+            <td><%= player.damage_taken %></td>
+            <td><%= player.team_damage %></td>
+            <td><%= player.flag_touches %></td>
+            <td><%= player.flag_caps %></td>
+            <td><%= player.flag_throws %></td>
+            <td><%= player.flag_stops %></td>
+            <td data-sort="<%= player.flag_carry_seconds %>"><%= player.flag_carry_display %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </figure>
+
+  <h3>Weapons</h3>
+  <% @players.each do |player| %>
+    <details>
+      <summary>
+        <span style="color: <%= team_colour_code(player.team) %>;"><strong><%= player.name %></strong></span>
+        <small><%= player.class_breakdown %></small>
+      </summary>
+      <figure>
+        <table>
+          <thead>
+            <tr><th>Weapon</th><th>Shots</th><th>Hits</th><th>Acc</th><th>Damage</th><th>Kills</th></tr>
+          </thead>
+          <tbody>
+            <% player.weapon_stats.sort_by { |_, s| -s["damage"].to_i }.each do |weapon, stats| %>
+              <tr>
+                <td><%= weapon %></td>
+                <td><%= stats["shots"] %></td>
+                <td><%= stats["hits"] %></td>
+                <td><%= stats["shots"].to_i.positive? ? "#{(100.0 * stats["hits"].to_i / stats["shots"].to_i).round}%" : "" %></td>
+                <td><%= stats["damage"] %></td>
+                <td><%= stats["kills"] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </figure>
+    </details>
+  <% end %>
+</div>

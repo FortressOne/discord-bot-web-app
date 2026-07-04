@@ -1,0 +1,56 @@
+<div class="container">
+  <h1>Match Stats</h1>
+
+  <%= form_with url: stats_path, method: :get, data: { turbo: false } do |form| %>
+    <div class="grid">
+      <%= form.text_field :map, value: params[:map], placeholder: "Map (e.g. 2fort5r)" %>
+      <%= form.select :region, options_for_select(@regions, params[:region]), include_blank: "All regions" %>
+      <%= form.select :mode, options_for_select(@game_modes, params[:mode]), include_blank: "All modes" %>
+      <%= form.text_field :player, value: params[:player], placeholder: "Player name" %>
+      <%= form.submit "Filter" %>
+    </div>
+  <% end %>
+
+  <% if params.values_at(:map, :region, :mode, :player).any?(&:present?) %>
+    <p><%= link_to "✕ Clear filters", stats_path %></p>
+  <% end %>
+
+  <%== pagy_nav(@pagy) %>
+
+  <figure>
+    <table role="grid">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Map</th>
+          <th>Region</th>
+          <th>Mode</th>
+          <th>Score</th>
+          <th>Duration</th>
+          <th>Players</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @match_stats.each do |match_stat| %>
+          <tr>
+            <td><%= link_to match_stat.played_at&.strftime("%Y-%m-%d %H:%M") || "?", stat_path(match_stat) %></td>
+            <td><%= stats_filter_link(match_stat.map_name, :map, match_stat.map_name) %></td>
+            <td><%= stats_filter_link(match_stat.region, :region, match_stat.region) %></td>
+            <td><%= stats_filter_link(match_stat.game_mode, :mode, match_stat.game_mode) %></td>
+            <td><%= link_to stat_path(match_stat) do %><strong style="color: <%= team_colour_code(match_stat.winning_team) %>;"><%= match_stat.score %></strong><% end %></td>
+            <td><%= match_stat.duration_display %></td>
+            <td>
+              <% match_stat.player_match_stats.sort_by { |p| [p.team.to_i, p.name] }.each do |player| %>
+                <%= stats_filter_link(player.name, :player, player.name, style: "color: #{team_colour_code(player.team)};") %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </figure>
+
+  <%== pagy_nav(@pagy) %>
+
+  <p><small><%= @pagy.count %> matches with stats. Archive spans 2020 onwards; import is ongoing.</small></p>
+</div>

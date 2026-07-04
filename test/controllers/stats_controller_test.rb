@@ -19,6 +19,28 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     match_stat
   end
 
+  test "index renders html with filter links" do
+    create_match_stat
+
+    get stats_url
+
+    assert_response :success
+    assert_match "Match Stats", response.body
+    assert_match "2fort5r", response.body
+    assert_match "alice", response.body
+  end
+
+  test "show renders html with awards and player table" do
+    match_stat = create_match_stat
+
+    get stat_url(match_stat)
+
+    assert_response :success
+    assert_match "Slaughterhouse", response.body
+    assert_match "stats_players_table", response.body
+    assert_match "rl", response.body
+  end
+
   test "index returns browsable stats with filters" do
     match_stat = create_match_stat
 

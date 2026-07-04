@@ -1,7 +1,8 @@
-# JSON API for browsing per-match stats. Designed to be consumable from FTE
-# menuqc (uri_get + json_parse builtins): flat arrays of rows, stable keys,
-# and pre-formatted display strings alongside raw values so the client does
-# no string math.
+# Browsable per-match stats parsed from the fortressone-stats S3 archive.
+# HTML and JSON render the same data. The JSON shape is designed for the FTE
+# client's menuqc stats browser (uri_get + json_parse builtins): flat arrays
+# of rows, stable keys, and pre-formatted display strings alongside raw
+# values so the client does no string math.
 class StatsController < ApplicationController
   PAGE_ITEMS = 50
 
@@ -12,28 +13,42 @@ class StatsController < ApplicationController
     scope = scope.for_game_mode(params[:mode]) if params[:mode].present?
     scope = scope.for_player(params[:player]) if params[:player].present?
 
-    @pagy, match_stats = pagy(scope.includes(:player_match_stats), items: PAGE_ITEMS)
+    @pagy, @match_stats = pagy(scope.includes(:player_match_stats), items: PAGE_ITEMS)
 
-    render json: {
-      stats: match_stats.map { |match_stat| index_row(match_stat) },
-      page: @pagy.page,
-      pages: @pagy.pages,
-      count: @pagy.count
-    }
+    respond_to do |format|
+      format.html do
+        @regions = MatchStat.parsed.distinct.order(:region).pluck(:region).compact
+        @game_modes = MatchStat.parsed.distinct.order(:game_mode).pluck(:game_mode).compact
+      end
+      format.json do
+        render json: {
+          stats: @match_stats.map { |match_stat| index_row(match_stat) },
+          page: @pagy.page,
+          pages: @pagy.pages,
+          count: @pagy.count
+        }
+      end
+    end
   end
 
   def show
-    match_stat = MatchStat.includes(:player_match_stats).find(params[:id])
+    @match_stat = MatchStat.includes(:player_match_stats).find(params[:id])
+    @players = @match_stat.player_match_stats.sort_by { |player| [player.team.to_i, -player.kills] }
+    @awards = Stats::Awards.for(@players)
 
-    render json: {
-      **index_row(match_stat),
-      s3_key: match_stat.s3_key,
-      json_url: match_stat.json_url,
-      demo_filename: match_stat.demo_filename,
-      players: match_stat.player_match_stats
-                         .sort_by { |player| [player.team.to_i, -player.kills] }
-                         .map { |player| player_row(player) }
-    }
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: {
+          **index_row(@match_stat),
+          s3_key: @match_stat.s3_key,
+          json_url: @match_stat.json_url,
+          demo_filename: @match_stat.demo_filename,
+          awards: @awards.map(&:to_h),
+          players: @players.map { |player| player_row(player) }
+        }
+      end
+    end
   end
 
   private
