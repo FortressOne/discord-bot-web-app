@@ -87,6 +87,10 @@ asset_path: /rails/public/assets
 # Configure the image builder.
 builder:
   arch: amd64
+  # Classic build driver: works with both docker and podman (via a docker
+  # shim); the default docker-container driver needs buildx create/inspect,
+  # which podman doesn't implement.
+  driver: docker
 
   # # Build image via remote server (useful for faster amd64 builds on arm64 computers)
   # remote: ssh://docker@docker-builder-server
