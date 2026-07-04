@@ -1,0 +1,157 @@
+require "test_helper"
+
+module Stats
+  class EventLogParserTest < ActiveSupport::TestCase
+    # A hand-computable match: alice (team 1, Soldier) vs bob (team 2, Scout).
+    EVENTS = [
+      { type: "gameStart", map: "2fort5r", numPlayers: 2, numTeams: 2, time: 0,
+        demo: "2022-01-01_00-00-00_[2fort5r]_blue_vs_red.mvd", gameTimeStamp: "2022-01-01T00:00:00.000Z" },
+      { type: "playerStart", player: "alice", classtime: 0, time: 0 },
+      { type: "playerStart", player: "bob", classtime: 0, time: 0 },
+      { type: "attack", player: "alice", playerClass: "3", inflictor: "rocketlauncher", time: 10 },
+      { type: "attack", player: "alice", playerClass: "3", inflictor: "rocketlauncher", time: 12 },
+      { type: "damageDone", kind: "enemy", player: "alice", playerClass: 3, playerTeam: 1,
+        target: "bob", targetClass: 1, targetTeam: 2, inflictor: "proj_rocket", damage: 90, time: 12 },
+      { type: "kill", kind: "enemy", player: "alice", playerClass: 3, playerTeam: 1,
+        target: "bob", targetClass: 1, targetTeam: 2, inflictor: "proj_rocket", time: 12 },
+      { type: "death", kind: "enemy", attacker: "alice", attackerClass: 3, attackerTeam: 1,
+        player: "bob", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", time: 12 },
+      # bob grabs the flag, carries 30s, is killed by alice: a flag stop
+      { type: "pickup", team: 2, player: "bob", playerClass: "1", time: 100 },
+      { type: "death", kind: "enemy", attacker: "alice", attackerClass: 3, attackerTeam: 1,
+        player: "bob", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", time: 130 },
+      { type: "fumble", team: 2, player: "bob", playerClass: "1", timeCarried: 30, time: 130 },
+      # alice grabs the flag at 200 and caps at 245: 45s carry
+      { type: "pickup", team: 1, player: "alice", playerClass: "3", time: 200 },
+      { type: "goal", team: 1, player: "alice", playerClass: "3", time: 245 },
+      # bob deliberately throws the flag
+      { type: "pickup", team: 2, player: "bob", playerClass: "1", time: 300 },
+      { type: "fumble", team: 2, player: "bob", playerClass: "1", timeCarried: 5, time: 305 },
+      # alice teamkills, then suicides; environmental death for bob
+      { type: "kill", kind: "team", player: "alice", playerClass: 3, playerTeam: 1,
+        target: "carol", targetClass: 5, targetTeam: 1, inflictor: "proj_rocket", time: 400 },
+      { type: "kill", kind: "self", player: "alice", playerClass: 3, playerTeam: 1,
+        target: "alice", targetClass: 3, targetTeam: 1, inflictor: "proj_rocket", time: 410 },
+      { type: "death", kind: "self", attacker: "alice", attackerClass: 3, attackerTeam: 1,
+        player: "alice", playerClass: 3, playerTeam: 1, inflictor: "proj_rocket", time: 410 },
+      { type: "kill", kind: "enemy", player: "world", playerClass: 8, playerTeam: 1,
+        target: "bob", targetClass: 1, targetTeam: 2, inflictor: "worldspawn", time: 500 },
+      { type: "death", kind: "enemy", attacker: "world", attackerClass: 8, attackerTeam: 1,
+        player: "bob", playerClass: 1, playerTeam: 2, inflictor: "worldspawn", time: 500 },
+      # alice destroys bob's sentry: not a kill
+      { type: "kill", kind: "enemy", player: "alice", playerClass: 3, playerTeam: 1,
+        target: "bob", targetClass: 10, targetTeam: 2, inflictor: "proj_rocket", time: 550 },
+      # class switch: alice played Soldier 0-600, Demoman 600-1200
+      { type: "changeClass", player: "alice", playerClass: 3, nextClass: 4, team: 1, timePlayed: 600, time: 600 },
+      { type: "changeClass", player: "alice", playerClass: 4, nextClass: 0, team: 1, timePlayed: 600, time: 1200 },
+      { type: "changeClass", player: "bob", playerClass: 1, nextClass: 0, team: 2, timePlayed: 1200, time: 1200 },
+      { type: "teamScores", team1Score: 10, team2Score: 0, team1Name: "blue", team2Name: "red",
+        winningTeam: 1, time: 1200 },
+      { type: "gameEnd", time: 1200 }
+    ].freeze
+
+    def raw_log
+      # As uploaded by the game server: one object per line, comma-terminated,
+      # no enclosing brackets.
+      EVENTS.map { |event| "#{event.to_json}," }.join("\n")
+    end
+
+    test "parses match metadata" do
+      result = EventLogParser.parse(raw_log)
+
+      assert_equal "parsed", result.status
+      assert_equal "2fort5r", result.map_name
+      assert_equal "2022-01-01_00-00-00_[2fort5r]_blue_vs_red.mvd", result.demo_filename
+      assert_equal Time.utc(2022, 1, 1), result.played_at
+      assert_equal 1200, result.duration_seconds
+      assert_equal 10, result.team1_score
+      assert_equal 0, result.team2_score
+      assert_equal 1, result.winning_team
+      assert_equal %w[alice bob].sort, result.players.keys.sort
+    end
+
+    test "aggregates kills, deaths, teamkills, suicides and sentry kills" do
+      players = EventLogParser.parse(raw_log).players
+
+      assert_equal 1, players["alice"][:kills]
+      assert_equal 1, players["alice"][:teamkills]
+      assert_equal 1, players["alice"][:suicides]
+      assert_equal 1, players["alice"][:sentries_destroyed]
+      assert_equal 1, players["alice"][:deaths]
+      # bob: rocket at 12, flag stop at 130, environmental at 500
+      assert_equal 3, players["bob"][:deaths]
+      assert_equal 0, players["bob"][:kills]
+    end
+
+    test "aggregates damage by kind" do
+      players = EventLogParser.parse(raw_log).players
+
+      assert_equal 90, players["alice"][:damage_given]
+      assert_equal 90, players["bob"][:damage_taken]
+      assert_equal 0, players["alice"][:team_damage]
+    end
+
+    test "canonicalises weapon names across attack and damage events" do
+      alice = EventLogParser.parse(raw_log).players["alice"]
+
+      assert_equal({ "shots" => 2, "hits" => 1, "damage" => 90, "kills" => 1 }, alice[:weapon_stats]["rl"])
+      assert_nil alice[:weapon_stats]["rocketlauncher"]
+      assert_nil alice[:weapon_stats]["proj_rocket"]
+    end
+
+    test "tracks flag events, stops, throws and carry time" do
+      players = EventLogParser.parse(raw_log).players
+
+      assert_equal 1, players["alice"][:flag_caps]
+      assert_equal 45, players["alice"][:flag_carry_seconds]
+      assert_equal 1, players["alice"][:flag_stops]
+      assert_equal 2, players["bob"][:flag_touches]
+      assert_equal 2, players["bob"][:flag_drops]
+      assert_equal 1, players["bob"][:flag_throws]
+      assert_equal 35, players["bob"][:flag_carry_seconds]
+    end
+
+    test "tracks class time from changeClass events" do
+      players = EventLogParser.parse(raw_log).players
+
+      assert_equal({ "Sold" => 600, "Demo" => 600 }, players["alice"][:class_seconds])
+      assert_equal({ "Sco" => 1200 }, players["bob"][:class_seconds])
+    end
+
+    test "excludes the world pseudo-player" do
+      result = EventLogParser.parse(raw_log)
+
+      assert_not_includes result.players.keys, "world"
+    end
+
+    test "accepts logs already wrapped in brackets" do
+      result = EventLogParser.parse("[#{EVENTS.map(&:to_json).join(',')}]")
+
+      assert_equal "parsed", result.status
+      assert_equal 2, result.players.size
+    end
+
+    test "survives a corrupt line" do
+      corrupt = raw_log.lines.insert(3, "{\"type\": \"attack\", BROKEN\n").join
+
+      result = EventLogParser.parse(corrupt)
+
+      assert_equal "parsed", result.status
+      assert_equal 2, result.players.size
+    end
+
+    test "flags trivial games as empty" do
+      events = [
+        { type: "gameStart", map: "2fort5r", numPlayers: 1, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },
+        { type: "gameEnd", time: 5 }
+      ]
+      result = EventLogParser.parse(events.map { |event| "#{event.to_json}," }.join("\n"))
+
+      assert_equal "empty", result.status
+    end
+
+    test "reports unparseable input as error" do
+      assert_equal "error", EventLogParser.parse("").status
+    end
+  end
+end
