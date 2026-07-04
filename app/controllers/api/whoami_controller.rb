@@ -12,7 +12,7 @@ class Api::WhoamiController < ActionController::API
     return render plain: "invalid", status: :unauthorized if player.nil?
 
     lines = ["name #{player.name}"]
-    lines << "avatar #{player.image}" if player.image.to_s.start_with?("https://")
+    lines << "avatar #{player.image}.png?size=64" if player.image.to_s.start_with?("https://")  # discord cdn defaults to webp without an extension; the engine reads png
     render plain: lines.join("\n")
   end
 end

@@ -12,7 +12,7 @@ class Api::WhoamiControllerTest < ActionDispatch::IntegrationTest
     post api_whoami_url, params: { token: TflToken.mint(player) }
 
     assert_response :success
-    assert_equal "name #{player.name}\navatar https://cdn.discordapp.com/avatars/1/abc.png", response.body
+    assert_equal "name #{player.name}\navatar https://cdn.discordapp.com/avatars/1/abc.png.png?size=64", response.body
   end
 
   test "non-url image is omitted" do
