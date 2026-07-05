@@ -31,6 +31,6 @@ class MatchStatTest < ActiveSupport::TestCase
   test "draw" do
     stat = build_stat(winning_team: 0, team1_score: 30, team2_score: 30)
 
-    assert_equal "Draw!", stat.result_description
+    assert_equal "Draw", stat.result_description
   end
 end

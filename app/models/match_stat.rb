@@ -32,10 +32,36 @@ class MatchStat < ApplicationRecord
     "https://fortressone-stats.s3.ap-southeast-2.amazonaws.com/#{s3_key}"
   end
 
+  # Mirror Match's result card: bar colour and fill follow the same rules
+  # so the stats card renders identically.
+  def result_colour
+    return ResultConstants::COLOUR[:draw] if drawn?
+    return ResultConstants::COLOUR[:blue] if winning_team.to_i == 1
+
+    ResultConstants::COLOUR[:red]
+  end
+
+  def progress_max
+    half_boundary_seconds ? 2 * half_boundary_seconds : duration_seconds.to_i
+  end
+
+  # Blue wins show how close red got on score; red wins show how much of
+  # the clock they needed.
+  def progress_value
+    boundary = progress_max / 2
+    if winning_team.to_i == 1 && team1_score.to_i.positive?
+      boundary + (team2_score.to_f / team1_score * boundary)
+    elsif winning_team.to_i == 2
+      duration_seconds.to_i
+    else
+      progress_max
+    end
+  end
+
   # Mirrors Match#description: blue wins on points at full time; red wins
   # the moment they pass blue's score, so their margin is the time left.
   def result_description
-    return "Draw!" if drawn?
+    return "Draw" if drawn?
 
     winner = winning_team.to_i == 1 ? (team1_name.presence || "blue") : (team2_name.presence || "red")
     winner = winner.capitalize

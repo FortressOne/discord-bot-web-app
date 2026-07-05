@@ -161,6 +161,13 @@ module StatsHelper
     link_to label, stats_path(request.query_parameters.merge(param => value, page: nil)), style: style
   end
 
+  # Same shape as match_summary: "Red wins with 2m 54s remaining - 4v4 - ff-schtop"
+  def stats_match_summary(match_stat, players)
+    sizes = players.group_by { |player| player.team.to_i }
+    size = [1, 2].map { |team| (sizes[team] || []).size }.join("v")
+    [match_stat.result_description, size, match_stat.map_name].compact.join(DELIMITER)
+  end
+
   # Login-era logs append the Player id to the name ("bent#35") — pure
   # noise for display; the raw name still keys filters and duels.
   def stats_display_name(name)

@@ -4,25 +4,36 @@
   <article>
     <header>
       <p>
-        <span style="float: right;">
-          <% if @match_stat.played_at %>
-            <%= local_time(@match_stat.played_at) %>
-          <% end %>
-        </span>
-        <%= stats_filter_link(@match_stat.region, :region, @match_stat.region) %> /
-        <%= stats_filter_link(@match_stat.game_mode, :mode, @match_stat.game_mode) %>
-        &middot; <%= @match_stat.duration_display %> min
+        <span style="float: right;"><%= @match_stat.id %><%= DELIMITER %><% if @match_stat.played_at %><%= local_time(@match_stat.played_at) %><small> (<%= local_time_ago(@match_stat.played_at) %>)</small><% end %></span>
+        <% if @match_stat.match&.server %>
+          Server: <%= link_to(@match_stat.match.server.name, "qw://#{@match_stat.match.server.address}", style: "text-align: left;") %></br>
+        <% end %>
+        <% if @match_stat.match&.discord_channel %>
+          Discord: <%= link_to(@match_stat.match.discord_channel.name, @match_stat.match.discord_channel, style: "text-align: left;") %></br>
+        <% end %>
+        <% unless @match_stat.match %>
+          Region: <%= stats_filter_link(@match_stat.region, :region, @match_stat.region) %></br>
+          Mode: <%= stats_filter_link(@match_stat.game_mode, :mode, @match_stat.game_mode) %></br>
+        <% end %>
+        <h4><%= stats_match_summary(@match_stat, @players) %></h4>
       </p>
-      <h4><%= @match_stat.map_name %></h4>
+
+      <progress style='--progress-color: <%= @match_stat.result_colour %>;' value=<%= @match_stat.progress_value %> max="<%= @match_stat.progress_max %>"></progress>
     </header>
     <div class="grid">
       <% [1, 2].each_with_index do |team, index| %>
         <div style="margin: auto;">
-          <strong style="color: <%= team_colour_code(team) %>;"><%= (team == 1 ? @match_stat.team1_name : @match_stat.team2_name)&.capitalize || (team == 1 ? "Blue" : "Red") %></strong>
+          <% flag = Team::FLAGS.fetch(team, Team::DEFAULT_FLAG) %>
+          <%= image_tag(flag[:url], alt: flag[:alt], style: "height: 44px;") %>
+          <strong><%= "#{((team == 1 ? @match_stat.team1_name : @match_stat.team2_name).presence || Team::COLOUR[team]).capitalize} Team" %></strong>
           </br>
           <% @players.select { |player| player.team == team }.each do |player| %>
-            <%= stats_class_icon(player.dominant_class, StatsHelper::TEAM_COLOURS[team], height: 28) %>
-            <%= stats_player_link(player) %>
+            <%= stats_class_icon(player.dominant_class, StatsHelper::TEAM_COLOURS[team], height: 44) %>
+            <% if player.player_id %>
+              <%= link_to(stats_display_name(player.name), player_path(player.player_id)) %>
+            <% else %>
+              <%= link_to(stats_display_name(player.name), stats_path(player: player.name)) %>
+            <% end %>
             <% @awards.select { |award| award.player == player.name }.each do |award| %>
               <span title="<%= award.title %> (<%= award.description %>)"><%= award.emoji %></span>
             <% end %>
@@ -30,13 +41,8 @@
           <% end %>
         </div>
         <% if index.zero? %>
-          <div style="margin: auto; text-align: center;">
-            <h1>
-              <span style="color: <%= team_colour_code(1) %>;"><%= @match_stat.team1_score %></span>
-              &ndash;
-              <span style="color: <%= team_colour_code(2) %>;"><%= @match_stat.team2_score %></span>
-            </h1>
-            <p><strong><%= @match_stat.result_description %></strong></p>
+          <div style="margin: auto;">
+            <h1><%= @match_stat.team1_score %> &mdash; <%= @match_stat.team2_score %></h1>
           </div>
         <% end %>
       <% end %>
@@ -44,10 +50,10 @@
     <footer>
       <%= link_to "Raw event log", @match_stat.json_url %>
       <% if @match_stat.match %>
-        &middot; <%= link_to "PUG result", @match_stat.match %>
+        <%= DELIMITER %><%= link_to "PUG result", @match_stat.match %>
       <% end %>
       <% if @match_stat.demo_filename.present? && @match_stat.match&.demo_uri.present? %>
-        &middot; <%= link_to "Demo", @match_stat.match.demo_uri %>
+        <%= DELIMITER %><%= link_to "Demo", @match_stat.match.demo_uri %>
       <% end %>
     </footer>
   </article>
@@ -105,7 +111,7 @@
                     </span>
                   </th>
                   <% [matchup.left, matchup.right].each do |side| %>
-                    <th style="color: <%= team_colour_code(side.team) %>;"><%= stats_display_name(side.name) %></th>
+                    <th style="color: <%= team_colour_code(side.team) %>;" title="<%= stats_display_name(side.name) %>"><%= stats_display_name(side.name) %></th>
                   <% end %>
                   <th></th>
                 </tr>

@@ -110,10 +110,20 @@ html body main.container nav ul li form.button_to {
 }
 
 /* Compact head-to-head cards: four across on a large screen. */
+.h2h-table {
+  font-size: 0.9em;
+}
+
 .h2h-table th,
 .h2h-table td {
-  padding: 0.4rem 0.55rem;
+  padding: 0.3rem 0.45rem;
   white-space: nowrap;
+}
+
+.h2h-table th {
+  max-width: 9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #match_team_result_1 {
