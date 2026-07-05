@@ -163,10 +163,13 @@ module StatsHelper
     link_to label, stats_path(request.query_parameters.merge(param => value, page: nil)), style: style
   end
 
-  # Same shape as match_summary: "Red wins with 2m 54s remaining - 4v4 - ff-schtop"
+  # Same shape as match_summary: "Red wins with 2m 54s remaining - 4v4 - ff-schtop".
+  # All-time attackers belong to neither side: "4v4 +ATA".
   def stats_match_summary(match_stat, players)
-    sizes = players.group_by { |player| player.team.to_i }
+    teamed, all_time_attackers = players.partition { |player| !player.unteamed? }
+    sizes = teamed.group_by { |player| player.team.to_i }
     size = [1, 2].map { |team| (sizes[team] || []).size }.join("v")
+    size += " +#{all_time_attackers.size > 1 ? "#{all_time_attackers.size} " : ""}ATA" if all_time_attackers.any?
     [match_stat.result_description, size, match_stat.map_name].compact.join(DELIMITER)
   end
 
