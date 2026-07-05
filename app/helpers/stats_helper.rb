@@ -12,7 +12,7 @@ module StatsHelper
     flag_throws: ["Throw", "Flag throws"],
     kills: ["K", "Kills"],
     deaths: ["D", "Deaths"],
-    kd: ["K/D", "Kills per (deaths + teamkills)"],
+    kd: ["K/(D+TK)", "Kills per (deaths + teamkills)"],
     teamkills: ["TK", "Teamkills"],
     damage_given: ["Dmg", "Damage given"],
     damage_taken: ["Dmg T", "Damage taken"],
@@ -20,11 +20,11 @@ module StatsHelper
     flag_stops: ["Stop", "Flag stops"]
   }.freeze
 
-  FULL_COLUMNS = %i[kills deaths kd teamkills damage_given damage_taken team_damage
+  FULL_COLUMNS = %i[kills deaths kd teamkills damage_given team_damage
                     flag_touches flag_caps flag_throws flag_stops flag_carry].freeze
   ATTACK_COLUMNS = %i[flag_caps flag_carry kills damage_given flag_touches flag_throws
                       teamkills team_damage].freeze
-  DEFENCE_COLUMNS = %i[kills damage_given flag_stops deaths damage_taken teamkills kd
+  DEFENCE_COLUMNS = %i[kills damage_given flag_stops deaths teamkills kd
                        team_damage].freeze
 
   ROLE_COLUMNS = {
@@ -114,8 +114,7 @@ module StatsHelper
         [["Kills", :kills, {}],
          ["Damage", :damage_given, {}],
          ["Stops", :flag_stops, {}],
-         ["Deaths", :deaths, { lower_wins: true }],
-         ["Dmg taken", :damage_taken, { lower_wins: true }]]
+         ["Deaths", :deaths, { lower_wins: true }]]
       end
 
     definitions.map do |label, stat, options|
