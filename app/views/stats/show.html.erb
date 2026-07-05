@@ -4,7 +4,11 @@
   <article>
     <header>
       <p>
-        <span style="float: right;"><%= @match_stat.played_at&.strftime("%Y-%m-%d %H:%M") %> UTC</span>
+        <span style="float: right;">
+          <% if @match_stat.played_at %>
+            <%= local_time(@match_stat.played_at) %><small> (<%= local_time_ago(@match_stat.played_at) %>)</small>
+          <% end %>
+        </span>
         <%= stats_filter_link(@match_stat.region, :region, @match_stat.region) %> /
         <%= stats_filter_link(@match_stat.game_mode, :mode, @match_stat.game_mode) %>
         &middot; <%= @match_stat.duration_display %> min
@@ -79,38 +83,44 @@
     <h3>Head to head</h3>
     <% grouped_matchups.each do |role, matchups| %>
       <h4><%= role == :attack ? "Attack" : "Defence" %></h4>
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; align-items: flex-start;">
         <% matchups.each do |matchup| %>
-          <article style="margin: 0;">
+          <article style="margin: 0; flex: 1 1 340px; max-width: 100%;">
             <header style="padding: 0.5rem 1rem; text-align: center;">
-              <strong><%= matchup.class_name %></strong>
+              <strong><%= stats_class_full_name(matchup.class_name) %></strong>
             </header>
             <table>
               <thead>
                 <tr>
                   <th></th>
-                  <th style="color: <%= team_colour_code(matchup.left.team) %>;">
-                    <%= stats_class_icon(matchup.class_name, StatsHelper::TEAM_COLOURS[matchup.left.team]) %>
-                    <%= matchup.left.name %>
-                  </th>
-                  <th style="color: <%= team_colour_code(matchup.right.team) %>;">
-                    <%= stats_class_icon(matchup.class_name, StatsHelper::TEAM_COLOURS[matchup.right.team]) %>
-                    <%= matchup.right.name %>
-                  </th>
+                  <% [matchup.left, matchup.right].each do |side| %>
+                    <th style="color: <%= team_colour_code(side.team) %>;">
+                      <span style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem;">
+                        <%= stats_class_icon(matchup.class_name, StatsHelper::TEAM_COLOURS[side.team]) %>
+                        <%= side.name %>
+                      </span>
+                    </th>
+                  <% end %>
                 </tr>
               </thead>
               <tbody>
+                <% stat_rows = [] %>
                 <% if matchup.role == :attack %>
-                  <tr><td>Caps</td><td><%= matchup.left.flag_caps %></td><td><%= matchup.right.flag_caps %></td></tr>
-                  <tr><td>Carry</td><td><%= matchup.left.flag_carry_display %></td><td><%= matchup.right.flag_carry_display %></td></tr>
-                  <tr><td>Took</td><td><%= matchup.left.flag_touches %></td><td><%= matchup.right.flag_touches %></td></tr>
+                  <% stat_rows << ["Caps", matchup.left.flag_caps, matchup.right.flag_caps, {}] %>
+                  <% stat_rows << ["Carry", matchup.left.flag_carry_seconds, matchup.right.flag_carry_seconds,
+                                   { left_display: matchup.left.flag_carry_display, right_display: matchup.right.flag_carry_display }] %>
+                  <% stat_rows << ["Took", matchup.left.flag_touches, matchup.right.flag_touches, {}] %>
                 <% else %>
-                  <tr><td>Stops</td><td><%= matchup.left.flag_stops %></td><td><%= matchup.right.flag_stops %></td></tr>
+                  <% stat_rows << ["Stops", matchup.left.flag_stops, matchup.right.flag_stops, {}] %>
                 <% end %>
-                <tr><td>Kills</td><td><%= matchup.left.kills %></td><td><%= matchup.right.kills %></td></tr>
-                <tr><td>Deaths</td><td><%= matchup.left.deaths %></td><td><%= matchup.right.deaths %></td></tr>
-                <tr><td>Damage</td><td><%= matchup.left.damage_given %></td><td><%= matchup.right.damage_given %></td></tr>
-                <tr><td>Dmg taken</td><td><%= matchup.left.damage_taken %></td><td><%= matchup.right.damage_taken %></td></tr>
+                <% stat_rows << ["Kills", matchup.left.kills, matchup.right.kills, {}] %>
+                <% stat_rows << ["Deaths", matchup.left.deaths, matchup.right.deaths, { lower_wins: true }] %>
+                <% stat_rows << ["Damage", matchup.left.damage_given, matchup.right.damage_given, {}] %>
+                <% stat_rows << ["Dmg taken", matchup.left.damage_taken, matchup.right.damage_taken, { lower_wins: true }] %>
+                <% stat_rows.each do |label, left, right, options| %>
+                  <% left_html, right_html = duel_pair(left, right, **options) %>
+                  <tr><td><%= label %></td><td><%= left_html %></td><td><%= right_html %></td></tr>
+                <% end %>
               </tbody>
             </table>
             <footer style="padding: 0.5rem 1rem;">

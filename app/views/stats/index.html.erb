@@ -33,7 +33,11 @@
       <tbody>
         <% @match_stats.each do |match_stat| %>
           <tr>
-            <td><%= link_to match_stat.played_at&.strftime("%Y-%m-%d %H:%M") || "?", stat_path(match_stat) %></td>
+            <td>
+              <%= link_to stat_path(match_stat) do %>
+                <%= match_stat.played_at ? local_time(match_stat.played_at, "%Y-%m-%d %H:%M") : "?" %>
+              <% end %>
+            </td>
             <td><%= stats_filter_link(match_stat.map_name, :map, match_stat.map_name) %></td>
             <td><%= stats_filter_link(match_stat.region, :region, match_stat.region) %></td>
             <td><%= stats_filter_link(match_stat.game_mode, :mode, match_stat.game_mode) %></td>

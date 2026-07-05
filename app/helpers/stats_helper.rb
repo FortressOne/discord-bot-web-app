@@ -69,6 +69,22 @@ module StatsHelper
     tag.span(icons, style: "white-space: nowrap; display: inline-flex; align-items: center;")
   end
 
+  def stats_class_full_name(class_name)
+    number = CLASS_NUMBERS[class_name]
+    full_name = number&.positive? && Playerclass::PLAYERCLASSES.dig(number, :name)
+    full_name.presence || class_name
+  end
+
+  # Bold the winning side of a head-to-head stat. Deaths and damage taken
+  # pass lower_wins.
+  def duel_pair(left, right, left_display: nil, right_display: nil, lower_wins: false)
+    displays = [left_display || left, right_display || right]
+    return displays if left == right
+
+    left_wins = lower_wins ? left < right : left > right
+    left_wins ? [tag.strong(displays[0]), displays[1]] : [displays[0], tag.strong(displays[1])]
+  end
+
   def stats_class_icon(class_name, colour, height: 24)
     number = CLASS_NUMBERS[class_name]
     return "" unless number&.positive?
