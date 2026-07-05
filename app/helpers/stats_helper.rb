@@ -9,16 +9,16 @@ module StatsHelper
     flag_caps: ["Caps", "Flag captures"],
     flag_carry: ["Carry", "Flag carry time"],
     flag_touches: ["Takes", "Flag takes"],
-    flag_throws: ["Throw", "Flag throws"],
-    kills: ["K", "Kills"],
-    deaths: ["D", "Deaths"],
+    flag_throws: ["Throws", "Flag throws"],
+    kills: ["Kills", "Kills"],
+    deaths: ["Deaths", "Deaths"],
     kd: ["K/(D+TK)", "Kills per (deaths + teamkills)"],
-    dmg_per_min: ["Dmg/m", "Damage per minute"],
+    dmg_per_min: ["Damage/min", "Damage per minute"],
     teamkills: ["Team Kills", "Team kills"],
-    damage_given: ["Dmg", "Damage given"],
+    damage_given: ["Damage", "Damage given"],
     damage_taken: ["Dmg T", "Damage taken"],
     team_damage: ["Team Damage", "Damage dealt to teammates"],
-    flag_stops: ["Stop", "Flag stops"]
+    flag_stops: ["Stops", "Flag stops"]
   }.freeze
 
   FULL_COLUMNS = %i[kills deaths kd teamkills damage_given team_damage
