@@ -84,7 +84,10 @@ module Stats
     def tables
       @tables ||= if attack_defence?
         { attack: rows.select { |row| row.half == row.team }
-                      .sort_by { |row| [-row.flag_caps * row.weight, -row.kills * row.weight] },
+                      .sort_by { |row|
+                        [-row.flag_caps * row.weight, -row.flag_carry_seconds * row.weight,
+                         -row.flag_touches * row.weight]
+                      },
           defence: rows.reject { |row| row.half == row.team }
                        .sort_by { |row| [-row.kills * row.weight, -row.damage_given * row.weight] } }
       else

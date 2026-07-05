@@ -90,6 +90,7 @@ module Stats
       return error_result("no events") if events.empty?
 
       @half_boundary, @attack_defence = detect_halves(events)
+      @real_players = real_players_in(events)
       events.each { |event| process(event) }
       finalise(events)
       @result
@@ -178,16 +179,27 @@ module Stats
       half_stat(name, 2)["class_seconds"][class_name] += second if second.positive?
     end
 
-    # Map entities (build_timer, kill triggers) emit events with
-    # playerClass 0; real players always have a class. They are not
-    # participants.
-    def pseudo?(name, class_value)
-      name.blank? || name == WORLD || class_value.to_i.zero?
+    # Map entities (build_timer, kill triggers) only ever appear with
+    # class 0; anyone seen with a real class is a player. The distinction
+    # matters because sentry frags are logged for the owning engineer
+    # WITH playerClass 0 (the shooter is the building), and those must
+    # still count.
+    def real_players_in(events)
+      events.each_with_object(Set.new) do |event, names|
+        name = event["player"]
+        names << name if name.present? && event["playerClass"].to_i.positive?
+        target = event["target"]
+        names << target if target.present? && event["targetClass"].to_i.positive?
+      end
+    end
+
+    def pseudo?(name)
+      name.blank? || name == WORLD || !@real_players.include?(name)
     end
 
     def process_attack(event)
       name = event["player"]
-      return if pseudo?(name, event["playerClass"])
+      return if pseudo?(name)
 
       weapon_stat(name, event["inflictor"])["shots"] += 1
       bump_half_weapon(name, event["time"], event["inflictor"], "shots")
@@ -202,12 +214,12 @@ module Stats
       case event["kind"]
       when "enemy"
         target = event["target"]
-        target_real = !pseudo?(target, event["targetClass"])
+        target_real = !pseudo?(target)
         if target_real
           @players[target][:damage_taken] += damage
           bump_half(target, time, "damage_taken", damage)
         end
-        return if pseudo?(name, event["playerClass"])
+        return if pseudo?(name)
 
         note_team(name, event["playerTeam"], time)
         @players[name][:damage_given] += damage
@@ -219,7 +231,7 @@ module Stats
         bump_half_weapon(name, time, event["inflictor"], "hits")
         bump_half_weapon(name, time, event["inflictor"], "damage", damage)
       when "team"
-        return if pseudo?(name, event["playerClass"])
+        return if pseudo?(name)
 
         note_team(name, event["playerTeam"], time)
         @players[name][:team_damage] += damage
@@ -229,7 +241,7 @@ module Stats
 
     def process_kill(event)
       name = event["player"]
-      return if pseudo?(name, event["playerClass"])
+      return if pseudo?(name)
 
       time = event["time"]
       target_class = event["targetClass"].to_i
@@ -266,7 +278,7 @@ module Stats
 
     def process_death(event)
       name = event["player"]
-      return if pseudo?(name, event["playerClass"]) || event["playerClass"].to_i == SENTRY_CLASS
+      return if pseudo?(name) || event["playerClass"].to_i == SENTRY_CLASS
 
       note_team(name, event["playerTeam"], event["time"])
       @players[name][:deaths] += 1

@@ -33,10 +33,15 @@ class StatsController < ApplicationController
 
   def show
     @match_stat = MatchStat.includes(:player_match_stats).find(params[:id])
-    # Winning team first, then alphabetical within each team.
+    # Winning team first, then alphabetical within each team; all-time
+    # attackers belong to neither team and go last.
     winning_team = @match_stat.winning_team.to_i
     @players = @match_stat.player_match_stats.sort_by do |player|
-      [player.team.to_i == winning_team ? 0 : 1, player.team.to_i, player.name.downcase]
+      if player.unteamed?
+        [2, 0, player.name.downcase]
+      else
+        [player.team.to_i == winning_team ? 0 : 1, player.team.to_i, player.name.downcase]
+      end
     end
     @awards = Stats::Awards.for(@players)
     @breakdown = Stats::HalfBreakdown.new(@match_stat, @players)

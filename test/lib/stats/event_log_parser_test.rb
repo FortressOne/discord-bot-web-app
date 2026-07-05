@@ -303,6 +303,28 @@ module Stats
       assert_not result.attack_defence
     end
 
+    test "sentry frags are attributed to the owning engineer" do
+      events = [
+        { type: "gameStart", map: "rs_zzr", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },
+        # the engineer exists with a real class...
+        { type: "changeClass", player: "eng", playerClass: 9, nextClass: 0, team: 2, timePlayed: 700, time: 700 },
+        # ...but their sentry's frags log with playerClass 0
+        { type: "kill", kind: "enemy", player: "eng", playerClass: 0, playerTeam: 2,
+          target: "alice", targetClass: 3, targetTeam: 1, inflictor: "building_sentrygun", time: 100 },
+        { type: "death", kind: "enemy", attacker: "eng", attackerClass: 0, attackerTeam: 2,
+          player: "alice", playerClass: 3, playerTeam: 1, inflictor: "building_sentrygun", time: 100 },
+        { type: "teamScores", team1Score: 0, team2Score: 10, team1Name: "blue", team2Name: "red", winningTeam: 2, time: 700 },
+        { type: "gameEnd", time: 700 }
+      ]
+
+      result = EventLogParser.parse(events.map { |event| "#{event.to_json}," }.join("\n"))
+
+      eng = result.players["eng"]
+      assert_equal 1, eng[:kills]
+      assert_equal 1, eng[:weapon_stats]["sent"]["kills"]
+      assert_equal({ "alice" => { "kills" => 1, "damage" => 0 } }, result.kill_matrix["eng"])
+    end
+
     test "map entities with class 0 are not players" do
       events = [
         { type: "gameStart", map: "rs_zzr", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },
