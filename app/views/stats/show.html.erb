@@ -68,15 +68,13 @@
       <thead>
         <tr>
           <th>Team</th>
-          <th title="Kills">K</th>
-          <th title="Teamkills">TK</th>
-          <th title="Damage given">Dmg</th>
-          <th title="Friendly fire damage">FF</th>
-          <th title="Flag touches">Took</th>
+          <th>Score</th>
           <th title="Flag captures">Caps</th>
-          <th title="Flag throws">Throw</th>
-          <th title="Flag stops">Stop</th>
+          <th title="Kills">Kills</th>
+          <th title="Deaths">Deaths</th>
+          <th title="Teamkills">TKs</th>
           <th title="Flag carry time">Carry</th>
+          <th title="Flag touches">Touches</th>
         </tr>
       </thead>
       <tbody>
@@ -84,15 +82,13 @@
           <% members = @weighted_players.select { |player| player.team.to_i == team && !player.unteamed? } %>
           <tr>
             <td><strong style="color: <%= team_colour_code(team) %>;"><%= ((team == 1 ? @match_stat.team1_name : @match_stat.team2_name).presence || Team::COLOUR[team]).capitalize %></strong></td>
-            <%= stats_totals_cell(members, :kills) %>
-            <%= stats_totals_cell(members, :teamkills) %>
-            <%= stats_totals_cell(members, :damage_given) %>
-            <%= stats_totals_cell(members, :team_damage) %>
-            <%= stats_totals_cell(members, :flag_touches) %>
+            <td><strong><%= team == 1 ? @match_stat.team1_score : @match_stat.team2_score %></strong></td>
             <%= stats_totals_cell(members, :flag_caps) %>
-            <%= stats_totals_cell(members, :flag_throws) %>
-            <%= stats_totals_cell(members, :flag_stops) %>
+            <%= stats_totals_cell(members, :kills) %>
+            <%= stats_totals_cell(members, :deaths) %>
+            <%= stats_totals_cell(members, :teamkills) %>
             <%= stats_totals_cell(members, :flag_carry_seconds, clock: true) %>
+            <%= stats_totals_cell(members, :flag_touches) %>
           </tr>
         <% end %>
       </tbody>
