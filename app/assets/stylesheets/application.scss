@@ -109,6 +109,13 @@ html body main.container nav ul li form.button_to {
   white-space: nowrap;
 }
 
+/* Stats tables hug their content and sit centred. */
+.container-stats table {
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Compact head-to-head cards: four across on a large screen. */
 .h2h-table {
   font-size: 0.9em;
