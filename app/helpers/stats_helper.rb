@@ -92,7 +92,10 @@ module StatsHelper
 
     left_wins = lower_wins ? left < right : left > right
     margin = (left - right).abs
-    display = clock ? format("+%d:%02d", margin / 60, margin % 60) : "+#{margin}"
+    # On lower-wins stats (deaths, damage taken) the winner has LESS, so
+    # the margin reads negative.
+    sign = lower_wins ? "-" : "+"
+    display = clock ? format("#{sign}%d:%02d", margin / 60, margin % 60) : "#{sign}#{margin}"
     tag.strong(display, style: "color: #{team_colour_code(left_wins ? left_team : right_team)};")
   end
 
