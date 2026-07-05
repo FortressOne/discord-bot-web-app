@@ -60,7 +60,7 @@
 
   <% if @awards.any? %>
     <h3>Awards</h3>
-    <div class="grid">
+    <div style="display: flex; flex-wrap: wrap; gap: 0 3rem; align-items: flex-start;">
       <% @awards.each_slice((@awards.size / 2.0).ceil).each do |column| %>
         <div>
           <table>
