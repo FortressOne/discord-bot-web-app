@@ -37,7 +37,7 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_match "Slaughterhouse", response.body
-    assert_match "stats_players_table", response.body
+    assert_match "stats-table", response.body
     assert_match "rl", response.body
   end
 

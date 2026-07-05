@@ -1,0 +1,46 @@
+<figure>
+  <table role="grid" class="stats-table" data-sortable data-bold-max>
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Classes</th>
+        <th title="Kills">K</th>
+        <th title="Deaths">D</th>
+        <th title="Kills per death">K/D</th>
+        <th title="Teamkills">TK</th>
+        <th title="Suicides">Sui</th>
+        <th title="Sentries destroyed">SG</th>
+        <th title="Damage given">Dmg</th>
+        <th title="Damage taken">Dmg&nbsp;T</th>
+        <th title="Friendly fire damage">FF</th>
+        <th title="Flag touches">Took</th>
+        <th title="Flag captures">Caps</th>
+        <th title="Flag throws">Throw</th>
+        <th title="Flag stops">Stop</th>
+        <th title="Flag carry time">Carry</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% rows.each do |player| %>
+        <tr>
+          <td><strong><%= stats_player_link(player) %></strong></td>
+          <td><%= stats_class_icons(player) %></td>
+          <td><%= player.kills %></td>
+          <td><%= player.deaths %></td>
+          <td><%= player.kd_ratio %></td>
+          <td><%= player.teamkills %></td>
+          <td><%= player.suicides %></td>
+          <td><%= player.sentries_destroyed %></td>
+          <td><%= player.damage_given %></td>
+          <td><%= player.damage_taken %></td>
+          <td><%= player.team_damage %></td>
+          <td><%= player.flag_touches %></td>
+          <td><%= player.flag_caps %></td>
+          <td><%= player.flag_throws %></td>
+          <td><%= player.flag_stops %></td>
+          <td data-sort="<%= player.flag_carry_seconds %>"><%= player.flag_carry_display %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</figure>

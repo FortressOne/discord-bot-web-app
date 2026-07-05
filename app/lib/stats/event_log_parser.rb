@@ -45,10 +45,19 @@ module Stats
       "info_tfgoal" => "laser"
     }.freeze
 
+    # In FO pug convention a match is two mirrored halves: team 1 attacks
+    # the first half, team 2 the second (fo-stats FO_stats_v1f.ps1). A match
+    # counts as attack/defence when flag touches actually follow that
+    # pattern; symmetric maps (both teams capping all game) do not.
+    MIN_HALF_SECONDS = 300
+    AD_PURITY = 0.8
+    MIN_AD_TOUCHES = 4
+
     Result = Struct.new(
       :map_name, :played_at, :demo_filename, :duration_seconds,
       :team1_name, :team2_name, :team1_score, :team2_score, :winning_team,
       :player_count, :players, :status, :error_message,
+      :kill_matrix, :attack_defence,
       keyword_init: true
     )
 
@@ -62,16 +71,21 @@ module Stats
       @raw = raw.to_s.force_encoding(Encoding::UTF_8).scrub("?")
       @players = Hash.new { |hash, name| hash[name] = blank_player }
       @teams_seen = Hash.new { |hash, name| hash[name] = Hash.new(0) }
+      @half_players = {}
+      @half_teams = Hash.new { |hash, key| hash[key] = Hash.new(0) }
+      @half_flag_touches = []
+      @kill_matrix = {}
       @flag_took_at = {}
       @last_class_change = {}
       @previous_death = nil
-      @result = Result.new(players: {}, status: "parsed")
+      @result = Result.new(players: {}, status: "parsed", kill_matrix: {}, attack_defence: false)
     end
 
     def parse
       events = decode_events
       return error_result("no events") if events.empty?
 
+      @half_boundary = half_boundary_from(events)
       events.each { |event| process(event) }
       finalise(events)
       @result
@@ -136,15 +150,28 @@ module Stats
       name = event["player"]
       return if name.blank?
 
-      note_team(name, event["team"])
       time = event["time"].to_i
+      note_team(name, event["team"], time)
       from_class = event["playerClass"].to_i
       last_change = @last_class_change[name] || 0
       duration = time - last_change
       if from_class.positive? && from_class < SENTRY_CLASS && duration.positive?
-        @players[name][:class_seconds][CLASS_NAMES[from_class]] += duration
+        class_name = CLASS_NAMES[from_class]
+        @players[name][:class_seconds][class_name] += duration
+        add_half_class_time(name, class_name, last_change, time)
       end
       @last_class_change[name] = time
+    end
+
+    # A class segment can span the half boundary; split it so each half
+    # gets its share.
+    def add_half_class_time(name, class_name, from, to)
+      return unless @half_boundary
+
+      first = [to, @half_boundary].min - from
+      half_stat(name, 1)["class_seconds"][class_name] += first if first.positive?
+      second = to - [from, @half_boundary].max
+      half_stat(name, 2)["class_seconds"][class_name] += second if second.positive?
     end
 
     def process_attack(event)
@@ -159,22 +186,29 @@ module Stats
       damage = event["damage"].to_i
       return if name.blank? || damage.zero?
 
+      time = event["time"]
       case event["kind"]
       when "enemy"
         target = event["target"]
-        @players[target][:damage_taken] += damage if target.present? && target != WORLD
+        if target.present? && target != WORLD
+          @players[target][:damage_taken] += damage
+          bump_half(target, time, "damage_taken", damage)
+        end
         return if name == WORLD
 
-        note_team(name, event["playerTeam"])
+        note_team(name, event["playerTeam"], time)
         @players[name][:damage_given] += damage
+        bump_half(name, time, "damage_given", damage)
+        duel_stat(name, target)["damage"] += damage if target.present? && target != WORLD
         weapon = weapon_stat(name, event["inflictor"])
         weapon["hits"] += 1
         weapon["damage"] += damage
       when "team"
         return if name == WORLD
 
-        note_team(name, event["playerTeam"])
+        note_team(name, event["playerTeam"], time)
         @players[name][:team_damage] += damage
+        bump_half(name, time, "team_damage", damage)
       end
     end
 
@@ -182,17 +216,24 @@ module Stats
       name = event["player"]
       return if name.blank? || name == WORLD
 
-      note_team(name, event["playerTeam"])
+      time = event["time"]
+      note_team(name, event["playerTeam"], time)
       case event["kind"]
       when "self"
         @players[name][:suicides] += 1
+        bump_half(name, time, "suicides")
       when "team"
         @players[name][:teamkills] += 1
+        bump_half(name, time, "teamkills")
       when "enemy"
         if event["targetClass"].to_i == SENTRY_CLASS
           @players[name][:sentries_destroyed] += 1
+          bump_half(name, time, "sentries_destroyed")
         else
           @players[name][:kills] += 1
+          bump_half(name, time, "kills")
+          target = event["target"]
+          duel_stat(name, target)["kills"] += 1 if target.present? && target != WORLD
           weapon_stat(name, event["inflictor"])["kills"] += 1
         end
       end
@@ -202,8 +243,9 @@ module Stats
       name = event["player"]
       return if name.blank? || name == WORLD || event["playerClass"].to_i == SENTRY_CLASS
 
-      note_team(name, event["playerTeam"])
+      note_team(name, event["playerTeam"], event["time"])
       @players[name][:deaths] += 1
+      bump_half(name, event["time"], "deaths")
       @previous_death = event
     end
 
@@ -211,8 +253,10 @@ module Stats
       name = event["player"]
       return if name.blank?
 
-      note_team(name, event["team"])
+      note_team(name, event["team"], event["time"])
       @players[name][:flag_touches] += 1
+      bump_half(name, event["time"], "flag_touches")
+      @half_flag_touches << [name, half_of(event["time"])] if @half_boundary
       @flag_took_at[name] = event["time"].to_i
     end
 
@@ -221,8 +265,10 @@ module Stats
       return if name.blank?
 
       @players[name][:flag_drops] += 1
-      carried = event["timeCarried"] || carry_duration(name, event["time"])
-      @players[name][:flag_carry_seconds] += carried.to_i
+      bump_half(name, event["time"], "flag_drops")
+      carried = (event["timeCarried"] || carry_duration(name, event["time"])).to_i
+      @players[name][:flag_carry_seconds] += carried
+      bump_half(name, event["time"], "flag_carry_seconds", carried)
       @flag_took_at.delete(name)
 
       # A fumble in the same instant as the carrier's death is a flag stop,
@@ -231,9 +277,13 @@ module Stats
       death = @previous_death
       if death && death["player"] == name && death["time"] == event["time"] && death["kind"] != "self"
         killer = death["attacker"]
-        @players[killer][:flag_stops] += 1 if killer.present? && killer != WORLD
+        if killer.present? && killer != WORLD
+          @players[killer][:flag_stops] += 1
+          bump_half(killer, event["time"], "flag_stops")
+        end
       elsif death.nil? || death["kind"] != "self"
         @players[name][:flag_throws] += 1
+        bump_half(name, event["time"], "flag_throws")
       end
     end
 
@@ -241,9 +291,12 @@ module Stats
       name = event["player"]
       return if name.blank?
 
-      note_team(name, event["team"])
+      note_team(name, event["team"], event["time"])
       @players[name][:flag_caps] += 1
-      @players[name][:flag_carry_seconds] += carry_duration(name, event["time"]).to_i
+      bump_half(name, event["time"], "flag_caps")
+      carried = carry_duration(name, event["time"]).to_i
+      @players[name][:flag_carry_seconds] += carried
+      bump_half(name, event["time"], "flag_carry_seconds", carried)
       @flag_took_at.delete(name)
     end
 
@@ -260,9 +313,39 @@ module Stats
       took_at ? time.to_i - took_at : 0
     end
 
-    def note_team(name, team)
+    def note_team(name, team, time = nil)
       team = team.to_i
-      @teams_seen[name][team] += 1 if team.positive?
+      return unless team.positive?
+
+      @teams_seen[name][team] += 1
+      half = half_of(time)
+      @half_teams[[name, half]][team] += 1 if half
+    end
+
+    def half_boundary_from(events)
+      game_end = events.reverse_each.find { |event| event["type"] == "gameEnd" }
+      duration = (game_end || events.last)&.dig("time").to_i
+      boundary = duration / 2
+      boundary if boundary >= MIN_HALF_SECONDS
+    end
+
+    def half_of(time)
+      return nil unless @half_boundary && time
+
+      time.to_i <= @half_boundary ? 1 : 2
+    end
+
+    def half_stat(name, half)
+      @half_players[[name, half]] ||= blank_half
+    end
+
+    def bump_half(name, time, key, amount = 1)
+      half = half_of(time)
+      half_stat(name, half)[key] += amount if half
+    end
+
+    def duel_stat(attacker, victim)
+      (@kill_matrix[attacker] ||= {})[victim] ||= { "kills" => 0, "damage" => 0 }
     end
 
     def weapon_stat(name, inflictor)
@@ -281,6 +364,18 @@ module Stats
       }
     end
 
+    def blank_half
+      {
+        "team" => nil,
+        "kills" => 0, "deaths" => 0, "teamkills" => 0, "suicides" => 0,
+        "sentries_destroyed" => 0,
+        "damage_given" => 0, "damage_taken" => 0, "team_damage" => 0,
+        "flag_touches" => 0, "flag_caps" => 0, "flag_drops" => 0,
+        "flag_throws" => 0, "flag_stops" => 0, "flag_carry_seconds" => 0,
+        "class_seconds" => Hash.new(0)
+      }
+    end
+
     def finalise(events)
       @result.duration_seconds ||= events.last&.dig("time").to_i
 
@@ -289,8 +384,14 @@ module Stats
         player = @players[name]
         player[:team] = @teams_seen[name].max_by { |_, count| count }.first
         player[:class_seconds] = player[:class_seconds].to_h
+        player[:half_stats] = half_stats_for(name, player[:team])
         player
       end
+
+      @result.kill_matrix = @kill_matrix.slice(*@teams_seen.keys)
+                                        .transform_values { |victims| victims.slice(*@teams_seen.keys) }
+                                        .reject { |_, victims| victims.empty? }
+      @result.attack_defence = attack_defence?
 
       if @result.map_name.blank?
         @result.status = "error"
@@ -298,6 +399,34 @@ module Stats
       elsif @result.players.size < MIN_PLAYERS || @result.duration_seconds.to_i < MIN_DURATION || @result.team1_score.nil?
         @result.status = "empty"
       end
+    end
+
+    def half_stats_for(name, overall_team)
+      [1, 2].filter_map { |half|
+        stats = @half_players[[name, half]]
+        next unless stats
+
+        team_counts = @half_teams[[name, half]]
+        stats["team"] = team_counts.any? ? team_counts.max_by { |_, count| count }.first : overall_team
+        stats["class_seconds"] = stats["class_seconds"].to_h
+        [half.to_s, stats]
+      }.to_h
+    end
+
+    # True when flag touches follow the pug convention: team 1 attacks the
+    # first half, team 2 the second.
+    def attack_defence?
+      return false unless @half_boundary
+
+      touches = @half_flag_touches.filter_map do |name, half|
+        team = @result.players.dig(name, :half_stats, half.to_s, "team")
+        [half, team] if team
+      end
+      halves = touches.map(&:first).uniq
+      return false if touches.size < MIN_AD_TOUCHES || halves.size < 2
+
+      on_convention = touches.count { |half, team| half == team }
+      on_convention.fdiv(touches.size) >= AD_PURITY
     end
 
     def error_result(message)

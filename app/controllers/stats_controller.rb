@@ -35,6 +35,7 @@ class StatsController < ApplicationController
     @match_stat = MatchStat.includes(:player_match_stats).find(params[:id])
     @players = @match_stat.player_match_stats.sort_by { |player| [player.team.to_i, -player.kills] }
     @awards = Stats::Awards.for(@players)
+    @breakdown = Stats::HalfBreakdown.new(@match_stat, @players)
 
     respond_to do |format|
       format.html
@@ -44,8 +45,12 @@ class StatsController < ApplicationController
           s3_key: @match_stat.s3_key,
           json_url: @match_stat.json_url,
           demo_filename: @match_stat.demo_filename,
+          attack_defence: @match_stat.attack_defence,
           awards: @awards.map(&:to_h),
-          players: @players.map { |player| player_row(player) }
+          players: @players.map { |player| player_row(player) },
+          halves: @breakdown.tables.transform_values { |rows| rows.map { |row| half_row(row) } },
+          matchups: @breakdown.matchups.map { |matchup| matchup_row(matchup) },
+          kill_matrix: @match_stat.kill_matrix
         }
       end
     end
@@ -98,6 +103,43 @@ class StatsController < ApplicationController
       classes_display: player.class_breakdown,
       class_seconds: player.class_seconds,
       weapons: player.weapon_stats.map { |weapon, stats| weapon_row(weapon, stats) }
+    }
+  end
+
+  def half_row(row)
+    {
+      name: row.name,
+      player_id: row.player_id,
+      team: row.team,
+      half: row.half,
+      kills: row.kills,
+      deaths: row.deaths,
+      kd_display: row.kd_ratio.to_s,
+      teamkills: row.teamkills,
+      suicides: row.suicides,
+      sentries_destroyed: row.sentries_destroyed,
+      damage_given: row.damage_given,
+      damage_taken: row.damage_taken,
+      team_damage: row.team_damage,
+      flag_touches: row.flag_touches,
+      flag_caps: row.flag_caps,
+      flag_drops: row.flag_drops,
+      flag_throws: row.flag_throws,
+      flag_stops: row.flag_stops,
+      flag_carry_seconds: row.flag_carry_seconds,
+      flag_carry_display: row.flag_carry_display,
+      class_seconds: row.class_seconds,
+      dominant_class: row.dominant_class
+    }
+  end
+
+  def matchup_row(matchup)
+    {
+      role: matchup.role,
+      class_name: matchup.class_name,
+      left: half_row(matchup.left),
+      right: half_row(matchup.right),
+      duels: matchup.duels
     }
   end
 

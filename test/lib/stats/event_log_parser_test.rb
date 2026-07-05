@@ -154,6 +154,76 @@ module Stats
       assert_equal "error", EventLogParser.parse("").status
     end
 
+    test "splits stats into halves at the midpoint" do
+      result = EventLogParser.parse(raw_log)
+
+      alice = result.players["alice"][:half_stats]
+      assert_equal({ "Sold" => 600 }, alice["1"]["class_seconds"])
+      assert_equal({ "Demo" => 600 }, alice["2"]["class_seconds"])
+      assert_equal 1, alice["1"]["kills"]
+      assert_equal 1, alice["1"]["flag_caps"]
+      assert_equal 45, alice["1"]["flag_carry_seconds"]
+      assert_equal 1, alice["1"]["suicides"]
+      assert_equal 0, alice["2"]["kills"]
+
+      bob = result.players["bob"][:half_stats]
+      assert_equal 3, bob["1"]["deaths"]
+      assert_equal 2, bob["1"]["flag_touches"]
+      assert_equal 1, bob["1"]["flag_throws"]
+    end
+
+    test "builds a kill matrix between real players only" do
+      result = EventLogParser.parse(raw_log)
+
+      assert_equal({ "alice" => { "bob" => { "kills" => 1, "damage" => 90 } } }, result.kill_matrix)
+    end
+
+    test "does not flag a symmetric match as attack defence" do
+      assert_not EventLogParser.parse(raw_log).attack_defence
+    end
+
+    test "detects attack defence from the flag touch pattern" do
+      events = [
+        { type: "gameStart", map: "rs_zzr", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },
+        { type: "playerStart", player: "alice", classtime: 0, time: 0 },
+        { type: "playerStart", player: "bob", classtime: 0, time: 0 },
+        # team 1 does all the flag work in half 1, team 2 in half 2
+        { type: "pickup", team: 1, player: "alice", playerClass: "3", time: 100 },
+        { type: "goal", team: 1, player: "alice", playerClass: "3", time: 150 },
+        { type: "pickup", team: 1, player: "alice", playerClass: "3", time: 300 },
+        { type: "goal", team: 1, player: "alice", playerClass: "3", time: 350 },
+        { type: "pickup", team: 2, player: "bob", playerClass: "1", time: 700 },
+        { type: "goal", team: 2, player: "bob", playerClass: "1", time: 750 },
+        { type: "pickup", team: 2, player: "bob", playerClass: "1", time: 900 },
+        { type: "goal", team: 2, player: "bob", playerClass: "1", time: 950 },
+        { type: "changeClass", player: "alice", playerClass: 3, nextClass: 0, team: 1, timePlayed: 1200, time: 1200 },
+        { type: "changeClass", player: "bob", playerClass: 1, nextClass: 0, team: 2, timePlayed: 1200, time: 1200 },
+        { type: "teamScores", team1Score: 20, team2Score: 20, team1Name: "blue", team2Name: "red", winningTeam: 0, time: 1200 },
+        { type: "gameEnd", time: 1200 }
+      ]
+
+      result = EventLogParser.parse(events.map { |event| "#{event.to_json}," }.join("\n"))
+
+      assert result.attack_defence
+    end
+
+    test "skips halves for short matches" do
+      events = [
+        { type: "gameStart", map: "1on1r", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },
+        { type: "kill", kind: "enemy", player: "alice", playerClass: 3, playerTeam: 1,
+          target: "bob", targetClass: 1, targetTeam: 2, inflictor: "proj_rocket", time: 60 },
+        { type: "death", kind: "enemy", attacker: "alice", attackerClass: 3, attackerTeam: 1,
+          player: "bob", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", time: 60 },
+        { type: "teamScores", team1Score: 1, team2Score: 0, team1Name: "blue", team2Name: "red", winningTeam: 1, time: 300 },
+        { type: "gameEnd", time: 300 }
+      ]
+
+      result = EventLogParser.parse(events.map { |event| "#{event.to_json}," }.join("\n"))
+
+      assert_empty result.players["alice"][:half_stats]
+      assert_not result.attack_defence
+    end
+
     test "scrubs invalid UTF-8 bytes from player names" do
       # Old logs carry raw Quake-charset bytes ("fun chars") in names.
       funky = raw_log.gsub("alice", "al\xEDce".b).force_encoding(Encoding::UTF_8)

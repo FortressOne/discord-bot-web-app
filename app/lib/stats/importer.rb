@@ -45,6 +45,8 @@ module Stats
           demo_filename: result.demo_filename,
           status: result.status,
           error_message: result.error_message,
+          kill_matrix: result.kill_matrix || {},
+          attack_defence: result.attack_defence || false,
           match: linked_match(result)
         )
         match_stat.save!

@@ -61,52 +61,55 @@
   <% end %>
 
   <h3>Players</h3>
-  <figure>
-    <table role="grid" id="stats_players_table">
-      <thead>
-        <tr>
-          <th>Player</th>
-          <th>Classes</th>
-          <th title="Kills">K</th>
-          <th title="Deaths">D</th>
-          <th title="Kills per death">K/D</th>
-          <th title="Teamkills">TK</th>
-          <th title="Suicides">Sui</th>
-          <th title="Sentries destroyed">SG</th>
-          <th title="Damage given">Dmg</th>
-          <th title="Damage taken">Dmg&nbsp;T</th>
-          <th title="Friendly fire damage">FF</th>
-          <th title="Flag touches">Took</th>
-          <th title="Flag captures">Caps</th>
-          <th title="Flag throws">Throw</th>
-          <th title="Flag stops">Stop</th>
-          <th title="Flag carry time">Carry</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @players.each do |player| %>
-          <tr>
-            <td><strong><%= stats_player_link(player) %></strong></td>
-            <td><%= stats_class_icons(player) %></td>
-            <td><%= player.kills %></td>
-            <td><%= player.deaths %></td>
-            <td><%= player.kd_ratio %></td>
-            <td><%= player.teamkills %></td>
-            <td><%= player.suicides %></td>
-            <td><%= player.sentries_destroyed %></td>
-            <td><%= player.damage_given %></td>
-            <td><%= player.damage_taken %></td>
-            <td><%= player.team_damage %></td>
-            <td><%= player.flag_touches %></td>
-            <td><%= player.flag_caps %></td>
-            <td><%= player.flag_throws %></td>
-            <td><%= player.flag_stops %></td>
-            <td data-sort="<%= player.flag_carry_seconds %>"><%= player.flag_carry_display %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </figure>
+  <%= render "players_table", rows: @players %>
+
+  <% @breakdown.tables.each do |role, rows| %>
+    <% next if rows.empty? %>
+    <h3><%= { attack: "Attack", defence: "Defence", first_half: "First half", second_half: "Second half" }[role] %></h3>
+    <%= render "players_table", rows: rows %>
+  <% end %>
+
+  <% if @breakdown.matchups.any? %>
+    <h3>Head to head</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem;">
+      <% @breakdown.matchups.each do |matchup| %>
+        <article style="margin: 0;">
+          <header style="padding: 0.5rem 1rem;">
+            <strong><%= matchup.class_name %></strong>
+            &middot; <%= matchup.role == :attack ? "Attack" : "Defence" %>
+          </header>
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th style="color: <%= team_colour_code(matchup.left.team) %>;"><%= matchup.left.name %></th>
+                <th style="color: <%= team_colour_code(matchup.right.team) %>;"><%= matchup.right.name %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Kills</td><td><%= matchup.left.kills %></td><td><%= matchup.right.kills %></td></tr>
+              <tr><td>Deaths</td><td><%= matchup.left.deaths %></td><td><%= matchup.right.deaths %></td></tr>
+              <tr><td>Damage</td><td><%= matchup.left.damage_given %></td><td><%= matchup.right.damage_given %></td></tr>
+              <tr><td>Dmg taken</td><td><%= matchup.left.damage_taken %></td><td><%= matchup.right.damage_taken %></td></tr>
+              <% if matchup.role == :attack %>
+                <tr><td>Caps</td><td><%= matchup.left.flag_caps %></td><td><%= matchup.right.flag_caps %></td></tr>
+                <tr><td>Flag took</td><td><%= matchup.left.flag_touches %></td><td><%= matchup.right.flag_touches %></td></tr>
+                <tr><td>Carry</td><td><%= matchup.left.flag_carry_display %></td><td><%= matchup.right.flag_carry_display %></td></tr>
+              <% else %>
+                <tr><td>Stops</td><td><%= matchup.left.flag_stops %></td><td><%= matchup.right.flag_stops %></td></tr>
+              <% end %>
+            </tbody>
+          </table>
+          <footer style="padding: 0.5rem 1rem;">
+            <small>
+              Duels: <%= matchup.left.name %> <%= matchup.duels[:left_kills] %> &ndash; <%= matchup.duels[:right_kills] %> <%= matchup.right.name %>
+              (dmg <%= matchup.duels[:left_damage] %> &ndash; <%= matchup.duels[:right_damage] %>)
+            </small>
+          </footer>
+        </article>
+      <% end %>
+    </div>
+  <% end %>
 
   <h3>Weapons</h3>
   <% @players.each do |player| %>
