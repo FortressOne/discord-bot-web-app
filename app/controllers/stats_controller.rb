@@ -75,6 +75,7 @@ class StatsController < ApplicationController
       team2_score: match_stat.team2_score,
       winning_team: match_stat.winning_team,
       drawn: match_stat.drawn?,
+      result_display: match_stat.result_description,
       duration_seconds: match_stat.duration_seconds,
       duration_display: match_stat.duration_display,
       player_count: match_stat.player_count,

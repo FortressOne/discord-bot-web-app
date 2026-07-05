@@ -36,7 +36,7 @@
               &ndash;
               <span style="color: <%= team_colour_code(2) %>;"><%= @match_stat.team2_score %></span>
             </h1>
-            <p><strong><%= @match_stat.drawn? ? "Draw!" : "#{(@match_stat.winning_team == 1 ? @match_stat.team1_name : @match_stat.team2_name)&.capitalize} wins" %></strong></p>
+            <p><strong><%= @match_stat.result_description %></strong></p>
           </div>
         <% end %>
       <% end %>

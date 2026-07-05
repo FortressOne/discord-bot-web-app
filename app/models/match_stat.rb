@@ -31,4 +31,32 @@ class MatchStat < ApplicationRecord
   def json_url
     "https://fortressone-stats.s3.ap-southeast-2.amazonaws.com/#{s3_key}"
   end
+
+  # Mirrors Match#description: blue wins on points at full time; red wins
+  # the moment they pass blue's score, so their margin is the time left.
+  def result_description
+    return "Draw!" if drawn?
+
+    winner = winning_team.to_i == 1 ? (team1_name.presence || "blue") : (team2_name.presence || "red")
+    winner = winner.capitalize
+    if winning_team.to_i == 2 && time_remaining.positive?
+      "#{winner} wins with #{seconds_to_str(time_remaining)} remaining"
+    else
+      margin = (team1_score.to_i - team2_score.to_i).abs
+      margin.positive? ? "#{winner} wins by #{margin} points" : "#{winner} wins"
+    end
+  end
+
+  private
+
+  def time_remaining
+    return 0 unless half_boundary_seconds
+
+    2 * half_boundary_seconds - duration_seconds.to_i
+  end
+
+  def seconds_to_str(seconds)
+    ["#{seconds / 3600}h", "#{seconds / 60 % 60}m", "#{seconds % 60}s"]
+      .select { |str| str =~ /[1-9]/ }.join(" ")
+  end
 end
