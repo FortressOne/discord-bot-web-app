@@ -57,7 +57,9 @@ module Stats
     end
 
     def initialize(raw)
-      @raw = raw
+      # Old logs contain raw Quake-charset bytes in player names ("fun
+      # chars"), which are not valid UTF-8 and blow up String#strip/JSON.
+      @raw = raw.to_s.force_encoding(Encoding::UTF_8).scrub("?")
       @players = Hash.new { |hash, name| hash[name] = blank_player }
       @teams_seen = Hash.new { |hash, name| hash[name] = Hash.new(0) }
       @flag_took_at = {}
@@ -124,6 +126,10 @@ module Stats
       @result.player_count = event["numPlayers"].to_i
       timestamp = event["gameTimeStamp"]
       @result.played_at = Time.zone.parse(timestamp) if timestamp
+    rescue ArgumentError
+      # Some logs have corrupt timestamps ("2021-10-01Tcabo:59:44.053Z");
+      # the importer falls back to the timestamp in the S3 key.
+      @result.played_at = nil
     end
 
     def process_change_class(event)

@@ -153,5 +153,24 @@ module Stats
     test "reports unparseable input as error" do
       assert_equal "error", EventLogParser.parse("").status
     end
+
+    test "scrubs invalid UTF-8 bytes from player names" do
+      # Old logs carry raw Quake-charset bytes ("fun chars") in names.
+      funky = raw_log.gsub("alice", "al\xEDce".b).force_encoding(Encoding::UTF_8)
+
+      result = EventLogParser.parse(funky)
+
+      assert_equal "parsed", result.status
+      assert_includes result.players.keys, "al?ce"
+    end
+
+    test "tolerates a corrupt gameStart timestamp" do
+      corrupt = raw_log.sub(/"gameTimeStamp":"[^"]*"/, '"gameTimeStamp":"2021-10-01Tcabo:59:44.053Z"')
+
+      result = EventLogParser.parse(corrupt)
+
+      assert_equal "parsed", result.status
+      assert_nil result.played_at
+    end
   end
 end
