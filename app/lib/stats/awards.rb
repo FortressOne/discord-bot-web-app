@@ -12,7 +12,7 @@ module Stats
       { title: "Golden Hands", emoji: "🚩", description: "most captures", stat: ->(p) { p.flag_caps }, format: ->(v) { "#{v} caps" } },
       { title: "No-no-no Motumbo", emoji: "🙅", description: "most flag stops", stat: ->(p) { p.flag_stops }, format: ->(v) { "#{v} stops" } },
       { title: "Running Man", emoji: "🏃", description: "longest flag time", stat: ->(p) { p.flag_carry_seconds }, format: ->(v) { Time.at(v).utc.strftime("%-M:%S") } },
-      { title: "Terminator", emoji: "🤖", description: "best kills/deaths", weighted: false, stat: ->(p) { (p.deaths + p.teamkills).zero? ? p.kills.to_f : p.kills.fdiv(p.deaths + p.teamkills) }, format: ->(v) { format("%.2f K/D", v) } },
+      { title: "Terminator", emoji: "🤖", description: "best kills/deaths", stat: ->(p) { (p.deaths + p.teamkills).zero? ? p.kills.to_f : p.kills.fdiv(p.deaths + p.teamkills) }, format: ->(v) { format("%.2f K/D", v) } },
       { title: "Hulk Smash", emoji: "💪", description: "most sentries destroyed", stat: ->(p) { p.sentries_destroyed }, format: ->(v) { "#{v} sentries" } },
       { title: "Lemming", emoji: "🪦", description: "most deaths", stat: ->(p) { p.deaths }, format: ->(v) { "#{v} deaths" } },
       { title: "Kamikaze", emoji: "💣", description: "most suicides", stat: ->(p) { p.suicides }, format: ->(v) { "#{v} suicides" } },

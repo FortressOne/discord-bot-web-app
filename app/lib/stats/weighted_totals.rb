@@ -26,6 +26,14 @@ module Stats
       end
     end
 
+    # K/(D+TK) from the weighted components.
+    def kd_ratio
+      denominator = deaths + teamkills
+      return kills.to_f if denominator.zero?
+
+      (kills / denominator.to_f).round(2)
+    end
+
     def actual
       __getobj__
     end

@@ -14,7 +14,6 @@ module StatsHelper
     deaths: ["D", "Deaths"],
     kd: ["K/(D+TK)", "Kills per (deaths + teamkills)"],
     dmg_per_min: ["Dmg/m", "Damage per minute"],
-    time_played: ["Time", "Time played"],
     teamkills: ["TK", "Teamkills"],
     damage_given: ["Dmg", "Damage given"],
     damage_taken: ["Dmg T", "Damage taken"],
@@ -25,9 +24,9 @@ module StatsHelper
   FULL_COLUMNS = %i[kills deaths kd teamkills damage_given team_damage
                     flag_touches flag_caps flag_throws flag_stops flag_carry].freeze
   ATTACK_COLUMNS = %i[flag_caps flag_carry kills damage_given dmg_per_min flag_touches
-                      flag_throws teamkills team_damage time_played].freeze
+                      flag_throws teamkills team_damage].freeze
   DEFENCE_COLUMNS = %i[kills damage_given dmg_per_min flag_stops deaths teamkills kd
-                       team_damage time_played].freeze
+                       team_damage].freeze
 
   ROLE_COLUMNS = {
     attack: ATTACK_COLUMNS,
@@ -37,12 +36,14 @@ module StatsHelper
   }.freeze
 
   def stats_cell(player, column)
-    return tag.td(player.kd_ratio) if column == :kd # a rate: unaffected by a shortened half
-    return tag.td(player.damage_per_minute) if column == :dmg_per_min
-    if column == :time_played
-      seconds = player.time_played_seconds
-      return tag.td(format("%d:%02d", seconds / 60, seconds % 60), data: { sort: seconds })
+    if column == :kd
+      # Within one half the weight cancels out of the ratio; across a whole
+      # match the weighted components shift it, so show both.
+      weighted = player.kd_ratio
+      raw = player.respond_to?(:actual) ? player.actual.kd_ratio : weighted
+      return weighted == raw ? tag.td(raw) : tag.td("#{weighted} (#{raw})", data: { sort: weighted })
     end
+    return tag.td(player.damage_per_minute) if column == :dmg_per_min
 
     stat = column == :flag_carry ? :flag_carry_seconds : column
     clock = column == :flag_carry
