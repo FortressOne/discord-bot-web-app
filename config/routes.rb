@@ -28,6 +28,10 @@ Rails.application.routes.draw do
   # the .json variant via uri_get + json_parse.
   resources :stats, only: [:index, :show]
 
+  # discord rich-presence button landing pages (address is host:port)
+  get 'join/:address', to: 'joins#show', constraints: { address: /[^\/]+/ }
+  get 'spectate/:address', to: 'joins#show', constraints: { address: /[^\/]+/ }
+
   # API consumed by QWTF-Live progs (server-qwprogs ssqc/json.qc). The game
   # server's tfl_endpoint localinfo must point at this app's root URL.
   namespace :api, defaults: { format: :json } do
