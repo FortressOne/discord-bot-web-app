@@ -6,7 +6,7 @@
       <p>
         <span style="float: right;">
           <% if @match_stat.played_at %>
-            <%= local_time(@match_stat.played_at) %><small> (<%= local_time_ago(@match_stat.played_at) %>)</small>
+            <%= local_time(@match_stat.played_at) %>
           <% end %>
         </span>
         <%= stats_filter_link(@match_stat.region, :region, @match_stat.region) %> /
