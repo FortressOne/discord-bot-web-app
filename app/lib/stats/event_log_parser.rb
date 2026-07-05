@@ -226,15 +226,18 @@ module Stats
         @players[name][:teamkills] += 1
         bump_half(name, time, "teamkills")
       when "enemy"
+        # Sentry destruction counts as a kill too; the separate tally
+        # remains for career stats, but only player-vs-player kills feed
+        # the duel matrix.
+        @players[name][:kills] += 1
+        bump_half(name, time, "kills")
+        weapon_stat(name, event["inflictor"])["kills"] += 1
         if event["targetClass"].to_i == SENTRY_CLASS
           @players[name][:sentries_destroyed] += 1
           bump_half(name, time, "sentries_destroyed")
         else
-          @players[name][:kills] += 1
-          bump_half(name, time, "kills")
           target = event["target"]
           duel_stat(name, target)["kills"] += 1 if target.present? && target != WORLD
-          weapon_stat(name, event["inflictor"])["kills"] += 1
         end
       end
     end

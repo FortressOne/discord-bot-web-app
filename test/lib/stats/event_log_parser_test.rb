@@ -73,7 +73,8 @@ module Stats
     test "aggregates kills, deaths, teamkills, suicides and sentry kills" do
       players = EventLogParser.parse(raw_log).players
 
-      assert_equal 1, players["alice"][:kills]
+      # bob at 12 plus his sentry at 550: sentry destruction counts as a kill
+      assert_equal 2, players["alice"][:kills]
       assert_equal 1, players["alice"][:teamkills]
       assert_equal 1, players["alice"][:suicides]
       assert_equal 1, players["alice"][:sentries_destroyed]
@@ -94,7 +95,7 @@ module Stats
     test "canonicalises weapon names across attack and damage events" do
       alice = EventLogParser.parse(raw_log).players["alice"]
 
-      assert_equal({ "shots" => 2, "hits" => 1, "damage" => 90, "kills" => 1 }, alice[:weapon_stats]["rl"])
+      assert_equal({ "shots" => 2, "hits" => 1, "damage" => 90, "kills" => 2 }, alice[:weapon_stats]["rl"])
       assert_nil alice[:weapon_stats]["rocketlauncher"]
       assert_nil alice[:weapon_stats]["proj_rocket"]
     end
@@ -160,7 +161,7 @@ module Stats
       alice = result.players["alice"][:half_stats]
       assert_equal({ "Sold" => 600 }, alice["1"]["class_seconds"])
       assert_equal({ "Demo" => 600 }, alice["2"]["class_seconds"])
-      assert_equal 1, alice["1"]["kills"]
+      assert_equal 2, alice["1"]["kills"]
       assert_equal 1, alice["1"]["flag_caps"]
       assert_equal 45, alice["1"]["flag_carry_seconds"]
       assert_equal 1, alice["1"]["suicides"]

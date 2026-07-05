@@ -1,6 +1,49 @@
 module StatsHelper
   TEAM_COLOURS = { 1 => :blue, 2 => :red }.freeze
 
+  # Column sets for the stats tables. Suicides already count as deaths and
+  # sentry kills as kills, so neither gets its own column. Defenders never
+  # touch the flag in attack/defence matches and attackers never stop it,
+  # so each role shows only its own flag columns.
+  STATS_COLUMNS = {
+    flag_caps: ["Caps", "Flag captures"],
+    flag_carry: ["Carry", "Flag carry time"],
+    flag_touches: ["Took", "Flag touches"],
+    flag_throws: ["Throw", "Flag throws"],
+    kills: ["K", "Kills"],
+    deaths: ["D", "Deaths"],
+    kd: ["K/D", "Kills per death"],
+    teamkills: ["TK", "Teamkills"],
+    damage_given: ["Dmg", "Damage given"],
+    damage_taken: ["Dmg T", "Damage taken"],
+    team_damage: ["FF", "Friendly fire damage"],
+    flag_stops: ["Stop", "Flag stops"]
+  }.freeze
+
+  FULL_COLUMNS = %i[kills deaths kd teamkills damage_given damage_taken team_damage
+                    flag_touches flag_caps flag_throws flag_stops flag_carry].freeze
+  ATTACK_COLUMNS = %i[flag_caps flag_carry flag_touches flag_throws
+                      kills deaths teamkills damage_given damage_taken team_damage].freeze
+  DEFENCE_COLUMNS = %i[kills deaths kd teamkills damage_given damage_taken team_damage
+                       flag_stops].freeze
+
+  ROLE_COLUMNS = {
+    attack: ATTACK_COLUMNS,
+    defence: DEFENCE_COLUMNS,
+    first_half: FULL_COLUMNS,
+    second_half: FULL_COLUMNS
+  }.freeze
+
+  def stats_cell(player, column)
+    case column
+    when :kd then tag.td(player.kd_ratio)
+    when :flag_carry
+      tag.td(player.flag_carry_display, data: { sort: player.flag_carry_seconds })
+    else
+      tag.td(player.public_send(column))
+    end
+  end
+
   # class_seconds keys are short class names ("Sold"); Playerclass is keyed
   # by class number.
   CLASS_NUMBERS = Stats::EventLogParser::CLASS_NAMES.each_with_index.to_h.freeze
@@ -24,6 +67,14 @@ module StatsHelper
         tag.small(" #{share}% ")
     }.compact.join.html_safe
     tag.span(icons, style: "white-space: nowrap; display: inline-flex; align-items: center;")
+  end
+
+  def stats_class_icon(class_name, colour, height: 24)
+    number = CLASS_NUMBERS[class_name]
+    return "" unless number&.positive?
+
+    image = Playerclass.new(number).image(colour)
+    image_tag(image[:url], alt: image[:alt], title: class_name, style: "height: #{height}px;")
   end
 
   def stats_filter_link(label, param, value, style: nil)
