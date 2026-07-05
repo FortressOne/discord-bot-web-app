@@ -34,9 +34,10 @@ module Stats
       tables = breakdown(build_match).tables
 
       assert_equal [["alice", 1], ["bob", 2]], tables[:attack].map { |row| [row.name, row.half] }
-      assert_equal [["bob", 1], ["alice", 2]], tables[:defence].map { |row| [row.name, row.half] }
+      # defence sorts by team, so alice (team 1, defending half 2) leads
+      assert_equal [["alice", 2], ["bob", 1]], tables[:defence].map { |row| [row.name, row.half] }
       assert_equal 10, tables[:attack].first.kills
-      assert_equal 3, tables[:defence].last.flag_stops
+      assert_equal 3, tables[:defence].first.flag_stops
     end
 
     test "falls back to plain halves for symmetric matches" do

@@ -53,15 +53,19 @@ module Stats
     end
 
     # {attack:, defence:} when the match follows the pug convention,
-    # {first_half:, second_half:} otherwise.
+    # {first_half:, second_half:} otherwise. Attackers rank by caps,
+    # defenders by kills, both grouped by team.
     def tables
       @tables ||= if attack_defence?
-        { attack: rows.select { |row| row.half == row.team },
-          defence: rows.reject { |row| row.half == row.team } }
+        { attack: rows.select { |row| row.half == row.team }
+                      .sort_by { |row| [row.team, -row.flag_caps, -row.kills] },
+          defence: rows.reject { |row| row.half == row.team }
+                       .sort_by { |row| [row.team, -row.kills] } }
       else
         { first_half: rows.select { |row| row.half == 1 },
           second_half: rows.select { |row| row.half == 2 } }
-      end.transform_values { |list| list.sort_by { |row| [row.half, row.team, -row.kills] } }
+          .transform_values { |list| list.sort_by { |row| [row.team, -row.kills] } }
+      end
     end
 
     # One head-to-head per role and class when exactly one player per team
