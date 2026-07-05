@@ -98,9 +98,9 @@ html body main.container nav ul li form.button_to {
   max-width: 1400px;
 }
 
-/* Stats tables have ~16 columns; give them the full window. */
+/* Sized so the players table fits with equal margins at 1080p. */
 .container-stats {
-  max-width: 1900px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 0 var(--spacing);
 }
