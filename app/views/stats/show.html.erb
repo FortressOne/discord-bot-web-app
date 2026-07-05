@@ -60,22 +60,20 @@
 
   <% if @awards.any? %>
     <h3>Awards</h3>
-    <div style="display: flex; flex-wrap: wrap; gap: 0 3rem; align-items: flex-start;">
-      <% @awards.each_slice((@awards.size / 2.0).ceil).each do |column| %>
-        <div>
-          <table>
-            <tbody>
-              <% column.each do |award| %>
-                <tr>
-                  <td><strong><%= award.emoji %> <%= award.title %></strong><br><small><%= award.description %></small></td>
-                  <td><%= stats_display_name(award.player) %><br><small><%= award.value %></small></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
-    </div>
+    <figure>
+      <table class="stats-table">
+        <tbody>
+          <% @awards.each do |award| %>
+            <tr>
+              <td><%= award.emoji %> <strong><%= award.title %></strong></td>
+              <td><small><%= award.description %></small></td>
+              <td><% winner = @players.find { |player| player.name == award.player } %><%= winner ? stats_player_link(winner) : stats_display_name(award.player) %></td>
+              <td><%= award.value %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </figure>
   <% end %>
 
   <h3>Players</h3>
