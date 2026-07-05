@@ -22,10 +22,10 @@ module StatsHelper
 
   FULL_COLUMNS = %i[kills deaths kd teamkills damage_given damage_taken team_damage
                     flag_touches flag_caps flag_throws flag_stops flag_carry].freeze
-  ATTACK_COLUMNS = %i[flag_caps flag_carry flag_touches flag_throws
-                      kills deaths teamkills damage_given damage_taken team_damage].freeze
-  DEFENCE_COLUMNS = %i[kills deaths kd teamkills damage_given damage_taken team_damage
-                       flag_stops].freeze
+  ATTACK_COLUMNS = %i[flag_caps flag_carry kills damage_given flag_touches flag_throws
+                      teamkills team_damage].freeze
+  DEFENCE_COLUMNS = %i[kills damage_given flag_stops deaths damage_taken teamkills kd
+                       team_damage].freeze
 
   ROLE_COLUMNS = {
     attack: ATTACK_COLUMNS,
@@ -109,7 +109,7 @@ module StatsHelper
          ["Took", :flag_touches, {}],
          ["Throws", :flag_throws, {}],
          ["TKs", :teamkills, { lower_wins: true }],
-         ["Deaths", :deaths, { neutral: true }]]
+         ["FF", :team_damage, { lower_wins: true }]]
       else
         [["Kills", :kills, {}],
          ["Damage", :damage_given, {}],
