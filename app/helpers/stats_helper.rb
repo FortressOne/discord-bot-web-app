@@ -14,7 +14,7 @@ module StatsHelper
     return "" if total.zero?
 
     colour = TEAM_COLOURS[player.team.to_i] || :blue
-    player.class_seconds.sort_by { |_, seconds| -seconds }.map { |name, seconds|
+    icons = player.class_seconds.sort_by { |_, seconds| -seconds }.map { |name, seconds|
       number = CLASS_NUMBERS[name]
       next if number.nil? || number.zero?
 
@@ -23,6 +23,7 @@ module StatsHelper
       image_tag(image[:url], alt: image[:alt], title: "#{name} #{share}%", style: "height: #{height}px;") +
         tag.small(" #{share}% ")
     }.compact.join.html_safe
+    tag.span(icons, style: "white-space: nowrap; display: inline-flex; align-items: center;")
   end
 
   def stats_filter_link(label, param, value, style: nil)

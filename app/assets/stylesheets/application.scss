@@ -98,6 +98,17 @@ html body main.container nav ul li form.button_to {
   max-width: 1400px;
 }
 
+/* Stats tables have ~16 columns; give them the full window. */
+.container-stats {
+  max-width: 1900px;
+  margin: 0 auto;
+  padding: 0 var(--spacing);
+}
+
+#stats_players_table td {
+  white-space: nowrap;
+}
+
 #match_team_result_1 {
   background-color: #2b482b;
 }
