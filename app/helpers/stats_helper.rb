@@ -8,16 +8,16 @@ module StatsHelper
   STATS_COLUMNS = {
     flag_caps: ["Caps", "Flag captures"],
     flag_carry: ["Carry", "Flag carry time"],
-    flag_touches: ["Took", "Flag touches"],
+    flag_touches: ["Takes", "Flag takes"],
     flag_throws: ["Throw", "Flag throws"],
     kills: ["K", "Kills"],
     deaths: ["D", "Deaths"],
     kd: ["K/(D+TK)", "Kills per (deaths + teamkills)"],
     dmg_per_min: ["Dmg/m", "Damage per minute"],
-    teamkills: ["TK", "Teamkills"],
+    teamkills: ["Team Kills", "Team kills"],
     damage_given: ["Dmg", "Damage given"],
     damage_taken: ["Dmg T", "Damage taken"],
-    team_damage: ["FF", "Friendly fire damage"],
+    team_damage: ["Team Damage", "Damage dealt to teammates"],
     flag_stops: ["Stop", "Flag stops"]
   }.freeze
 
@@ -147,10 +147,10 @@ module StatsHelper
          ["Carry", :flag_carry_seconds, { clock: true }],
          ["Kills", :kills, {}],
          ["Damage", :damage_given, {}],
-         ["Took", :flag_touches, {}],
+         ["Takes", :flag_touches, {}],
          ["Throws", :flag_throws, {}],
-         ["TKs", :teamkills, { lower_wins: true }],
-         ["FF", :team_damage, { lower_wins: true }]]
+         ["Team Kills", :teamkills, { lower_wins: true }],
+         ["Team Damage", :team_damage, { lower_wins: true }]]
       else
         [["Kills", :kills, {}],
          ["Damage", :damage_given, {}],
