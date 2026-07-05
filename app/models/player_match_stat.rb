@@ -4,6 +4,10 @@ class PlayerMatchStat < ApplicationRecord
 
   validates :name, presence: true
 
+  def dominant_class
+    class_seconds.max_by { |_, seconds| seconds }&.first
+  end
+
   def kd_ratio
     return kills.to_f if deaths.zero?
 
