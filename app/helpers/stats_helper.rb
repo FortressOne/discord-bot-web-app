@@ -35,12 +35,19 @@ module StatsHelper
   }.freeze
 
   def stats_cell(player, column)
+    weight = player.respond_to?(:weight) ? player.weight.to_f : 1.0
     case column
-    when :kd then tag.td(player.kd_ratio)
+    when :kd
+      # A rate, not a count: unaffected by a shortened half.
+      tag.td(player.kd_ratio)
     when :flag_carry
-      tag.td(player.flag_carry_display, data: { sort: player.flag_carry_seconds })
+      raw = player.flag_carry_seconds
+      weighted = (raw * weight).round
+      tag.td(weighted_stat_display(weighted, raw, weight, clock: true), data: { sort: weighted })
     else
-      tag.td(player.public_send(column))
+      raw = player.public_send(column)
+      weighted = (raw * weight).round
+      weight > 1.01 ? tag.td(weighted_stat_display(weighted, raw, weight), data: { sort: weighted }) : tag.td(raw)
     end
   end
 

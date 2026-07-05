@@ -22,7 +22,10 @@ function boldColumnMaxima(table) {
 		const cells = rows.map(row => row.cells[col]);
 		// Only bold plain-text cells; name/class cells contain markup.
 		if (cells.some(cell => !cell || cell.children.length > 0)) continue;
-		const values = cells.map(cell => statValue(cell.textContent));
+		const values = cells.map(cell => {
+			const sortValue = cell.getAttribute("data-sort");
+			return statValue(sortValue !== null ? sortValue : cell.textContent);
+		});
 		const max = Math.max(...values.filter(value => !isNaN(value)));
 		if (!isFinite(max) || max <= 0) continue;
 		cells.forEach((cell, i) => {

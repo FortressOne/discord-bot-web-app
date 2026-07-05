@@ -14,7 +14,7 @@ module Stats
       :kills, :deaths, :teamkills, :suicides, :sentries_destroyed,
       :damage_given, :damage_taken, :team_damage,
       :flag_touches, :flag_caps, :flag_drops, :flag_throws, :flag_stops,
-      :flag_carry_seconds, :class_seconds,
+      :flag_carry_seconds, :class_seconds, :weight,
       keyword_init: true
     ) do
       def kd_ratio
@@ -84,9 +84,9 @@ module Stats
     def tables
       @tables ||= if attack_defence?
         { attack: rows.select { |row| row.half == row.team }
-                      .sort_by { |row| [-row.flag_caps, -row.kills] },
+                      .sort_by { |row| [-row.flag_caps * row.weight, -row.kills * row.weight] },
           defence: rows.reject { |row| row.half == row.team }
-                       .sort_by { |row| [-row.kills, -row.damage_given] } }
+                       .sort_by { |row| [-row.kills * row.weight, -row.damage_given * row.weight] } }
       else
         { first_half: rows.select { |row| row.half == 1 },
           second_half: rows.select { |row| row.half == 2 } }
@@ -133,7 +133,7 @@ module Stats
             flag_drops: stats["flag_drops"].to_i, flag_throws: stats["flag_throws"].to_i,
             flag_stops: stats["flag_stops"].to_i,
             flag_carry_seconds: stats["flag_carry_seconds"].to_i,
-            class_seconds: class_seconds
+            class_seconds: class_seconds, weight: half_weight(half.to_i)
           )
         end
       end
