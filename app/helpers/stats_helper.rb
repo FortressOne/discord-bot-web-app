@@ -86,9 +86,9 @@ module StatsHelper
   end
 
   # The margin of victory for one head-to-head row, coloured by the
-  # winning side's team. Blank on a tie.
+  # winning side's team. A neutral hyphen on a tie.
   def duel_margin(left, right, left_team, right_team, lower_wins: false, clock: false)
-    return "" if left == right
+    return tag.span("&ndash;".html_safe, style: "color: #FFFFFF;") if left == right
 
     left_wins = lower_wins ? left < right : left > right
     margin = (left - right).abs
