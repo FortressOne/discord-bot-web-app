@@ -178,9 +178,16 @@ module Stats
       half_stat(name, 2)["class_seconds"][class_name] += second if second.positive?
     end
 
+    # Map entities (build_timer, kill triggers) emit events with
+    # playerClass 0; real players always have a class. They are not
+    # participants.
+    def pseudo?(name, class_value)
+      name.blank? || name == WORLD || class_value.to_i.zero?
+    end
+
     def process_attack(event)
       name = event["player"]
-      return if name.blank? || name == WORLD
+      return if pseudo?(name, event["playerClass"])
 
       weapon_stat(name, event["inflictor"])["shots"] += 1
     end
@@ -194,21 +201,22 @@ module Stats
       case event["kind"]
       when "enemy"
         target = event["target"]
-        if target.present? && target != WORLD
+        target_real = !pseudo?(target, event["targetClass"])
+        if target_real
           @players[target][:damage_taken] += damage
           bump_half(target, time, "damage_taken", damage)
         end
-        return if name == WORLD
+        return if pseudo?(name, event["playerClass"])
 
         note_team(name, event["playerTeam"], time)
         @players[name][:damage_given] += damage
         bump_half(name, time, "damage_given", damage)
-        duel_stat(name, target)["damage"] += damage if target.present? && target != WORLD
+        duel_stat(name, target)["damage"] += damage if target_real
         weapon = weapon_stat(name, event["inflictor"])
         weapon["hits"] += 1
         weapon["damage"] += damage
       when "team"
-        return if name == WORLD
+        return if pseudo?(name, event["playerClass"])
 
         note_team(name, event["playerTeam"], time)
         @players[name][:team_damage] += damage
@@ -218,29 +226,35 @@ module Stats
 
     def process_kill(event)
       name = event["player"]
-      return if name.blank? || name == WORLD
+      return if pseudo?(name, event["playerClass"])
 
       time = event["time"]
+      target_class = event["targetClass"].to_i
+      target = event["target"]
       note_team(name, event["playerTeam"], time)
       case event["kind"]
       when "self"
         @players[name][:suicides] += 1
         bump_half(name, time, "suicides")
       when "team"
+        # Blowing up a teammate's under-construction building is not a
+        # teamkill.
+        return if target_class.zero?
+
         @players[name][:teamkills] += 1
         bump_half(name, time, "teamkills")
       when "enemy"
-        # Sentry destruction counts as a kill too; the separate tally
-        # remains for career stats, but only player-vs-player kills feed
-        # the duel matrix.
+        # Sentry destruction counts as a kill too (a class-0 target is a
+        # building under construction); the separate tally remains for
+        # career stats, but only player-vs-player kills feed the duel
+        # matrix.
         @players[name][:kills] += 1
         bump_half(name, time, "kills")
         weapon_stat(name, event["inflictor"])["kills"] += 1
-        if event["targetClass"].to_i == SENTRY_CLASS
+        if target_class == SENTRY_CLASS || target_class.zero?
           @players[name][:sentries_destroyed] += 1
           bump_half(name, time, "sentries_destroyed")
         else
-          target = event["target"]
           duel_stat(name, target)["kills"] += 1 if target.present? && target != WORLD
         end
       end
@@ -248,7 +262,7 @@ module Stats
 
     def process_death(event)
       name = event["player"]
-      return if name.blank? || name == WORLD || event["playerClass"].to_i == SENTRY_CLASS
+      return if pseudo?(name, event["playerClass"]) || event["playerClass"].to_i == SENTRY_CLASS
 
       note_team(name, event["playerTeam"], event["time"])
       @players[name][:deaths] += 1

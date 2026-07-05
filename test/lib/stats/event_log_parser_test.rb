@@ -294,6 +294,43 @@ module Stats
       assert_not result.attack_defence
     end
 
+    test "map entities with class 0 are not players" do
+      events = [
+        { type: "gameStart", map: "rs_zzr", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },
+        { type: "kill", kind: "enemy", player: "alice", playerClass: 3, playerTeam: 1,
+          target: "bob", targetClass: 1, targetTeam: 2, inflictor: "proj_rocket", time: 10 },
+        { type: "death", kind: "enemy", attacker: "alice", attackerClass: 3, attackerTeam: 1,
+          player: "bob", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", time: 10 },
+        # alice destroys a building under construction: a sentry kill, and
+        # build_timer is not a participant
+        { type: "kill", kind: "enemy", player: "alice", playerClass: 3, playerTeam: 1,
+          target: "build_timer", targetClass: 0, targetTeam: 2, inflictor: "proj_rocket", time: 20 },
+        { type: "damageDone", kind: "enemy", player: "alice", playerClass: 3, playerTeam: 1,
+          target: "build_timer", targetClass: 0, targetTeam: 2, inflictor: "proj_rocket", damage: 96, time: 20 },
+        # bob blows up his own build timer: not a teamkill
+        { type: "kill", kind: "team", player: "bob", playerClass: 1, playerTeam: 2,
+          target: "build_timer", targetClass: 0, targetTeam: 2, inflictor: "grenade", time: 30 },
+        # a map kill trigger teamkills someone: not a participant either
+        { type: "kill", kind: "team", player: "kill", playerClass: 0, playerTeam: 2,
+          target: "bob", targetClass: 1, targetTeam: 2, inflictor: "info_tfgoal", time: 40 },
+        { type: "death", kind: "team", attacker: "kill", attackerClass: 0, attackerTeam: 2,
+          player: "bob", playerClass: 1, playerTeam: 2, inflictor: "info_tfgoal", time: 40 },
+        { type: "teamScores", team1Score: 10, team2Score: 0, team1Name: "blue", team2Name: "red", winningTeam: 1, time: 700 },
+        { type: "gameEnd", time: 700 }
+      ]
+
+      result = EventLogParser.parse(events.map { |event| "#{event.to_json}," }.join("\n"))
+
+      assert_equal %w[alice bob], result.players.keys.sort
+      alice = result.players["alice"]
+      assert_equal 2, alice[:kills]
+      assert_equal 1, alice[:sentries_destroyed]
+      assert_equal 0, result.players["bob"][:teamkills]
+      # bob still died to the kill trigger
+      assert_equal 2, result.players["bob"][:deaths]
+      assert_equal({ "alice" => { "bob" => { "kills" => 1, "damage" => 0 } } }, result.kill_matrix)
+    end
+
     test "scrubs invalid UTF-8 bytes from player names" do
       # Old logs carry raw Quake-charset bytes ("fun chars") in names.
       funky = raw_log.gsub("alice", "al\xEDce".b).force_encoding(Encoding::UTF_8)
