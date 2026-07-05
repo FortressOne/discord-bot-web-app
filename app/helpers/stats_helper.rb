@@ -85,6 +85,17 @@ module StatsHelper
     left_wins ? [tag.strong(displays[0]), displays[1]] : [displays[0], tag.strong(displays[1])]
   end
 
+  # The margin of victory for one head-to-head row, coloured by the
+  # winning side's team. Blank on a tie.
+  def duel_margin(left, right, left_team, right_team, lower_wins: false, clock: false)
+    return "" if left == right
+
+    left_wins = lower_wins ? left < right : left > right
+    margin = (left - right).abs
+    display = clock ? format("+%d:%02d", margin / 60, margin % 60) : "+#{margin}"
+    tag.strong(display, style: "color: #{team_colour_code(left_wins ? left_team : right_team)};")
+  end
+
   def stats_class_icon(class_name, colour, height: 24)
     number = CLASS_NUMBERS[class_name]
     return "" unless number&.positive?

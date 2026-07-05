@@ -101,6 +101,7 @@
                       </span>
                     </th>
                   <% end %>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -108,7 +109,8 @@
                 <% if matchup.role == :attack %>
                   <% stat_rows << ["Caps", matchup.left.flag_caps, matchup.right.flag_caps, {}] %>
                   <% stat_rows << ["Carry", matchup.left.flag_carry_seconds, matchup.right.flag_carry_seconds,
-                                   { left_display: matchup.left.flag_carry_display, right_display: matchup.right.flag_carry_display }] %>
+                                   { left_display: matchup.left.flag_carry_display, right_display: matchup.right.flag_carry_display,
+                                     clock: true }] %>
                   <% stat_rows << ["Took", matchup.left.flag_touches, matchup.right.flag_touches, {}] %>
                 <% else %>
                   <% stat_rows << ["Stops", matchup.left.flag_stops, matchup.right.flag_stops, {}] %>
@@ -118,17 +120,18 @@
                 <% stat_rows << ["Damage", matchup.left.damage_given, matchup.right.damage_given, {}] %>
                 <% stat_rows << ["Dmg taken", matchup.left.damage_taken, matchup.right.damage_taken, { lower_wins: true }] %>
                 <% stat_rows.each do |label, left, right, options| %>
+                  <% clock = options.delete(:clock) || false %>
                   <% left_html, right_html = duel_pair(left, right, **options) %>
-                  <tr><td><%= label %></td><td><%= left_html %></td><td><%= right_html %></td></tr>
+                  <tr>
+                    <td><%= label %></td>
+                    <td><%= left_html %></td>
+                    <td><%= right_html %></td>
+                    <td><%= duel_margin(left, right, matchup.left.team, matchup.right.team,
+                                        lower_wins: options.fetch(:lower_wins, false), clock: clock) %></td>
+                  </tr>
                 <% end %>
               </tbody>
             </table>
-            <footer style="padding: 0.5rem 1rem;">
-              <small>
-                Duels: <%= matchup.left.name %> <%= matchup.duels[:left_kills] %> &ndash; <%= matchup.duels[:right_kills] %> <%= matchup.right.name %>
-                (dmg <%= matchup.duels[:left_damage] %> &ndash; <%= matchup.duels[:right_damage] %>)
-              </small>
-            </footer>
           </article>
         <% end %>
       </div>
