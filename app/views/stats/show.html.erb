@@ -85,7 +85,7 @@
       <h4><%= role == :attack ? "Attack" : "Defence" %></h4>
       <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; align-items: flex-start;">
         <% matchups.each do |matchup| %>
-          <article style="margin: 0; flex: 1 1 340px; max-width: 100%;">
+          <article style="margin: 0; flex: 0 1 auto; min-width: 340px; max-width: 100%;">
             <header style="padding: 0.5rem 1rem; text-align: center;">
               <strong><%= stats_class_full_name(matchup.class_name) %></strong>
             </header>
@@ -105,20 +105,27 @@
                 </tr>
               </thead>
               <tbody>
-                <% stat_rows = [] %>
-                <% if matchup.role == :attack %>
-                  <% stat_rows << ["Caps", matchup.left.flag_caps, matchup.right.flag_caps, {}] %>
-                  <% stat_rows << ["Carry", matchup.left.flag_carry_seconds, matchup.right.flag_carry_seconds,
-                                   { left_display: matchup.left.flag_carry_display, right_display: matchup.right.flag_carry_display,
-                                     clock: true }] %>
-                  <% stat_rows << ["Took", matchup.left.flag_touches, matchup.right.flag_touches, {}] %>
-                <% else %>
-                  <% stat_rows << ["Stops", matchup.left.flag_stops, matchup.right.flag_stops, {}] %>
-                <% end %>
-                <% stat_rows << ["Kills", matchup.left.kills, matchup.right.kills, {}] %>
-                <% stat_rows << ["Deaths", matchup.left.deaths, matchup.right.deaths, { lower_wins: true }] %>
-                <% stat_rows << ["Damage", matchup.left.damage_given, matchup.right.damage_given, {}] %>
-                <% stat_rows << ["Dmg taken", matchup.left.damage_taken, matchup.right.damage_taken, { lower_wins: true }] %>
+                <% left, right = matchup.left, matchup.right %>
+                <% stat_rows = if matchup.role == :attack
+                     [
+                       ["Caps", left.flag_caps, right.flag_caps, {}],
+                       ["Carry", left.flag_carry_seconds, right.flag_carry_seconds,
+                        { left_display: left.flag_carry_display, right_display: right.flag_carry_display, clock: true }],
+                       ["Kills", left.kills, right.kills, {}],
+                       ["Damage", left.damage_given, right.damage_given, {}],
+                       ["Took", left.flag_touches, right.flag_touches, {}],
+                       ["Throws", left.flag_throws, right.flag_throws, {}],
+                       ["Deaths", left.deaths, right.deaths, { lower_wins: true }]
+                     ]
+                   else
+                     [
+                       ["Kills", left.kills, right.kills, {}],
+                       ["Damage", left.damage_given, right.damage_given, {}],
+                       ["Stops", left.flag_stops, right.flag_stops, {}],
+                       ["Deaths", left.deaths, right.deaths, { lower_wins: true }],
+                       ["Dmg taken", left.damage_taken, right.damage_taken, { lower_wins: true }]
+                     ]
+                   end %>
                 <% stat_rows.each do |label, left, right, options| %>
                   <% clock = options.delete(:clock) || false %>
                   <% left_html, right_html = duel_pair(left, right, **options) %>
