@@ -20,9 +20,9 @@
 
       <progress style='--progress-color: <%= @match_stat.result_colour %>;' value=<%= @match_stat.progress_value %> max="<%= @match_stat.progress_max %>"></progress>
     </header>
-    <div class="grid">
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem 3rem; align-items: center;">
       <% [1, 2].each_with_index do |team, index| %>
-        <div style="margin: auto;">
+        <div style="flex: 0 0 auto;">
           <% flag = Team::FLAGS.fetch(team, Team::DEFAULT_FLAG) %>
           <%= image_tag(flag[:url], alt: flag[:alt], style: "height: 44px;") %>
           <strong><%= "#{((team == 1 ? @match_stat.team1_name : @match_stat.team2_name).presence || Team::COLOUR[team]).capitalize} Team" %></strong>
@@ -43,7 +43,7 @@
           <% end %>
         </div>
         <% if index.zero? %>
-          <div style="margin: auto;">
+          <div style="flex: 1 0 auto; text-align: center; min-width: 10rem;">
             <h1><%= @match_stat.team1_score %> &mdash; <%= @match_stat.team2_score %></h1>
           </div>
         <% end %>
