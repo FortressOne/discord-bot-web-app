@@ -126,6 +126,12 @@ html body main.container nav ul li form.button_to {
   text-overflow: ellipsis;
 }
 
+/* Winning values are bold AND white so they stand out from Pico's grey. */
+.stats-table td > strong,
+.h2h-table td > strong {
+  color: #FFFFFF;
+}
+
 #match_team_result_1 {
   background-color: #2b482b;
 }
