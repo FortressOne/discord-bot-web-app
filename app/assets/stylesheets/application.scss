@@ -109,6 +109,13 @@ html body main.container nav ul li form.button_to {
   white-space: nowrap;
 }
 
+/* Compact head-to-head cards: four across on a large screen. */
+.h2h-table th,
+.h2h-table td {
+  padding: 0.4rem 0.55rem;
+  white-space: nowrap;
+}
+
 #match_team_result_1 {
   background-color: #2b482b;
 }
