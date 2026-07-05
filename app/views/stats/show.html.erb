@@ -62,7 +62,7 @@
               <% column.each do |award| %>
                 <tr>
                   <td><strong><%= award.emoji %> <%= award.title %></strong><br><small><%= award.description %></small></td>
-                  <td><%= award.player %><br><small><%= award.value %></small></td>
+                  <td><%= stats_display_name(award.player) %><br><small><%= award.value %></small></td>
                 </tr>
               <% end %>
             </tbody>
@@ -85,7 +85,7 @@
   <% if grouped_matchups.any? %>
     <h3>Head to head</h3>
     <% if @breakdown.weighted? %>
-      <p><small>⚖️ The match ended early, shortening one half — values shown as <strong>weighted (actual)</strong>.</small></p>
+      <p><small>⚖️ The match ended <%= @breakdown.ended_early_display %> early, so shortened-half values are scaled up by <%= @breakdown.weight_percent %>% — shown as <strong>weighted (actual)</strong>.</small></p>
     <% end %>
     <% grouped_matchups.each do |role, matchups| %>
       <h4><%= role == :attack ? "Attack" : "Defence" %></h4>
@@ -103,7 +103,7 @@
                     <th style="color: <%= team_colour_code(side.team) %>;">
                       <span style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem;">
                         <%= stats_class_icon(matchup.class_name, StatsHelper::TEAM_COLOURS[side.team]) %>
-                        <%= side.name %>
+                        <%= stats_display_name(side.name) %>
                       </span>
                     </th>
                   <% end %>
@@ -135,7 +135,7 @@
   <% @players.each do |player| %>
     <details>
       <summary>
-        <span style="color: <%= team_colour_code(player.team) %>;"><strong><%= player.name %></strong></span>
+        <span style="color: <%= team_colour_code(player.team) %>;"><strong><%= stats_display_name(player.name) %></strong></span>
         <small><%= player.class_breakdown %></small>
       </summary>
       <figure>

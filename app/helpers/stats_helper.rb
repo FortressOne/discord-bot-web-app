@@ -154,14 +154,20 @@ module StatsHelper
     link_to label, stats_path(request.query_parameters.merge(param => value, page: nil)), style: style
   end
 
+  # Login-era logs append the Player id to the name ("bent#35") — pure
+  # noise for display; the raw name still keys filters and duels.
+  def stats_display_name(name)
+    name.to_s.sub(Stats::PlayerLinker::ID_SUFFIX, "")
+  end
+
   # Links to the Player profile when the stat row resolved to a real player,
   # otherwise falls back to filtering the match log by name.
   def stats_player_link(player)
     style = "color: #{team_colour_code(player.team)};"
     if player.player_id
-      link_to player.name, player_path(player.player_id), style: style
+      link_to stats_display_name(player.name), player_path(player.player_id), style: style
     else
-      stats_filter_link(player.name, :player, player.name, style: style)
+      stats_filter_link(stats_display_name(player.name), :player, player.name, style: style)
     end
   end
 end

@@ -87,6 +87,7 @@ class StatsController < ApplicationController
   def player_row(player)
     {
       name: player.name,
+      name_display: helpers.stats_display_name(player.name),
       player_id: player.player_id,
       team: player.team,
       kills: player.kills,
@@ -114,6 +115,7 @@ class StatsController < ApplicationController
   def half_row(row)
     {
       name: row.name,
+      name_display: helpers.stats_display_name(row.name),
       player_id: row.player_id,
       team: row.team,
       half: row.half,

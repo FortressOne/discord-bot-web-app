@@ -65,6 +65,15 @@ module Stats
       attack_defence? && [1, 2].any? { |half| half_weight(half) > 1.01 }
     end
 
+    def ended_early_display
+      seconds = (@half_lengths[1] - @half_lengths[2]).abs
+      ["#{seconds / 60}m", "#{seconds % 60}s"].select { |part| part =~ /[1-9]/ }.join(" ")
+    end
+
+    def weight_percent
+      (([half_weight(1), half_weight(2)].max - 1) * 100).round
+    end
+
     def any?
       tables.values.any?(&:any?)
     end

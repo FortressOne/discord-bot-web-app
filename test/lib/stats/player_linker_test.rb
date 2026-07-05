@@ -24,4 +24,17 @@ class Stats::PlayerLinkerTest < ActiveSupport::TestCase
   test "returns nil for unknown names" do
     assert_nil Stats::PlayerLinker.new.player_id_for("stranger")
   end
+
+  test "links by the id suffix on login-era names" do
+    player = Player.create!(name: "Bent")
+
+    # the logged name is username#player_id, whatever the username is
+    assert_equal player.id, Stats::PlayerLinker.new.player_id_for("something_else##{player.id}")
+  end
+
+  test "falls back to the stripped name when the id is unknown" do
+    player = Player.create!(name: "Bent")
+
+    assert_equal player.id, Stats::PlayerLinker.new.player_id_for("bent#99999")
+  end
 end
