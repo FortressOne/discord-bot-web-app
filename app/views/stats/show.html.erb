@@ -1,7 +1,7 @@
 <div class="container-stats">
   <p><%= link_to "← Match stats", stats_path %></p>
 
-  <article style="width: fit-content; min-width: min(48rem, 100%); max-width: 100%; margin: 0 auto var(--spacing);">
+  <article style="width: fit-content; min-width: min(48rem, 100%); max-width: 100%; margin: 0 0 var(--spacing);">
     <header>
       <p>
         <span style="float: right; margin-left: 2rem;"><%= @match_stat.id %><%= DELIMITER %><% if @match_stat.played_at %><%= local_time(@match_stat.played_at) %><small> (<%= local_time_ago(@match_stat.played_at) %>)</small><% end %></span>
