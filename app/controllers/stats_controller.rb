@@ -46,7 +46,7 @@ class StatsController < ApplicationController
     @breakdown = Stats::HalfBreakdown.new(@match_stat, @players)
     weights = { 1 => @breakdown.half_weight(1), 2 => @breakdown.half_weight(2) }
     @weighted_players = @players.map { |player| Stats::WeightedTotals.new(player, weights) }
-    @awards = Stats::Awards.for(@weighted_players)
+    @awards = Stats::Awards.for(@weighted_players, breakdown: @breakdown, kill_matrix: @match_stat.kill_matrix)
 
     respond_to do |format|
       format.html
@@ -116,7 +116,8 @@ class StatsController < ApplicationController
       flag_carry_display: player.flag_carry_display,
       classes_display: player.class_breakdown,
       class_seconds: player.class_seconds,
-      weapons: player.weapon_stats.map { |weapon, stats| weapon_row(weapon, stats) }
+      weapons: player.weapon_stats.map { |weapon, stats| weapon_row(weapon, stats) },
+      damage_received: player.damage_received
     }
   end
 

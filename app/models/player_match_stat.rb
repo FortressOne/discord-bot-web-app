@@ -26,6 +26,16 @@ class PlayerMatchStat < ApplicationRecord
     format("%d:%02d", flag_carry_seconds / 60, flag_carry_seconds % 60)
   end
 
+  def time_played_seconds
+    class_seconds.values.sum
+  end
+
+  def damage_per_minute
+    return 0 unless time_played_seconds.positive?
+
+    (damage_given / (time_played_seconds / 60.0)).round
+  end
+
   # e.g. {"Sold" => 523, "Demo" => 88} => "Sold 86%, Demo 14%"
   def class_breakdown
     total = class_seconds.values.sum

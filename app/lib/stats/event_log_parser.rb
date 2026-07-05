@@ -42,7 +42,8 @@ module Stats
       "detpack" => "detp",
       "sentrygun" => "sent", "building_sentrygun" => "sent", "build_timer" => "sent",
       "building_dispenser" => "disp",
-      "info_tfgoal" => "laser"
+      "info_tfgoal" => "laser",
+      "worldspawn" => "env"
     }.freeze
 
     # In FO pug convention a match is two mirrored halves: team 1 attacks
@@ -128,6 +129,7 @@ module Stats
       when "changeClass" then process_change_class(event)
       when "attack" then process_attack(event)
       when "damageDone" then process_damage(event)
+      when "damageTaken" then process_damage_taken(event)
       when "kill" then process_kill(event)
       when "death" then process_death(event)
       when "pickup" then process_pickup(event)
@@ -283,7 +285,19 @@ module Stats
       note_team(name, event["playerTeam"], event["time"])
       @players[name][:deaths] += 1
       bump_half(name, event["time"], "deaths")
+      received_stat(name, event["inflictor"])["deaths"] += 1
+      bump_half_received(name, event["time"], event["inflictor"], "deaths")
       @previous_death = event
+    end
+
+    # What killed and hurt each player, by weapon — the victim's view.
+    def process_damage_taken(event)
+      name = event["player"]
+      damage = event["damage"].to_i
+      return if pseudo?(name) || damage.zero?
+
+      received_stat(name, event["inflictor"])["damage"] += damage
+      bump_half_received(name, event["time"], event["inflictor"], "damage", damage)
     end
 
     def process_pickup(event)
@@ -444,19 +458,32 @@ module Stats
       (@kill_matrix[attacker] ||= {})[victim] ||= { "kills" => 0, "damage" => 0 }
     end
 
-    def weapon_stat(name, inflictor)
+    def canonical_weapon(inflictor)
       inflictor = inflictor.presence || "unknown"
-      weapon = WEAPON_NAMES[inflictor] || inflictor.tr("_", "-")
-      @players[name][:weapon_stats][weapon] ||= { "shots" => 0, "hits" => 0, "damage" => 0, "kills" => 0 }
+      WEAPON_NAMES[inflictor] || inflictor.tr("_", "-")
+    end
+
+    def weapon_stat(name, inflictor)
+      @players[name][:weapon_stats][canonical_weapon(inflictor)] ||= { "shots" => 0, "hits" => 0, "damage" => 0, "kills" => 0 }
     end
 
     def bump_half_weapon(name, time, inflictor, key, amount = 1)
       half = half_of(time)
       return unless half
 
-      inflictor = inflictor.presence || "unknown"
-      weapon = WEAPON_NAMES[inflictor] || inflictor.tr("_", "-")
-      stats = half_stat(name, half)["weapon_stats"][weapon] ||= { "shots" => 0, "hits" => 0, "damage" => 0, "kills" => 0 }
+      stats = half_stat(name, half)["weapon_stats"][canonical_weapon(inflictor)] ||= { "shots" => 0, "hits" => 0, "damage" => 0, "kills" => 0 }
+      stats[key] += amount
+    end
+
+    def received_stat(name, inflictor)
+      @players[name][:damage_received][canonical_weapon(inflictor)] ||= { "damage" => 0, "deaths" => 0 }
+    end
+
+    def bump_half_received(name, time, inflictor, key, amount = 1)
+      half = half_of(time)
+      return unless half
+
+      stats = half_stat(name, half)["damage_received"][canonical_weapon(inflictor)] ||= { "damage" => 0, "deaths" => 0 }
       stats[key] += amount
     end
 
@@ -466,7 +493,7 @@ module Stats
         damage_given: 0, damage_taken: 0, team_damage: 0,
         flag_touches: 0, flag_caps: 0, flag_drops: 0, flag_throws: 0,
         flag_stops: 0, flag_carry_seconds: 0,
-        class_seconds: Hash.new(0), weapon_stats: {}
+        class_seconds: Hash.new(0), weapon_stats: {}, damage_received: {}
       }
     end
 
@@ -478,7 +505,7 @@ module Stats
         "damage_given" => 0, "damage_taken" => 0, "team_damage" => 0,
         "flag_touches" => 0, "flag_caps" => 0, "flag_drops" => 0,
         "flag_throws" => 0, "flag_stops" => 0, "flag_carry_seconds" => 0,
-        "class_seconds" => Hash.new(0), "weapon_stats" => {}
+        "class_seconds" => Hash.new(0), "weapon_stats" => {}, "damage_received" => {}
       }
     end
 

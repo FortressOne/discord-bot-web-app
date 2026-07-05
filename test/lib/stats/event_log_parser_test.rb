@@ -173,6 +173,26 @@ module Stats
       assert_equal 1, bob["1"]["flag_throws"]
     end
 
+    test "aggregates damage received and deaths by weapon" do
+      events = [
+        { type: "gameStart", map: "2fort5r", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },
+        { type: "damageTaken", kind: "enemy", attacker: "alice", attackerClass: 3, attackerTeam: 1,
+          player: "bob", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", damage: 90, time: 10 },
+        { type: "damageTaken", kind: "enemy", attacker: "world", attackerClass: 0, attackerTeam: 0,
+          player: "bob", playerClass: 1, playerTeam: 2, inflictor: "worldspawn", damage: 25, time: 20 },
+        { type: "death", kind: "enemy", attacker: "alice", attackerClass: 3, attackerTeam: 1,
+          player: "bob", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", time: 30 },
+        { type: "teamScores", team1Score: 10, team2Score: 0, team1Name: "blue", team2Name: "red", winningTeam: 1, time: 700 },
+        { type: "gameEnd", time: 700 }
+      ]
+
+      result = EventLogParser.parse(events.map { |event| "#{event.to_json}," }.join("\n"))
+
+      received = result.players["bob"][:damage_received]
+      assert_equal({ "damage" => 90, "deaths" => 1 }, received["rl"])
+      assert_equal({ "damage" => 25, "deaths" => 0 }, received["env"])
+    end
+
     test "splits weapon stats into halves" do
       alice = EventLogParser.parse(raw_log).players["alice"]
 

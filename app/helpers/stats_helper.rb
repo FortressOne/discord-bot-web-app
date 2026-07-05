@@ -13,6 +13,8 @@ module StatsHelper
     kills: ["K", "Kills"],
     deaths: ["D", "Deaths"],
     kd: ["K/(D+TK)", "Kills per (deaths + teamkills)"],
+    dmg_per_min: ["Dmg/m", "Damage per minute"],
+    time_played: ["Time", "Time played"],
     teamkills: ["TK", "Teamkills"],
     damage_given: ["Dmg", "Damage given"],
     damage_taken: ["Dmg T", "Damage taken"],
@@ -22,10 +24,10 @@ module StatsHelper
 
   FULL_COLUMNS = %i[kills deaths kd teamkills damage_given team_damage
                     flag_touches flag_caps flag_throws flag_stops flag_carry].freeze
-  ATTACK_COLUMNS = %i[flag_caps flag_carry kills damage_given flag_touches flag_throws
-                      teamkills team_damage].freeze
-  DEFENCE_COLUMNS = %i[kills damage_given flag_stops deaths teamkills kd
-                       team_damage].freeze
+  ATTACK_COLUMNS = %i[flag_caps flag_carry kills damage_given dmg_per_min flag_touches
+                      flag_throws teamkills team_damage time_played].freeze
+  DEFENCE_COLUMNS = %i[kills damage_given dmg_per_min flag_stops deaths teamkills kd
+                       team_damage time_played].freeze
 
   ROLE_COLUMNS = {
     attack: ATTACK_COLUMNS,
@@ -36,6 +38,11 @@ module StatsHelper
 
   def stats_cell(player, column)
     return tag.td(player.kd_ratio) if column == :kd # a rate: unaffected by a shortened half
+    return tag.td(player.damage_per_minute) if column == :dmg_per_min
+    if column == :time_played
+      seconds = player.time_played_seconds
+      return tag.td(format("%d:%02d", seconds / 60, seconds % 60), data: { sort: seconds })
+    end
 
     stat = column == :flag_carry ? :flag_carry_seconds : column
     clock = column == :flag_carry
@@ -193,6 +200,28 @@ module StatsHelper
 
   def stats_filter_link(label, param, value, style: nil)
     link_to label, stats_path(request.query_parameters.merge(param => value, page: nil)), style: style
+  end
+
+  # A team-total cell: weighted sum with the actual in parentheses when a
+  # half was shortened.
+  def stats_totals_cell(members, stat, clock: false)
+    weighted = members.sum { |player| player.public_send(stat) }
+    raw = members.sum { |player| (player.respond_to?(:actual) ? player.actual : player).public_send(stat) }
+    if weighted != raw
+      tag.td(weighted_pair_display(weighted, raw, clock: clock))
+    else
+      tag.td(clock ? format("%d:%02d", raw / 60, raw % 60) : raw)
+    end
+  end
+
+  # Role blocks for a player's card: [label, half_data, team] — one per
+  # half, labelled by whether they attacked or defended it.
+  def stats_role_blocks(player)
+    player.half_stats.sort.filter_map do |half, data|
+      team = (data["team"] || player.team).to_i
+      role = team == half.to_i ? "Attack" : "Defence"
+      [role, data, team]
+    end
   end
 
   # Same shape as match_summary: "Red wins with 2m 54s remaining - 4v4 - ff-schtop".

@@ -1,0 +1,16 @@
+<figure>
+  <table>
+    <thead>
+      <tr><th>Weapon</th><th>Damage</th><th>Deaths</th></tr>
+    </thead>
+    <tbody>
+      <% damage_received.sort_by { |_, stats| -stats["damage"].to_i }.each do |weapon, stats| %>
+        <tr>
+          <td><%= weapon %></td>
+          <td><%= stats["damage"] %></td>
+          <td><%= stats["deaths"] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</figure>

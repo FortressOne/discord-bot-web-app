@@ -34,7 +34,7 @@
             <% else %>
               <%= link_to(stats_display_name(player.name), stats_path(player: player.name)) %>
             <% end %>
-            <% @awards.select { |award| award.player == player.name }.each do |award| %>
+            <% @awards.select { |award| award.players.include?(player.name) }.each do |award| %>
               <span title="<%= award.title %> (<%= award.description %>)"><%= award.emoji %></span>
             <% end %>
             </br>
@@ -62,6 +62,43 @@
     <p><small>⚖️ The match ended <%= @breakdown.ended_early_display %> early, so shortened-half values are scaled up by <%= @breakdown.weight_percent %>% — shown as <strong>weighted (actual)</strong>.</small></p>
   <% end %>
 
+  <h3>Teams</h3>
+  <figure>
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th title="Kills">K</th>
+          <th title="Teamkills">TK</th>
+          <th title="Damage given">Dmg</th>
+          <th title="Friendly fire damage">FF</th>
+          <th title="Flag touches">Took</th>
+          <th title="Flag captures">Caps</th>
+          <th title="Flag throws">Throw</th>
+          <th title="Flag stops">Stop</th>
+          <th title="Flag carry time">Carry</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% [1, 2].each do |team| %>
+          <% members = @weighted_players.select { |player| player.team.to_i == team && !player.unteamed? } %>
+          <tr>
+            <td><strong style="color: <%= team_colour_code(team) %>;"><%= ((team == 1 ? @match_stat.team1_name : @match_stat.team2_name).presence || Team::COLOUR[team]).capitalize %></strong></td>
+            <%= stats_totals_cell(members, :kills) %>
+            <%= stats_totals_cell(members, :teamkills) %>
+            <%= stats_totals_cell(members, :damage_given) %>
+            <%= stats_totals_cell(members, :team_damage) %>
+            <%= stats_totals_cell(members, :flag_touches) %>
+            <%= stats_totals_cell(members, :flag_caps) %>
+            <%= stats_totals_cell(members, :flag_throws) %>
+            <%= stats_totals_cell(members, :flag_stops) %>
+            <%= stats_totals_cell(members, :flag_carry_seconds, clock: true) %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </figure>
+
   <% if @awards.any? %>
     <h3>Awards</h3>
     <figure>
@@ -71,7 +108,7 @@
             <tr>
               <td><%= award.emoji %> <strong><%= award.title %></strong></td>
               <td><small><%= award.description %></small></td>
-              <td><% winner = @players.find { |player| player.name == award.player } %><%= winner ? stats_player_link(winner) : stats_display_name(award.player) %></td>
+              <td><%= safe_join(award.players.map { |name| winner = @players.find { |player| player.name == name }; winner ? stats_player_link(winner) : stats_display_name(name) }, ", ") %></td>
               <td><%= award.value %></td>
             </tr>
           <% end %>
@@ -137,29 +174,86 @@
     <% end %>
   <% end %>
 
-  <h3>Weapons</h3>
+  <h3>Player Stats</h3>
   <% @players.each do |player| %>
-    <% if player.unteamed? && player.half_stats.values.any? { |half| half["weapon_stats"].present? } %>
-      <%# All-time attackers get one entry per half, coloured by the team
-          they attacked with. %>
-      <% player.half_stats.sort.each do |_, half| %>
-        <% next if half["weapon_stats"].blank? %>
-        <details>
-          <summary>
-            <span style="color: <%= team_colour_code(half["team"]) %>;"><strong><%= stats_display_name(player.name) %></strong></span>
-            <small><%= stats_class_breakdown(half["class_seconds"] || {}) %></small>
-          </summary>
-          <%= render "weapon_table", weapon_stats: half["weapon_stats"] %>
-        </details>
+    <details>
+      <summary>
+        <span style="color: <%= player.unteamed? ? '#FFFFFF' : team_colour_code(player.team) %>;"><strong><%= stats_display_name(player.name) %></strong></span>
+        <small><%= player.class_breakdown %></small>
+      </summary>
+      <% blocks = @breakdown.attack_defence? ? stats_role_blocks(player) : [] %>
+      <% if blocks.any? %>
+        <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">
+          <% blocks.each do |role, data, team| %>
+            <div style="flex: 0 1 auto; min-width: 300px;">
+              <h5 style="color: <%= team_colour_code(team) %>;"><%= role %></h5>
+              <p>
+                <small>
+                  <%= stats_class_breakdown(data["class_seconds"] || {}) %><br>
+                  K/D/TK: <%= data["kills"].to_i %> / <%= data["deaths"].to_i %> / <%= data["teamkills"].to_i %>
+                  <% if role == "Attack" %>
+                    &middot; Touch/Cap: <%= data["flag_touches"].to_i %> / <%= data["flag_caps"].to_i %>
+                    &middot; Carry: <%= format("%d:%02d", data["flag_carry_seconds"].to_i / 60, data["flag_carry_seconds"].to_i % 60) %>
+                  <% else %>
+                    &middot; Stops: <%= data["flag_stops"].to_i %>
+                  <% end %>
+                </small>
+              </p>
+              <% if data["weapon_stats"].present? %>
+                <h6>Weapon Stats</h6>
+                <%= render "weapon_table", weapon_stats: data["weapon_stats"] %>
+              <% end %>
+              <% if data["damage_received"].present? %>
+                <h6>Damage Received</h6>
+                <%= render "damage_received_table", damage_received: data["damage_received"] %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">
+          <div style="flex: 0 1 auto; min-width: 300px;">
+            <h6>Weapon Stats</h6>
+            <%= render "weapon_table", weapon_stats: player.weapon_stats %>
+          </div>
+          <% if player.damage_received.present? %>
+            <div style="flex: 0 1 auto; min-width: 300px;">
+              <h6>Damage Received</h6>
+              <%= render "damage_received_table", damage_received: player.damage_received %>
+            </div>
+          <% end %>
+        </div>
       <% end %>
-    <% else %>
-      <details>
-        <summary>
-          <span style="color: <%= team_colour_code(player.team) %>;"><strong><%= stats_display_name(player.name) %></strong></span>
-          <small><%= player.class_breakdown %></small>
-        </summary>
-        <%= render "weapon_table", weapon_stats: player.weapon_stats %>
-      </details>
-    <% end %>
+    </details>
+  <% end %>
+
+  <% matrix_players = @players.reject(&:unteamed?) + @players.select(&:unteamed?) %>
+  <% if @match_stat.kill_matrix.present? %>
+    <h3>Kill Matrix</h3>
+    <figure>
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Killer \\ Victim</th>
+            <% matrix_players.each_with_index do |victim, index| %>
+              <th title="<%= stats_display_name(victim.name) %>"><%= index + 1 %></th>
+            <% end %>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% matrix_players.each_with_index do |killer, index| %>
+            <tr>
+              <td><strong style="color: <%= killer.unteamed? ? '#FFFFFF' : team_colour_code(killer.team) %>;"><%= index + 1 %>. <%= stats_display_name(killer.name) %></strong></td>
+              <% row = @match_stat.kill_matrix[killer.name] || {} %>
+              <% matrix_players.each do |victim| %>
+                <td><%= row.dig(victim.name, "kills").to_i.nonzero? %></td>
+              <% end %>
+              <td><strong><%= row.sum { |_, cell| cell["kills"].to_i } %></strong></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </figure>
   <% end %>
 </div>

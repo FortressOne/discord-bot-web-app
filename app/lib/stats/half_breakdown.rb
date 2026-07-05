@@ -31,6 +31,16 @@ module Stats
       def dominant_class
         class_seconds.max_by { |_, seconds| seconds }&.first
       end
+
+      def time_played_seconds
+        class_seconds.values.sum
+      end
+
+      def damage_per_minute
+        return 0 unless time_played_seconds.positive?
+
+        (damage_given / (time_played_seconds / 60.0)).round
+      end
     end
 
     Matchup = Struct.new(:role, :class_name, :left, :right, :duels, keyword_init: true)
