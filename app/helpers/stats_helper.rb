@@ -114,7 +114,7 @@ module StatsHelper
         [["Kills", :kills, {}],
          ["Damage", :damage_given, {}],
          ["Stops", :flag_stops, {}],
-         ["Deaths", :deaths, { neutral: true }],
+         ["Deaths", :deaths, { lower_wins: true }],
          ["Dmg taken", :damage_taken, { lower_wins: true }]]
       end
 
