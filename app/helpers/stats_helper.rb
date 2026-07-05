@@ -12,7 +12,7 @@ module StatsHelper
     flag_throws: ["Throw", "Flag throws"],
     kills: ["K", "Kills"],
     deaths: ["D", "Deaths"],
-    kd: ["K/D", "Kills per death"],
+    kd: ["K/D", "Kills per (deaths + teamkills)"],
     teamkills: ["TK", "Teamkills"],
     damage_given: ["Dmg", "Damage given"],
     damage_taken: ["Dmg T", "Damage taken"],

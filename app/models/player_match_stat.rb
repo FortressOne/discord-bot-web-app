@@ -14,10 +14,12 @@ class PlayerMatchStat < ApplicationRecord
     class_seconds.max_by { |_, seconds| seconds }&.first
   end
 
+  # Teamkills count against you: kills / (deaths + teamkills).
   def kd_ratio
-    return kills.to_f if deaths.zero?
+    denominator = deaths + teamkills
+    return kills.to_f if denominator.zero?
 
-    (kills / deaths.to_f).round(2)
+    (kills / denominator.to_f).round(2)
   end
 
   def flag_carry_display
