@@ -27,7 +27,7 @@
           <%= image_tag(flag[:url], alt: flag[:alt], style: "height: 44px;") %>
           <strong><%= "#{((team == 1 ? @match_stat.team1_name : @match_stat.team2_name).presence || Team::COLOUR[team]).capitalize} Team" %></strong>
           </br>
-          <% @players.select { |player| player.team == team }.each do |player| %>
+          <% @players.select { |player| player.team == team && !player.unteamed? }.each do |player| %>
             <%= stats_class_icon(player.dominant_class, StatsHelper::TEAM_COLOURS[team], height: 44) %>
             <% if player.player_id %>
               <%= link_to(stats_display_name(player.name), player_path(player.player_id)) %>
@@ -139,30 +139,27 @@
 
   <h3>Weapons</h3>
   <% @players.each do |player| %>
-    <details>
-      <summary>
-        <span style="color: <%= team_colour_code(player.team) %>;"><strong><%= stats_display_name(player.name) %></strong></span>
-        <small><%= player.class_breakdown %></small>
-      </summary>
-      <figure>
-        <table>
-          <thead>
-            <tr><th>Weapon</th><th>Shots</th><th>Hits</th><th>Acc</th><th>Damage</th><th>Kills</th></tr>
-          </thead>
-          <tbody>
-            <% player.weapon_stats.sort_by { |_, s| -s["damage"].to_i }.each do |weapon, stats| %>
-              <tr>
-                <td><%= weapon %></td>
-                <td><%= stats["shots"] %></td>
-                <td><%= stats["hits"] %></td>
-                <td><%= stats["shots"].to_i.positive? ? "#{(100.0 * stats["hits"].to_i / stats["shots"].to_i).round}%" : "" %></td>
-                <td><%= stats["damage"] %></td>
-                <td><%= stats["kills"] %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </figure>
-    </details>
+    <% if player.unteamed? && player.half_stats.values.any? { |half| half["weapon_stats"].present? } %>
+      <%# All-time attackers get one entry per half, coloured by the team
+          they attacked with. %>
+      <% player.half_stats.sort.each do |_, half| %>
+        <% next if half["weapon_stats"].blank? %>
+        <details>
+          <summary>
+            <span style="color: <%= team_colour_code(half["team"]) %>;"><strong><%= stats_display_name(player.name) %></strong></span>
+            <small><%= stats_class_breakdown(half["class_seconds"] || {}) %></small>
+          </summary>
+          <%= render "weapon_table", weapon_stats: half["weapon_stats"] %>
+        </details>
+      <% end %>
+    <% else %>
+      <details>
+        <summary>
+          <span style="color: <%= team_colour_code(player.team) %>;"><strong><%= stats_display_name(player.name) %></strong></span>
+          <small><%= player.class_breakdown %></small>
+        </summary>
+        <%= render "weapon_table", weapon_stats: player.weapon_stats %>
+      </details>
+    <% end %>
   <% end %>
 </div>

@@ -174,10 +174,21 @@ module StatsHelper
     name.to_s.sub(Stats::PlayerLinker::ID_SUFFIX, "")
   end
 
+  def stats_class_breakdown(class_seconds)
+    total = class_seconds.values.sum
+    return "" if total.zero?
+
+    class_seconds.sort_by { |_, seconds| -seconds }
+                 .map { |name, seconds| "#{name} #{(100.0 * seconds / total).round}%" }
+                 .join(", ")
+  end
+
   # Links to the Player profile when the stat row resolved to a real player,
-  # otherwise falls back to filtering the match log by name.
+  # otherwise falls back to filtering the match log by name. All-time
+  # attackers belong to neither team and render white.
   def stats_player_link(player)
-    style = "color: #{team_colour_code(player.team)};"
+    unteamed = player.respond_to?(:unteamed?) && player.unteamed?
+    style = "color: #{unteamed ? '#FFFFFF' : team_colour_code(player.team)};"
     if player.player_id
       link_to stats_display_name(player.name), player_path(player.player_id), style: style
     else

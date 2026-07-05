@@ -14,7 +14,7 @@ module Stats
       :kills, :deaths, :teamkills, :suicides, :sentries_destroyed,
       :damage_given, :damage_taken, :team_damage,
       :flag_touches, :flag_caps, :flag_drops, :flag_throws, :flag_stops,
-      :flag_carry_seconds, :class_seconds, :weight,
+      :flag_carry_seconds, :class_seconds, :weight, :weapon_stats,
       keyword_init: true
     ) do
       def kd_ratio
@@ -133,7 +133,8 @@ module Stats
             flag_drops: stats["flag_drops"].to_i, flag_throws: stats["flag_throws"].to_i,
             flag_stops: stats["flag_stops"].to_i,
             flag_carry_seconds: stats["flag_carry_seconds"].to_i,
-            class_seconds: class_seconds, weight: half_weight(half.to_i)
+            class_seconds: class_seconds, weight: half_weight(half.to_i),
+            weapon_stats: stats["weapon_stats"] || {}
           )
         end
       end

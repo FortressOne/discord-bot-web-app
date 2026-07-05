@@ -4,6 +4,12 @@ class PlayerMatchStat < ApplicationRecord
 
   validates :name, presence: true
 
+  # An all-time attacker swaps teams at half-time so they attack both
+  # ways (usually a new player). They belong to neither team.
+  def unteamed?
+    half_stats.values.filter_map { |half| half["team"] }.uniq.size > 1
+  end
+
   def dominant_class
     class_seconds.max_by { |_, seconds| seconds }&.first
   end

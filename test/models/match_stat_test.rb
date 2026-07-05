@@ -33,4 +33,18 @@ class MatchStatTest < ActiveSupport::TestCase
 
     assert_equal "Draw", stat.result_description
   end
+
+  test "all-time attackers are unteamed" do
+    attacker = PlayerMatchStat.new(
+      name: "newbie", team: 1,
+      half_stats: { "1" => { "team" => 1 }, "2" => { "team" => 2 } }
+    )
+    regular = PlayerMatchStat.new(
+      name: "vet", team: 1,
+      half_stats: { "1" => { "team" => 1 }, "2" => { "team" => 1 } }
+    )
+
+    assert attacker.unteamed?
+    assert_not regular.unteamed?
+  end
 end

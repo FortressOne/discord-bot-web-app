@@ -173,6 +173,15 @@ module Stats
       assert_equal 1, bob["1"]["flag_throws"]
     end
 
+    test "splits weapon stats into halves" do
+      alice = EventLogParser.parse(raw_log).players["alice"]
+
+      # all of alice's rl action happens in the first half
+      assert_equal({ "rl" => { "shots" => 2, "hits" => 1, "damage" => 90, "kills" => 2 } },
+                   alice[:half_stats]["1"]["weapon_stats"])
+      assert_empty alice[:half_stats]["2"]["weapon_stats"]
+    end
+
     test "builds a kill matrix between real players only" do
       result = EventLogParser.parse(raw_log)
 

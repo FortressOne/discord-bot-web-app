@@ -90,6 +90,7 @@ class StatsController < ApplicationController
       name_display: helpers.stats_display_name(player.name),
       player_id: player.player_id,
       team: player.team,
+      unteamed: player.unteamed?,
       kills: player.kills,
       deaths: player.deaths,
       kd_display: player.kd_ratio.to_s,
@@ -136,7 +137,8 @@ class StatsController < ApplicationController
       flag_carry_seconds: row.flag_carry_seconds,
       flag_carry_display: row.flag_carry_display,
       class_seconds: row.class_seconds,
-      dominant_class: row.dominant_class
+      dominant_class: row.dominant_class,
+      weapons: row.weapon_stats.map { |weapon, stats| weapon_row(weapon, stats) }
     }
   end
 

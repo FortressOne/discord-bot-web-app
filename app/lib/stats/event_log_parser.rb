@@ -190,6 +190,7 @@ module Stats
       return if pseudo?(name, event["playerClass"])
 
       weapon_stat(name, event["inflictor"])["shots"] += 1
+      bump_half_weapon(name, event["time"], event["inflictor"], "shots")
     end
 
     def process_damage(event)
@@ -215,6 +216,8 @@ module Stats
         weapon = weapon_stat(name, event["inflictor"])
         weapon["hits"] += 1
         weapon["damage"] += damage
+        bump_half_weapon(name, time, event["inflictor"], "hits")
+        bump_half_weapon(name, time, event["inflictor"], "damage", damage)
       when "team"
         return if pseudo?(name, event["playerClass"])
 
@@ -251,6 +254,7 @@ module Stats
         @players[name][:kills] += 1
         bump_half(name, time, "kills")
         weapon_stat(name, event["inflictor"])["kills"] += 1
+        bump_half_weapon(name, time, event["inflictor"], "kills")
         if target_class == SENTRY_CLASS || target_class.zero?
           @players[name][:sentries_destroyed] += 1
           bump_half(name, time, "sentries_destroyed")
@@ -434,6 +438,16 @@ module Stats
       @players[name][:weapon_stats][weapon] ||= { "shots" => 0, "hits" => 0, "damage" => 0, "kills" => 0 }
     end
 
+    def bump_half_weapon(name, time, inflictor, key, amount = 1)
+      half = half_of(time)
+      return unless half
+
+      inflictor = inflictor.presence || "unknown"
+      weapon = WEAPON_NAMES[inflictor] || inflictor.tr("_", "-")
+      stats = half_stat(name, half)["weapon_stats"][weapon] ||= { "shots" => 0, "hits" => 0, "damage" => 0, "kills" => 0 }
+      stats[key] += amount
+    end
+
     def blank_player
       {
         kills: 0, deaths: 0, teamkills: 0, suicides: 0, sentries_destroyed: 0,
@@ -452,7 +466,7 @@ module Stats
         "damage_given" => 0, "damage_taken" => 0, "team_damage" => 0,
         "flag_touches" => 0, "flag_caps" => 0, "flag_drops" => 0,
         "flag_throws" => 0, "flag_stops" => 0, "flag_carry_seconds" => 0,
-        "class_seconds" => Hash.new(0)
+        "class_seconds" => Hash.new(0), "weapon_stats" => {}
       }
     end
 
