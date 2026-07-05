@@ -11,7 +11,13 @@ namespace :stats do
     counts = Hash.new(0)
     imported = 0
 
-    Stats::Archive.each_key(prefix: prefix) do |key|
+    # Newest matches first, so fresh games are browsable long before the
+    # 2020 tail of the archive finishes.
+    keys = []
+    Stats::Archive.each_key(prefix: prefix) { |key| keys << key }
+    keys.sort_by! { |key| key[%r{([^/]+)\z}, 1].to_s }.reverse!
+
+    keys.each do |key|
       next if existing_keys.include?(key)
 
       match_stat = Stats::Importer.import_key(key, force: force, linker: linker)
