@@ -155,12 +155,20 @@ module StatsHelper
         [["Kills", :kills, {}],
          ["Damage", :damage_given, {}],
          ["Stops", :flag_stops, {}],
-         ["Deaths", :deaths, { lower_wins: true }]]
+         ["Deaths", :deaths, { lower_wins: true }],
+         ["Team Kills", :teamkills, { lower_wins: true }],
+         ["Team Damage", :team_damage, { lower_wins: true }],
+         ["K/(D+TK)", :kd_ratio, { rate: true }]]
       end
 
     definitions.map do |label, stat, options|
       raw_left = matchup.left.public_send(stat)
       raw_right = matchup.right.public_send(stat)
+      if options[:rate]
+        # Within one half the weight cancels out of a ratio.
+        next [label, raw_left, raw_right,
+              { left_display: raw_left, right_display: raw_right, lower_wins: false, clock: false }]
+      end
       weighted_left = (raw_left * left_weight).round
       weighted_right = (raw_right * right_weight).round
       clock = options[:clock] || false
@@ -184,6 +192,7 @@ module StatsHelper
 
     left_wins = lower_wins ? left < right : left > right
     margin = (left - right).abs
+    margin = margin.round(2) if margin.is_a?(Float)
     # On lower-wins stats (deaths, damage taken) the winner has LESS, so
     # the margin reads negative.
     sign = lower_wins ? "-" : "+"
