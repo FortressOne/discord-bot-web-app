@@ -35,20 +35,30 @@ module StatsHelper
   }.freeze
 
   def stats_cell(player, column)
-    weight = player.respond_to?(:weight) ? player.weight.to_f : 1.0
-    case column
-    when :kd
-      # A rate, not a count: unaffected by a shortened half.
-      tag.td(player.kd_ratio)
-    when :flag_carry
-      raw = player.flag_carry_seconds
-      weighted = (raw * weight).round
-      tag.td(weighted_stat_display(weighted, raw, weight, clock: true), data: { sort: weighted })
+    return tag.td(player.kd_ratio) if column == :kd # a rate: unaffected by a shortened half
+
+    stat = column == :flag_carry ? :flag_carry_seconds : column
+    clock = column == :flag_carry
+    if player.respond_to?(:actual)
+      weighted = player.public_send(stat)
+      raw = player.actual.public_send(stat)
     else
-      raw = player.public_send(column)
+      raw = player.public_send(stat)
+      weight = player.respond_to?(:weight) ? player.weight.to_f : 1.0
       weighted = (raw * weight).round
-      weight > 1.01 ? tag.td(weighted_stat_display(weighted, raw, weight), data: { sort: weighted }) : tag.td(raw)
     end
+
+    if weighted != raw || clock
+      display = weighted == raw ? (clock ? player.flag_carry_display : raw) : weighted_pair_display(weighted, raw, clock: clock)
+      tag.td(display, data: { sort: weighted })
+    else
+      tag.td(raw)
+    end
+  end
+
+  def weighted_pair_display(weighted, raw, clock: false)
+    formatter = ->(value) { clock ? format("%d:%02d", value / 60, value % 60) : value.to_s }
+    "#{formatter.call(weighted)} (#{formatter.call(raw)})"
   end
 
   # class_seconds keys are short class names ("Sold"); Playerclass is keyed

@@ -43,8 +43,10 @@ class StatsController < ApplicationController
         [player.team.to_i == winning_team ? 0 : 1, player.team.to_i, player.name.downcase]
       end
     end
-    @awards = Stats::Awards.for(@players)
     @breakdown = Stats::HalfBreakdown.new(@match_stat, @players)
+    weights = { 1 => @breakdown.half_weight(1), 2 => @breakdown.half_weight(2) }
+    @weighted_players = @players.map { |player| Stats::WeightedTotals.new(player, weights) }
+    @awards = Stats::Awards.for(@weighted_players)
 
     respond_to do |format|
       format.html

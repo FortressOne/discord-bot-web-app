@@ -58,6 +58,10 @@
     </footer>
   </article>
 
+  <% if @breakdown.weighted? %>
+    <p><small>⚖️ The match ended <%= @breakdown.ended_early_display %> early, so shortened-half values are scaled up by <%= @breakdown.weight_percent %>% — shown as <strong>weighted (actual)</strong>.</small></p>
+  <% end %>
+
   <% if @awards.any? %>
     <h3>Awards</h3>
     <figure>
@@ -77,11 +81,8 @@
   <% end %>
 
   <h3>Players</h3>
-  <%= render "players_table", rows: @players, class_icons: :main %>
+  <%= render "players_table", rows: @weighted_players, class_icons: :main %>
 
-  <% if @breakdown.weighted? && @breakdown.any? %>
-    <p><small>⚖️ The match ended <%= @breakdown.ended_early_display %> early, so shortened-half values are scaled up by <%= @breakdown.weight_percent %>% — shown as <strong>weighted (actual)</strong>.</small></p>
-  <% end %>
   <% @breakdown.tables.each do |role, rows| %>
     <% next if rows.empty? %>
     <h3><%= { attack: "Attack", defence: "Defence", first_half: "First half", second_half: "Second half" }[role] %></h3>

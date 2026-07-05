@@ -10,27 +10,37 @@ module Stats
       { title: "Golden Hands", emoji: "🚩", description: "most captures", stat: ->(p) { p.flag_caps }, format: ->(v) { "#{v} caps" } },
       { title: "No-no-no Motumbo", emoji: "🙅", description: "most flag stops", stat: ->(p) { p.flag_stops }, format: ->(v) { "#{v} stops" } },
       { title: "Running Man", emoji: "🏃", description: "longest flag time", stat: ->(p) { p.flag_carry_seconds }, format: ->(v) { Time.at(v).utc.strftime("%-M:%S") } },
-      { title: "Terminator", emoji: "🤖", description: "best kills/deaths", stat: ->(p) { (p.deaths + p.teamkills).zero? ? p.kills.to_f : p.kills.fdiv(p.deaths + p.teamkills) }, format: ->(v) { format("%.2f K/D", v) } },
+      { title: "Terminator", emoji: "🤖", description: "best kills/deaths", weighted: false, stat: ->(p) { (p.deaths + p.teamkills).zero? ? p.kills.to_f : p.kills.fdiv(p.deaths + p.teamkills) }, format: ->(v) { format("%.2f K/D", v) } },
       { title: "Lemming", emoji: "🪦", description: "most deaths", stat: ->(p) { p.deaths }, format: ->(v) { "#{v} deaths" } },
       { title: "Kamikaze", emoji: "💣", description: "most suicides", stat: ->(p) { p.suicides }, format: ->(v) { "#{v} suicides" } },
       { title: "Mr Magoo", emoji: "👓", description: "most teamkills", stat: ->(p) { p.teamkills }, format: ->(v) { "#{v} teamkills" } },
       { title: "Attention Whore", emoji: "📢", description: "most damage given + taken", stat: ->(p) { p.damage_given + p.damage_taken }, format: ->(v) { "#{v} damage" } }
     ].freeze
 
+    # Counting stats compare weighted when the players are wrapped in
+    # WeightedTotals; rates (weighted: false) always use the raw record.
     def self.for(players)
       return [] if players.size < 2
 
       DEFINITIONS.filter_map do |definition|
-        winner = players.max_by { |player| definition[:stat].call(player) }
+        candidates = players
+        candidates = players.map { |player| player.respond_to?(:actual) ? player.actual : player } if definition[:weighted] == false
+        winner = candidates.max_by { |player| definition[:stat].call(player) }
         value = definition[:stat].call(winner)
         next if value.to_f <= 0
+
+        display = definition[:format].call(value)
+        if winner.respond_to?(:actual)
+          raw = definition[:stat].call(winner.actual)
+          display += " (#{definition[:format].call(raw)})" if raw != value
+        end
 
         Award.new(
           title: definition[:title],
           emoji: definition[:emoji],
           description: definition[:description],
           player: winner.name,
-          value: definition[:format].call(value)
+          value: display
         )
       end
     end
