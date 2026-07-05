@@ -7,13 +7,14 @@ namespace :stats do
     force = ENV["FORCE"].present?
 
     existing_keys = force ? Set.new : MatchStat.pluck(:s3_key).to_set
+    linker = Stats::PlayerLinker.new
     counts = Hash.new(0)
     imported = 0
 
     Stats::Archive.each_key(prefix: prefix) do |key|
       next if existing_keys.include?(key)
 
-      match_stat = Stats::Importer.import_key(key, force: force)
+      match_stat = Stats::Importer.import_key(key, force: force, linker: linker)
       counts[match_stat.status] += 1
       imported += 1
       puts "[#{imported}] #{match_stat.status.ljust(6)} #{key}" if (imported % 100).zero? || match_stat.status == "error"
@@ -41,6 +42,19 @@ namespace :stats do
     rescue StandardError => e
       warn "FAILED #{match_stat.s3_key}: #{e.message}"
     end
+  end
+
+  desc "Link player match stats to Player records by name"
+  task link_players: :environment do
+    linker = Stats::PlayerLinker.new
+    linked = 0
+    PlayerMatchStat.where(player_id: nil).distinct.pluck(:name).each do |name|
+      player_id = linker.player_id_for(name)
+      next unless player_id
+
+      linked += PlayerMatchStat.where(player_id: nil, name: name).update_all(player_id: player_id)
+    end
+    puts "Linked #{linked} player match stats to players."
   end
 
   desc "Link parsed match stats to Match records via demo filename"

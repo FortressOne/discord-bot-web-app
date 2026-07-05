@@ -77,6 +77,7 @@ class StatsController < ApplicationController
   def player_row(player)
     {
       name: player.name,
+      player_id: player.player_id,
       team: player.team,
       kills: player.kills,
       deaths: player.deaths,

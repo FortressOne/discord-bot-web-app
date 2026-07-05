@@ -28,4 +28,15 @@ module StatsHelper
   def stats_filter_link(label, param, value, style: nil)
     link_to label, stats_path(request.query_parameters.merge(param => value, page: nil)), style: style
   end
+
+  # Links to the Player profile when the stat row resolved to a real player,
+  # otherwise falls back to filtering the match log by name.
+  def stats_player_link(player)
+    style = "color: #{team_colour_code(player.team)};"
+    if player.player_id
+      link_to player.name, player_path(player.player_id), style: style
+    else
+      stats_filter_link(player.name, :player, player.name, style: style)
+    end
+  end
 end

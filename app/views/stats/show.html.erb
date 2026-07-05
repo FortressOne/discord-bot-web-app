@@ -86,7 +86,7 @@
       <tbody>
         <% @players.each do |player| %>
           <tr>
-            <td><strong><%= stats_filter_link(player.name, :player, player.name, style: "color: #{team_colour_code(player.team)};") %></strong></td>
+            <td><strong><%= stats_player_link(player) %></strong></td>
             <td><%= stats_class_icons(player) %></td>
             <td><%= player.kills %></td>
             <td><%= player.deaths %></td>

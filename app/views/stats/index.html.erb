@@ -41,7 +41,7 @@
             <td><%= match_stat.duration_display %></td>
             <td>
               <% match_stat.player_match_stats.sort_by { |p| [p.team.to_i, p.name] }.each do |player| %>
-                <%= stats_filter_link(player.name, :player, player.name, style: "color: #{team_colour_code(player.team)};") %>
+                <%= stats_player_link(player) %>
               <% end %>
             </td>
           </tr>

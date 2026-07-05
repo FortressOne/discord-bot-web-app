@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_05_000001) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_05_200001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -200,8 +200,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_05_000001) do
     t.jsonb "weapon_stats", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "player_id"
     t.index ["match_stat_id"], name: "index_player_match_stats_on_match_stat_id"
     t.index ["name"], name: "index_player_match_stats_on_name"
+    t.index ["player_id"], name: "index_player_match_stats_on_player_id"
   end
 
   create_table "players", force: :cascade do |t|
@@ -281,6 +283,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_05_000001) do
   add_foreign_key "matches", "game_maps"
   add_foreign_key "matches", "servers"
   add_foreign_key "player_match_stats", "match_stats"
+  add_foreign_key "player_match_stats", "players"
   add_foreign_key "rounds", "matches"
   add_foreign_key "teams", "matches"
 end

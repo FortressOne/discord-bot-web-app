@@ -5,13 +5,14 @@ module Stats
   class Importer
     KEY_PATTERN = %r{\A(?<region>[^/]+)/(?<game_mode>[^/]+)/(?<filename>[^/]+)\.json\z}
 
-    def self.import_key(s3_key, force: false)
-      new(s3_key).import(force: force)
+    def self.import_key(s3_key, force: false, linker: nil)
+      new(s3_key, linker: linker).import(force: force)
     end
 
-    def initialize(s3_key, archive: Archive.new)
+    def initialize(s3_key, archive: Archive.new, linker: nil)
       @s3_key = s3_key
       @archive = archive
+      @linker = linker || PlayerLinker.new
     end
 
     def import(force: false)
@@ -50,7 +51,7 @@ module Stats
 
         match_stat.player_match_stats.delete_all
         result.players.each do |name, stats|
-          match_stat.player_match_stats.create!(name: name, **stats)
+          match_stat.player_match_stats.create!(name: name, player_id: @linker.player_id_for(name), **stats)
         end
       end
 

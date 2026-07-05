@@ -1,5 +1,6 @@
 class PlayerMatchStat < ApplicationRecord
   belongs_to :match_stat
+  belongs_to :player, optional: true
 
   validates :name, presence: true
 
