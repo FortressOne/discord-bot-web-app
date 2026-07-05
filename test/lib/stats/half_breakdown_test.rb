@@ -34,7 +34,7 @@ module Stats
       tables = breakdown(build_match).tables
 
       assert_equal [["alice", 1], ["bob", 2]], tables[:attack].map { |row| [row.name, row.half] }
-      # defence sorts by team, so alice (team 1, defending half 2) leads
+      # defence sorts by kills, so alice (6 in her defending half) leads bob (4)
       assert_equal [["alice", 2], ["bob", 1]], tables[:defence].map { |row| [row.name, row.half] }
       assert_equal 10, tables[:attack].first.kills
       assert_equal 3, tables[:defence].first.flag_stops

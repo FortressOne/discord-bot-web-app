@@ -33,7 +33,11 @@ class StatsController < ApplicationController
 
   def show
     @match_stat = MatchStat.includes(:player_match_stats).find(params[:id])
-    @players = @match_stat.player_match_stats.sort_by { |player| [player.team.to_i, -player.kills] }
+    # Winning team first, then alphabetical within each team.
+    winning_team = @match_stat.winning_team.to_i
+    @players = @match_stat.player_match_stats.sort_by do |player|
+      [player.team.to_i == winning_team ? 0 : 1, player.team.to_i, player.name.downcase]
+    end
     @awards = Stats::Awards.for(@players)
     @breakdown = Stats::HalfBreakdown.new(@match_stat, @players)
 

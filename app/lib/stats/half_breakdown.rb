@@ -54,13 +54,13 @@ module Stats
 
     # {attack:, defence:} when the match follows the pug convention,
     # {first_half:, second_half:} otherwise. Attackers rank by caps,
-    # defenders by kills, both grouped by team.
+    # defenders by kills, both across teams.
     def tables
       @tables ||= if attack_defence?
         { attack: rows.select { |row| row.half == row.team }
-                      .sort_by { |row| [row.team, -row.flag_caps, -row.kills] },
+                      .sort_by { |row| [-row.flag_caps, -row.kills] },
           defence: rows.reject { |row| row.half == row.team }
-                       .sort_by { |row| [row.team, -row.kills] } }
+                       .sort_by { |row| [-row.kills, -row.damage_given] } }
       else
         { first_half: rows.select { |row| row.half == 1 },
           second_half: rows.select { |row| row.half == 2 } }
