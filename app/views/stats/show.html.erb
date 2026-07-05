@@ -80,11 +80,13 @@
         </tr>
       </thead>
       <tbody>
-        <% [1, 2].sort_by { |team| -(team == 1 ? @match_stat.team1_score : @match_stat.team2_score).to_i }.each do |team| %>
+        <% team_scores = [1, 2].index_with { |team| (team == 1 ? @match_stat.team1_score : @match_stat.team2_score).to_i } %>
+        <% weighted_scores = team_scores.to_h { |team, score| [team, (score * (@match_stat.attack_defence ? @breakdown.half_weight(team) : 1)).round] } %>
+        <% [1, 2].sort_by { |team| -weighted_scores[team] }.each do |team| %>
           <% members = @weighted_players.select { |player| player.team.to_i == team && !player.unteamed? } %>
           <tr>
             <td><strong style="color: <%= team_colour_code(team) %>;"><%= ((team == 1 ? @match_stat.team1_name : @match_stat.team2_name).presence || Team::COLOUR[team]).capitalize %></strong></td>
-            <td><strong><%= team == 1 ? @match_stat.team1_score : @match_stat.team2_score %></strong></td>
+            <td><strong><%= weighted_scores[team] == team_scores[team] ? team_scores[team] : weighted_pair_display(weighted_scores[team], team_scores[team]) %></strong></td>
             <%= stats_totals_cell(members, :flag_caps) %>
             <%= stats_totals_cell(members, :kills) %>
             <%= stats_totals_cell(members, :deaths) %>
