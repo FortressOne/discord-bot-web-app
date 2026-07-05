@@ -23,6 +23,9 @@
           <% @players.select { |player| player.team == team }.each do |player| %>
             <%= stats_class_icon(player.dominant_class, StatsHelper::TEAM_COLOURS[team], height: 28) %>
             <%= stats_player_link(player) %>
+            <% @awards.select { |award| award.player == player.name }.each do |award| %>
+              <span title="<%= award.title %> (<%= award.description %>)"><%= award.emoji %></span>
+            <% end %>
             </br>
           <% end %>
         </div>
@@ -58,7 +61,7 @@
             <tbody>
               <% column.each do |award| %>
                 <tr>
-                  <td><strong><%= award.title %></strong><br><small><%= award.description %></small></td>
+                  <td><strong><%= award.emoji %> <%= award.title %></strong><br><small><%= award.description %></small></td>
                   <td><%= award.player %><br><small><%= award.value %></small></td>
                 </tr>
               <% end %>
