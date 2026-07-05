@@ -120,13 +120,14 @@
                 <% stat_rows = matchup_stat_rows(@breakdown, matchup) %>
                 <% stat_rows.each do |label, left, right, options| %>
                   <% clock = options.delete(:clock) || false %>
-                  <% left_html, right_html = duel_pair(left, right, **options) %>
+                  <% neutral = options.delete(:neutral) || false %>
+                  <% left_html, right_html = neutral ? [options[:left_display] || left, options[:right_display] || right] : duel_pair(left, right, **options) %>
                   <tr>
                     <td><%= label %></td>
                     <td><%= left_html %></td>
                     <td><%= right_html %></td>
-                    <td><%= duel_margin(left, right, matchup.left.team, matchup.right.team,
-                                        lower_wins: options.fetch(:lower_wins, false), clock: clock) %></td>
+                    <td><%= neutral ? "" : duel_margin(left, right, matchup.left.team, matchup.right.team,
+                                                       lower_wins: options.fetch(:lower_wins, false), clock: clock) %></td>
                   </tr>
                 <% end %>
               </tbody>

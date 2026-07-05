@@ -108,12 +108,13 @@ module StatsHelper
          ["Damage", :damage_given, {}],
          ["Took", :flag_touches, {}],
          ["Throws", :flag_throws, {}],
-         ["Deaths", :deaths, { lower_wins: true }]]
+         ["TKs", :teamkills, { lower_wins: true }],
+         ["Deaths", :deaths, { neutral: true }]]
       else
         [["Kills", :kills, {}],
          ["Damage", :damage_given, {}],
          ["Stops", :flag_stops, {}],
-         ["Deaths", :deaths, { lower_wins: true }],
+         ["Deaths", :deaths, { neutral: true }],
          ["Dmg taken", :damage_taken, { lower_wins: true }]]
       end
 
@@ -126,7 +127,8 @@ module StatsHelper
       [label, weighted_left, weighted_right,
        { left_display: weighted_stat_display(weighted_left, raw_left, left_weight, clock: clock),
          right_display: weighted_stat_display(weighted_right, raw_right, right_weight, clock: clock),
-         lower_wins: options.fetch(:lower_wins, false), clock: clock }]
+         lower_wins: options.fetch(:lower_wins, false), clock: clock,
+         neutral: options.fetch(:neutral, false) }]
     end
   end
 
