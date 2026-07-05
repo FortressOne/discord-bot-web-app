@@ -238,6 +238,45 @@ module Stats
       assert_equal 3, result.players["alice"][:half_stats]["1"]["flag_touches"]
     end
 
+    test "a roundStart event sets the boundary directly" do
+      events = [
+        { type: "gameStart", map: "rs_zzr", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },
+        { type: "roundStart", time: 0 },
+        { type: "kill", kind: "enemy", player: "alice", playerClass: 3, playerTeam: 1,
+          target: "bob", targetClass: 1, targetTeam: 2, inflictor: "proj_rocket", time: 100 },
+        { type: "death", kind: "enemy", attacker: "alice", attackerClass: 3, attackerTeam: 1,
+          player: "bob", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", time: 100 },
+        { type: "roundStart", time: 480 },
+        { type: "teamScores", team1Score: 10, team2Score: 0, team1Name: "blue", team2Name: "red", winningTeam: 1, time: 960 },
+        { type: "gameEnd", time: 960 }
+      ]
+
+      result = EventLogParser.parse(events.map { |event| "#{event.to_json}," }.join("\n"))
+
+      assert_equal 480, result.half_boundary
+    end
+
+    test "a changeClass burst confirms the round boundary" do
+      # No flag activity at all, but five players change class at 600.
+      events = [
+        { type: "gameStart", map: "frozen1", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },
+        { type: "kill", kind: "enemy", player: "alice", playerClass: 3, playerTeam: 1,
+          target: "bob", targetClass: 1, targetTeam: 2, inflictor: "proj_rocket", time: 100 },
+        { type: "death", kind: "enemy", attacker: "alice", attackerClass: 3, attackerTeam: 1,
+          player: "bob", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", time: 100 }
+      ] + 5.times.map { |i|
+        { type: "changeClass", player: "p#{i}", playerClass: 3, nextClass: 4, team: (i % 2) + 1, timePlayed: 600, time: 600 }
+      } + [
+        { type: "teamScores", team1Score: 10, team2Score: 0, team1Name: "blue", team2Name: "red", winningTeam: 1, time: 1160 },
+        { type: "gameEnd", time: 1160 }
+      ]
+
+      result = EventLogParser.parse(events.map { |event| "#{event.to_json}," }.join("\n"))
+
+      assert_equal 600, result.half_boundary
+      assert_not result.attack_defence
+    end
+
     test "skips halves for short matches" do
       events = [
         { type: "gameStart", map: "1on1r", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },

@@ -328,11 +328,18 @@ module Stats
       @half_teams[[name, half]][team] += 1 if half
     end
 
+    # A changeClass burst marks the round switch respawning everyone.
+    BURST_WINDOW = 5
+    BURST_MIN = 3
+
     # Pick the half boundary and decide whether this is an attack/defence
-    # match in one pass. Candidates are the match midpoint plus the
-    # standard round lengths; the flag-touch pattern (team 1 attacks the
-    # first half, team 2 the second) confirms one of them. An unconfirmed
-    # match keeps the midpoint and is not attack/defence.
+    # match in one pass. A roundStart event (progs emit these since 2024,
+    # though prod dats predate it) is authoritative. Otherwise candidates
+    # are the match midpoint plus the standard round lengths, confirmed by
+    # the flag-touch pattern (team 1 attacks the first half, team 2 the
+    # second) and by a burst of simultaneous changeClass events at the
+    # switch. An unconfirmed match keeps the midpoint and is not
+    # attack/defence.
     def detect_halves(events)
       game_end = events.reverse_each.find { |event| event["type"] == "gameEnd" }
       duration = (game_end || events.last)&.dig("time").to_i
@@ -341,7 +348,10 @@ module Stats
 
       team_counts = Hash.new { |hash, name| hash[name] = Hash.new(0) }
       touches = []
+      class_changes = []
+      round_starts = []
       events.each do |event|
+        round_starts << event["time"].to_i if event["type"] == "roundStart"
         name = event["player"]
         next if name.blank? || name == WORLD
 
@@ -349,25 +359,37 @@ module Stats
         team = event["team"].to_i if team.zero?
         team_counts[name][team] += 1 if team.positive?
         touches << [name, event["time"].to_i] if event["type"] == "pickup"
+        class_changes << event["time"].to_i if event["type"] == "changeClass"
       end
       team_of = team_counts.transform_values { |counts| counts.max_by { |_, count| count }.first }
 
-      candidates = ([fallback] + ROUND_LENGTHS).uniq.select do |boundary|
-        boundary >= MIN_HALF_SECONDS && duration - boundary >= MIN_DURATION
-      end
-      scored = candidates.filter_map do |boundary|
+      purity_at = lambda do |boundary|
         touch_halves = touches.filter_map do |name, time|
           team = team_of[name]
           [time <= boundary ? 1 : 2, team] if team
         end
-        next if touch_halves.size < MIN_AD_TOUCHES || touch_halves.map(&:first).uniq.size < 2
+        return nil if touch_halves.size < MIN_AD_TOUCHES || touch_halves.map(&:first).uniq.size < 2
 
-        [boundary, touch_halves.count { |half, team| half == team }.fdiv(touch_halves.size)]
+        touch_halves.count { |half, team| half == team }.fdiv(touch_halves.size)
       end
 
-      boundary, purity = scored.max_by { |_, best| best }
-      if purity && purity >= AD_PURITY
-        [boundary, true]
+      # The second roundStart is the switch into the second half.
+      explicit = round_starts.find { |time| time >= MIN_HALF_SECONDS && duration - time >= MIN_DURATION }
+      if explicit
+        purity = purity_at.call(explicit)
+        return [explicit, purity.to_f >= AD_PURITY]
+      end
+
+      burst_at = ->(boundary) { class_changes.count { |time| (time - boundary).abs <= BURST_WINDOW } }
+      candidates = ([fallback] + ROUND_LENGTHS).uniq.select do |boundary|
+        boundary >= MIN_HALF_SECONDS && duration - boundary >= MIN_DURATION
+      end
+      scored = candidates.map { |boundary| [boundary, purity_at.call(boundary), burst_at.call(boundary)] }
+                         .select { |_, purity, burst| purity || burst >= BURST_MIN }
+      boundary, purity, = scored.max_by { |_, purity, burst| [purity.to_f, burst] }
+
+      if boundary
+        [boundary, purity.to_f >= AD_PURITY]
       else
         [fallback, false]
       end
