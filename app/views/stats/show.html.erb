@@ -84,6 +84,9 @@
   <% grouped_matchups = @breakdown.matchups.group_by(&:role) %>
   <% if grouped_matchups.any? %>
     <h3>Head to head</h3>
+    <% if @breakdown.weighted? %>
+      <p><small>⚖️ The match ended early, shortening one half — values shown as <strong>weighted (actual)</strong>.</small></p>
+    <% end %>
     <% grouped_matchups.each do |role, matchups| %>
       <h4><%= role == :attack ? "Attack" : "Defence" %></h4>
       <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; align-items: flex-start;">
@@ -108,27 +111,7 @@
                 </tr>
               </thead>
               <tbody>
-                <% left, right = matchup.left, matchup.right %>
-                <% stat_rows = if matchup.role == :attack
-                     [
-                       ["Caps", left.flag_caps, right.flag_caps, {}],
-                       ["Carry", left.flag_carry_seconds, right.flag_carry_seconds,
-                        { left_display: left.flag_carry_display, right_display: right.flag_carry_display, clock: true }],
-                       ["Kills", left.kills, right.kills, {}],
-                       ["Damage", left.damage_given, right.damage_given, {}],
-                       ["Took", left.flag_touches, right.flag_touches, {}],
-                       ["Throws", left.flag_throws, right.flag_throws, {}],
-                       ["Deaths", left.deaths, right.deaths, { lower_wins: true }]
-                     ]
-                   else
-                     [
-                       ["Kills", left.kills, right.kills, {}],
-                       ["Damage", left.damage_given, right.damage_given, {}],
-                       ["Stops", left.flag_stops, right.flag_stops, {}],
-                       ["Deaths", left.deaths, right.deaths, { lower_wins: true }],
-                       ["Dmg taken", left.damage_taken, right.damage_taken, { lower_wins: true }]
-                     ]
-                   end %>
+                <% stat_rows = matchup_stat_rows(@breakdown, matchup) %>
                 <% stat_rows.each do |label, left, right, options| %>
                   <% clock = options.delete(:clock) || false %>
                   <% left_html, right_html = duel_pair(left, right, **options) %>

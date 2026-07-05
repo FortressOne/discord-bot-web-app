@@ -208,6 +208,36 @@ module Stats
       assert result.attack_defence
     end
 
+    test "keeps the round-length boundary when team 2 ends the match early" do
+      events = [
+        { type: "gameStart", map: "rs_zzr", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },
+        { type: "playerStart", player: "alice", classtime: 0, time: 0 },
+        { type: "playerStart", player: "bob", classtime: 0, time: 0 },
+        # team 1 attacks the full first half...
+        { type: "pickup", team: 1, player: "alice", playerClass: "3", time: 100 },
+        { type: "goal", team: 1, player: "alice", playerClass: "3", time: 150 },
+        { type: "pickup", team: 1, player: "alice", playerClass: "3", time: 300 },
+        # ...including right at the end of it
+        { type: "pickup", team: 1, player: "alice", playerClass: "3", time: 500 },
+        # team 2 passes their score at 4:49 into the second half: game over
+        { type: "pickup", team: 2, player: "bob", playerClass: "1", time: 700 },
+        { type: "goal", team: 2, player: "bob", playerClass: "1", time: 750 },
+        { type: "pickup", team: 2, player: "bob", playerClass: "1", time: 850 },
+        { type: "goal", team: 2, player: "bob", playerClass: "1", time: 889 },
+        { type: "changeClass", player: "alice", playerClass: 3, nextClass: 0, team: 1, timePlayed: 889, time: 889 },
+        { type: "changeClass", player: "bob", playerClass: 1, nextClass: 0, team: 2, timePlayed: 889, time: 889 },
+        { type: "teamScores", team1Score: 10, team2Score: 20, team1Name: "blue", team2Name: "red", winningTeam: 2, time: 889 },
+        { type: "gameEnd", time: 889 }
+      ]
+
+      result = EventLogParser.parse(events.map { |event| "#{event.to_json}," }.join("\n"))
+
+      assert result.attack_defence
+      assert_equal 600, result.half_boundary
+      # alice's 500s pickup belongs to the first half, not duration/2 halves
+      assert_equal 3, result.players["alice"][:half_stats]["1"]["flag_touches"]
+    end
+
     test "skips halves for short matches" do
       events = [
         { type: "gameStart", map: "1on1r", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },

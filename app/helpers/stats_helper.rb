@@ -85,6 +85,49 @@ module StatsHelper
     left_wins ? [tag.strong(displays[0]), displays[1]] : [displays[0], tag.strong(displays[1])]
   end
 
+  # Rows for a head-to-head card. When a half was cut short (team 2 won
+  # before their half ran out) its values scale up for a fair comparison,
+  # displayed as "weighted (actual)". Winners and margins use the
+  # weighted numbers.
+  def matchup_stat_rows(breakdown, matchup)
+    left_weight = breakdown.half_weight(matchup.left.half)
+    right_weight = breakdown.half_weight(matchup.right.half)
+
+    definitions =
+      if matchup.role == :attack
+        [["Caps", :flag_caps, {}],
+         ["Carry", :flag_carry_seconds, { clock: true }],
+         ["Kills", :kills, {}],
+         ["Damage", :damage_given, {}],
+         ["Took", :flag_touches, {}],
+         ["Throws", :flag_throws, {}],
+         ["Deaths", :deaths, { lower_wins: true }]]
+      else
+        [["Kills", :kills, {}],
+         ["Damage", :damage_given, {}],
+         ["Stops", :flag_stops, {}],
+         ["Deaths", :deaths, { lower_wins: true }],
+         ["Dmg taken", :damage_taken, { lower_wins: true }]]
+      end
+
+    definitions.map do |label, stat, options|
+      raw_left = matchup.left.public_send(stat)
+      raw_right = matchup.right.public_send(stat)
+      weighted_left = (raw_left * left_weight).round
+      weighted_right = (raw_right * right_weight).round
+      clock = options[:clock] || false
+      [label, weighted_left, weighted_right,
+       { left_display: weighted_stat_display(weighted_left, raw_left, left_weight, clock: clock),
+         right_display: weighted_stat_display(weighted_right, raw_right, right_weight, clock: clock),
+         lower_wins: options.fetch(:lower_wins, false), clock: clock }]
+    end
+  end
+
+  def weighted_stat_display(weighted, raw, weight, clock: false)
+    formatter = ->(value) { clock ? format("%d:%02d", value / 60, value % 60) : value.to_s }
+    weight > 1.01 ? "#{formatter.call(weighted)} (#{formatter.call(raw)})" : formatter.call(raw)
+  end
+
   # The margin of victory for one head-to-head row, coloured by the
   # winning side's team. A neutral hyphen on a tie.
   def duel_margin(left, right, left_team, right_team, lower_wins: false, clock: false)

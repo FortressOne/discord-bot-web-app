@@ -72,5 +72,25 @@ module Stats
     test "no matchups without the attack defence convention" do
       assert_empty breakdown(build_match(attack_defence: false)).matchups
     end
+
+    test "weights the shortened half" do
+      match_stat = build_match
+      match_stat.duration_seconds = 889
+      match_stat.half_boundary_seconds = 600
+
+      result = breakdown(match_stat)
+
+      assert_equal 1, result.half_weight(1)
+      assert_in_delta 600.fdiv(289), result.half_weight(2), 0.001
+      assert result.weighted?
+    end
+
+    test "full-length halves are unweighted" do
+      result = breakdown(build_match)
+
+      assert_equal 1, result.half_weight(1)
+      assert_equal 1, result.half_weight(2)
+      assert_not result.weighted?
+    end
   end
 end

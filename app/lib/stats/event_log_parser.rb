@@ -53,11 +53,16 @@ module Stats
     AD_PURITY = 0.8
     MIN_AD_TOUCHES = 4
 
+    # Standard round lengths (2x10 and 2x15 formats). A match can end
+    # before the second half runs its course — team 2 wins the moment
+    # they pass team 1's score — so the boundary is NOT always duration/2.
+    ROUND_LENGTHS = [600, 900].freeze
+
     Result = Struct.new(
       :map_name, :played_at, :demo_filename, :duration_seconds,
       :team1_name, :team2_name, :team1_score, :team2_score, :winning_team,
       :player_count, :players, :status, :error_message,
-      :kill_matrix, :attack_defence,
+      :kill_matrix, :attack_defence, :half_boundary,
       keyword_init: true
     )
 
@@ -73,7 +78,6 @@ module Stats
       @teams_seen = Hash.new { |hash, name| hash[name] = Hash.new(0) }
       @half_players = {}
       @half_teams = Hash.new { |hash, key| hash[key] = Hash.new(0) }
-      @half_flag_touches = []
       @kill_matrix = {}
       @flag_took_at = {}
       @last_class_change = {}
@@ -85,7 +89,7 @@ module Stats
       events = decode_events
       return error_result("no events") if events.empty?
 
-      @half_boundary = half_boundary_from(events)
+      @half_boundary, @attack_defence = detect_halves(events)
       events.each { |event| process(event) }
       finalise(events)
       @result
@@ -259,7 +263,6 @@ module Stats
       note_team(name, event["team"], event["time"])
       @players[name][:flag_touches] += 1
       bump_half(name, event["time"], "flag_touches")
-      @half_flag_touches << [name, half_of(event["time"])] if @half_boundary
       @flag_took_at[name] = event["time"].to_i
     end
 
@@ -325,11 +328,49 @@ module Stats
       @half_teams[[name, half]][team] += 1 if half
     end
 
-    def half_boundary_from(events)
+    # Pick the half boundary and decide whether this is an attack/defence
+    # match in one pass. Candidates are the match midpoint plus the
+    # standard round lengths; the flag-touch pattern (team 1 attacks the
+    # first half, team 2 the second) confirms one of them. An unconfirmed
+    # match keeps the midpoint and is not attack/defence.
+    def detect_halves(events)
       game_end = events.reverse_each.find { |event| event["type"] == "gameEnd" }
       duration = (game_end || events.last)&.dig("time").to_i
-      boundary = duration / 2
-      boundary if boundary >= MIN_HALF_SECONDS
+      fallback = duration / 2
+      return [nil, false] if fallback < MIN_HALF_SECONDS
+
+      team_counts = Hash.new { |hash, name| hash[name] = Hash.new(0) }
+      touches = []
+      events.each do |event|
+        name = event["player"]
+        next if name.blank? || name == WORLD
+
+        team = event["playerTeam"].to_i
+        team = event["team"].to_i if team.zero?
+        team_counts[name][team] += 1 if team.positive?
+        touches << [name, event["time"].to_i] if event["type"] == "pickup"
+      end
+      team_of = team_counts.transform_values { |counts| counts.max_by { |_, count| count }.first }
+
+      candidates = ([fallback] + ROUND_LENGTHS).uniq.select do |boundary|
+        boundary >= MIN_HALF_SECONDS && duration - boundary >= MIN_DURATION
+      end
+      scored = candidates.filter_map do |boundary|
+        touch_halves = touches.filter_map do |name, time|
+          team = team_of[name]
+          [time <= boundary ? 1 : 2, team] if team
+        end
+        next if touch_halves.size < MIN_AD_TOUCHES || touch_halves.map(&:first).uniq.size < 2
+
+        [boundary, touch_halves.count { |half, team| half == team }.fdiv(touch_halves.size)]
+      end
+
+      boundary, purity = scored.max_by { |_, best| best }
+      if purity && purity >= AD_PURITY
+        [boundary, true]
+      else
+        [fallback, false]
+      end
     end
 
     def half_of(time)
@@ -394,7 +435,8 @@ module Stats
       @result.kill_matrix = @kill_matrix.slice(*@teams_seen.keys)
                                         .transform_values { |victims| victims.slice(*@teams_seen.keys) }
                                         .reject { |_, victims| victims.empty? }
-      @result.attack_defence = attack_defence?
+      @result.attack_defence = @attack_defence
+      @result.half_boundary = @half_boundary
 
       if @result.map_name.blank?
         @result.status = "error"
@@ -414,22 +456,6 @@ module Stats
         stats["class_seconds"] = stats["class_seconds"].to_h
         [half.to_s, stats]
       }.to_h
-    end
-
-    # True when flag touches follow the pug convention: team 1 attacks the
-    # first half, team 2 the second.
-    def attack_defence?
-      return false unless @half_boundary
-
-      touches = @half_flag_touches.filter_map do |name, half|
-        team = @result.players.dig(name, :half_stats, half.to_s, "team")
-        [half, team] if team
-      end
-      halves = touches.map(&:first).uniq
-      return false if touches.size < MIN_AD_TOUCHES || halves.size < 2
-
-      on_convention = touches.count { |half, team| half == team }
-      on_convention.fdiv(touches.size) >= AD_PURITY
     end
 
     def error_result(message)

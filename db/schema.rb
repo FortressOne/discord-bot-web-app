@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_06_100001) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_06_200001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -157,6 +157,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_06_100001) do
     t.datetime "updated_at", null: false
     t.jsonb "kill_matrix", default: {}, null: false
     t.boolean "attack_defence", default: false, null: false
+    t.integer "half_boundary_seconds"
     t.index ["map_name"], name: "index_match_stats_on_map_name"
     t.index ["match_id"], name: "index_match_stats_on_match_id"
     t.index ["played_at"], name: "index_match_stats_on_played_at"

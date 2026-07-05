@@ -41,11 +41,28 @@ module Stats
     def initialize(match_stat, players)
       @match_stat = match_stat
       @players = players
-      @half_seconds = match_stat.duration_seconds.to_i / 2
+      duration = match_stat.duration_seconds.to_i
+      boundary = match_stat.half_boundary_seconds || duration / 2
+      @half_lengths = { 1 => boundary, 2 => duration - boundary }
     end
 
     def attack_defence?
       @match_stat.attack_defence
+    end
+
+    # When the match ends early (team 2 passing team 1's score wins on the
+    # spot) one half is shorter; its stats scale up by this factor for a
+    # fair comparison. 1 for full-length halves.
+    def half_weight(half)
+      own = @half_lengths[half].to_i
+      other = @half_lengths[3 - half].to_i
+      return 1 unless own.positive? && other > own
+
+      other.fdiv(own)
+    end
+
+    def weighted?
+      attack_defence? && [1, 2].any? { |half| half_weight(half) > 1.01 }
     end
 
     def any?
@@ -92,7 +109,8 @@ module Stats
       @rows ||= @players.flat_map do |player|
         player.half_stats.filter_map do |half, stats|
           class_seconds = stats["class_seconds"] || {}
-          next if @half_seconds.positive? && class_seconds.values.sum < @half_seconds * MIN_PRESENCE
+          half_length = @half_lengths[half.to_i].to_i
+          next if half_length.positive? && class_seconds.values.sum < half_length * MIN_PRESENCE
 
           Row.new(
             name: player.name, player_id: player.player_id,
