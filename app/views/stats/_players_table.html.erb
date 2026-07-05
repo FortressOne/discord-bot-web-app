@@ -1,4 +1,5 @@
 <% columns = local_assigns[:columns] || StatsHelper::FULL_COLUMNS %>
+<% class_icons = local_assigns[:class_icons] || :used %>
 <figure>
   <table role="grid" class="stats-table" data-sortable data-bold-max>
     <thead>
@@ -15,7 +16,7 @@
       <% rows.each do |player| %>
         <tr>
           <td><strong><%= stats_player_link(player) %></strong></td>
-          <td><%= stats_class_icons(player) %></td>
+          <td><%= class_icons == :main ? stats_main_class_icons(player) : stats_class_icons(player) %></td>
           <% columns.each do |column| %>
             <%= stats_cell(player, column) %>
           <% end %>

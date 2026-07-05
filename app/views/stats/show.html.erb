@@ -79,7 +79,7 @@
   <% end %>
 
   <h3>Players</h3>
-  <%= render "players_table", rows: @players %>
+  <%= render "players_table", rows: @players, class_icons: :main %>
 
   <% if @breakdown.weighted? && @breakdown.any? %>
     <p><small>⚖️ The match ended <%= @breakdown.ended_early_display %> early, so shortened-half values are scaled up by <%= @breakdown.weight_percent %>% — shown as <strong>weighted (actual)</strong>.</small></p>

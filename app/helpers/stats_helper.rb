@@ -59,21 +59,44 @@ module StatsHelper
     { 1 => "#01A2E8", 2 => "#EC1D24" }[team.to_i] || "#AAAAAA"
   end
 
+  # Classes used, most-played first, minor dabbles (<5% of playing time)
+  # hidden. The share lives in the tooltip.
   def stats_class_icons(player, height: 28)
     total = player.class_seconds.values.sum
     return "" if total.zero?
 
     colour = TEAM_COLOURS[player.team.to_i] || :blue
-    icons = player.class_seconds.sort_by { |_, seconds| -seconds }.map { |name, seconds|
+    icons = player.class_seconds.sort_by { |_, seconds| -seconds }.filter_map { |name, seconds|
+      share = 100.0 * seconds / total
+      next if share < 5
+
       number = CLASS_NUMBERS[name]
       next if number.nil? || number.zero?
 
       image = Playerclass.new(number).image(colour)
-      share = (100.0 * seconds / total).round
-      image_tag(image[:url], alt: image[:alt], title: "#{name} #{share}%", style: "height: #{height}px;") +
-        tag.small(" #{share}% ")
-    }.compact.join.html_safe
-    tag.span(icons, style: "white-space: nowrap; display: inline-flex; align-items: center;")
+      image_tag(image[:url], alt: image[:alt], title: "#{name} #{share.round}%", style: "height: #{height}px;")
+    }
+    tag.span(safe_join(icons), style: "white-space: nowrap; display: inline-flex; align-items: center; gap: 0.2rem;")
+  end
+
+  # The main class of each half (first then second), coloured by the team
+  # played for — the players-table view of a whole match.
+  def stats_main_class_icons(player, height: 28)
+    halves = player.respond_to?(:half_stats) ? player.half_stats : {}
+    icons = %w[1 2].filter_map do |half|
+      stats = halves[half]
+      next unless stats
+
+      main = (stats["class_seconds"] || {}).max_by { |_, seconds| seconds }&.first
+      next unless main
+
+      colour = TEAM_COLOURS[(stats["team"] || player.team).to_i] || :blue
+      icon = stats_class_icon(main, colour, height: height)
+      icon.presence
+    end
+    return stats_class_icons(player, height: height) if icons.empty?
+
+    tag.span(safe_join(icons), style: "white-space: nowrap; display: inline-flex; align-items: center; gap: 0.2rem;")
   end
 
   def stats_class_full_name(class_name)
