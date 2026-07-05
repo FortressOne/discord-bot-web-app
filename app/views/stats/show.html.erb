@@ -80,7 +80,7 @@
         </tr>
       </thead>
       <tbody>
-        <% [1, 2].each do |team| %>
+        <% [1, 2].sort_by { |team| -(team == 1 ? @match_stat.team1_score : @match_stat.team2_score).to_i }.each do |team| %>
           <% members = @weighted_players.select { |player| player.team.to_i == team && !player.unteamed? } %>
           <tr>
             <td><strong style="color: <%= team_colour_code(team) %>;"><%= ((team == 1 ? @match_stat.team1_name : @match_stat.team2_name).presence || Team::COLOUR[team]).capitalize %></strong></td>
