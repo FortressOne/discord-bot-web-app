@@ -91,21 +91,21 @@
       <h4><%= role == :attack ? "Attack" : "Defence" %></h4>
       <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; align-items: flex-start;">
         <% matchups.each do |matchup| %>
-          <article style="margin: 0; flex: 0 1 auto; min-width: 340px; max-width: 100%;">
+          <article style="margin: 0; flex: 0 1 auto; min-width: 300px; max-width: 100%;">
             <header style="padding: 0.5rem 1rem; text-align: center;">
               <strong><%= stats_class_full_name(matchup.class_name) %></strong>
             </header>
             <table>
               <thead>
                 <tr>
-                  <th></th>
+                  <th>
+                    <span style="white-space: nowrap; display: inline-flex; align-items: center;">
+                      <%= stats_class_icon(matchup.class_name, :blue) %>
+                      <%= stats_class_icon(matchup.class_name, :red) %>
+                    </span>
+                  </th>
                   <% [matchup.left, matchup.right].each do |side| %>
-                    <th style="color: <%= team_colour_code(side.team) %>;">
-                      <span style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem;">
-                        <%= stats_class_icon(matchup.class_name, StatsHelper::TEAM_COLOURS[side.team]) %>
-                        <%= stats_display_name(side.name) %>
-                      </span>
-                    </th>
+                    <th style="color: <%= team_colour_code(side.team) %>;"><%= stats_display_name(side.name) %></th>
                   <% end %>
                   <th></th>
                 </tr>
