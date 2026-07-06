@@ -84,6 +84,7 @@ module Stats
       @half_teams = Hash.new { |hash, key| hash[key] = Hash.new(0) }
       @kill_matrix = {}
       @all_time = {}
+      @tfl_ids = {}
       @flag_took_at = {}
       @last_class_change = {}
       @previous_death = nil
@@ -132,20 +133,23 @@ module Stats
       when "playerStart"
         @last_class_change[event["player"]] = event["time"].to_i
         note_all_time(event["player"], event["allTime"]) if event.key?("allTime")
+        note_player_id(event["player"], event["playerId"])
       when "changeClass" then process_change_class(event)
       when "attack" then process_attack(event)
       when "damageDone" then process_damage(event)
-      when "damageTaken" then process_damage_taken(event)
       when "kill" then process_kill(event)
-      when "death" then process_death(event)
       when "pickup" then process_pickup(event)
       when "fumble" then process_fumble(event)
       when "goal" then process_goal(event)
       when "teamScores" then process_team_scores(event)
-      when "allTime" then note_all_time(event["player"], event["mode"])
+      when "allTime"
+        note_all_time(event["player"], event["mode"])
+        note_player_id(event["player"], event["playerId"])
       when "gameEnd" then @result.duration_seconds = event["time"].to_i
       end
-      @previous_death = nil unless event["type"] == "death"
+      # Old logs mirror kills with death events; both may sit between the
+      # kill and the fumble it caused.
+      @previous_death = nil unless %w[kill death].include?(event["type"])
     end
 
     def process_game_start(event)
@@ -160,6 +164,14 @@ module Stats
       @result.played_at = nil
     end
 
+    # Modern logs carry the web app's Player id on identity-bearing
+    # events; no more mining it out of the username.
+    def note_player_id(name, player_id)
+      return if name.blank? || player_id.to_i <= 0
+
+      @tfl_ids[name] = player_id.to_i
+    end
+
     # Explicit all-time attack/defence election (new logs); playerStart
     # also carries the mode.
     def note_all_time(name, mode)
@@ -172,6 +184,7 @@ module Stats
       name = event["player"]
       return if name.blank?
 
+      note_player_id(name, event["playerId"])
       time = event["time"].to_i
       note_team(name, event["team"], time)
       from_class = event["playerClass"].to_i
@@ -228,10 +241,16 @@ module Stats
       return if name.blank? || damage.zero?
 
       time = event["time"]
+      target = event["target"]
+      target_real = !pseudo?(target)
+      if target_real
+        # The victim's view, whoever hurt them (enemy, teammate, self or
+        # the environment). Modern logs have no damageTaken mirrors.
+        received_stat(target, event["inflictor"])["damage"] += damage
+        bump_half_received(target, time, event["inflictor"], "damage", damage)
+      end
       case event["kind"]
       when "enemy"
-        target = event["target"]
-        target_real = !pseudo?(target)
         if target_real
           @players[target][:damage_taken] += damage
           bump_half(target, time, "damage_taken", damage)
@@ -257,12 +276,25 @@ module Stats
     end
 
     def process_kill(event)
-      name = event["player"]
-      return if pseudo?(name)
-
       time = event["time"]
       target_class = event["targetClass"].to_i
       target = event["target"]
+
+      # The victim's death: kill events mirror every death, and modern
+      # logs carry no separate death events at all.
+      if !pseudo?(target) && target_class != SENTRY_CLASS && !target_class.zero?
+        note_team(target, event["targetTeam"], time)
+        @players[target][:deaths] += 1
+        bump_half(target, time, "deaths")
+        received_stat(target, event["inflictor"])["deaths"] += 1
+        bump_half_received(target, time, event["inflictor"], "deaths")
+        @previous_death = { "player" => target, "time" => time,
+                            "kind" => event["kind"], "attacker" => event["player"] }
+      end
+
+      name = event["player"]
+      return if pseudo?(name)
+
       note_team(name, event["playerTeam"], time)
       case event["kind"]
       when "self"
@@ -291,28 +323,6 @@ module Stats
           duel_stat(name, target)["kills"] += 1 if target.present? && target != WORLD
         end
       end
-    end
-
-    def process_death(event)
-      name = event["player"]
-      return if pseudo?(name) || event["playerClass"].to_i == SENTRY_CLASS
-
-      note_team(name, event["playerTeam"], event["time"])
-      @players[name][:deaths] += 1
-      bump_half(name, event["time"], "deaths")
-      received_stat(name, event["inflictor"])["deaths"] += 1
-      bump_half_received(name, event["time"], event["inflictor"], "deaths")
-      @previous_death = event
-    end
-
-    # What killed and hurt each player, by weapon — the victim's view.
-    def process_damage_taken(event)
-      name = event["player"]
-      damage = event["damage"].to_i
-      return if pseudo?(name) || damage.zero?
-
-      received_stat(name, event["inflictor"])["damage"] += damage
-      bump_half_received(name, event["time"], event["inflictor"], "damage", damage)
     end
 
     def process_pickup(event)
@@ -534,6 +544,7 @@ module Stats
         player[:class_seconds] = player[:class_seconds].to_h
         player[:half_stats] = half_stats_for(name, player[:team])
         player[:all_time] = @all_time[name]
+        player[:tfl_player_id] = @tfl_ids[name]
         player
       end
 

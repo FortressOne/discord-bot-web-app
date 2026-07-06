@@ -54,7 +54,8 @@ module Stats
 
         match_stat.player_match_stats.delete_all
         result.players.each do |name, stats|
-          match_stat.player_match_stats.create!(name: name, player_id: @linker.player_id_for(name), **stats)
+          hint = stats.delete(:tfl_player_id)
+          match_stat.player_match_stats.create!(name: name, player_id: @linker.player_id_for(name, hint: hint), **stats)
         end
       end
 

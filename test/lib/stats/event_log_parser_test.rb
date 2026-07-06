@@ -18,6 +18,8 @@ module Stats
         player: "bob", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", time: 12 },
       # bob grabs the flag, carries 30s, is killed by alice: a flag stop
       { type: "pickup", team: 2, player: "bob", playerClass: "1", time: 100 },
+      { type: "kill", kind: "enemy", player: "alice", playerClass: 3, playerTeam: 1,
+        target: "bob", targetClass: 1, targetTeam: 2, inflictor: "proj_rocket", time: 130 },
       { type: "death", kind: "enemy", attacker: "alice", attackerClass: 3, attackerTeam: 1,
         player: "bob", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", time: 130 },
       { type: "fumble", team: 2, player: "bob", playerClass: "1", timeCarried: 30, time: 130 },
@@ -67,14 +69,15 @@ module Stats
       assert_equal 10, result.team1_score
       assert_equal 0, result.team2_score
       assert_equal 1, result.winning_team
-      assert_equal %w[alice bob].sort, result.players.keys.sort
+      assert_equal %w[alice bob carol].sort, result.players.keys.sort
     end
 
     test "aggregates kills, deaths, teamkills, suicides and sentry kills" do
       players = EventLogParser.parse(raw_log).players
 
-      # bob at 12 plus his sentry at 550: sentry destruction counts as a kill
-      assert_equal 2, players["alice"][:kills]
+      # bob at 12 and 130 plus his sentry at 550: sentry destruction counts
+      # as a kill
+      assert_equal 3, players["alice"][:kills]
       assert_equal 1, players["alice"][:teamkills]
       assert_equal 1, players["alice"][:suicides]
       assert_equal 1, players["alice"][:sentries_destroyed]
@@ -95,7 +98,7 @@ module Stats
     test "canonicalises weapon names across attack and damage events" do
       alice = EventLogParser.parse(raw_log).players["alice"]
 
-      assert_equal({ "shots" => 2, "hits" => 1, "damage" => 90, "kills" => 2 }, alice[:weapon_stats]["rl"])
+      assert_equal({ "shots" => 2, "hits" => 1, "damage" => 90, "kills" => 3 }, alice[:weapon_stats]["rl"])
       assert_nil alice[:weapon_stats]["rocketlauncher"]
       assert_nil alice[:weapon_stats]["proj_rocket"]
     end
@@ -129,7 +132,7 @@ module Stats
       result = EventLogParser.parse("[#{EVENTS.map(&:to_json).join(',')}]")
 
       assert_equal "parsed", result.status
-      assert_equal 2, result.players.size
+      assert_equal 3, result.players.size
     end
 
     test "survives a corrupt line" do
@@ -138,7 +141,7 @@ module Stats
       result = EventLogParser.parse(corrupt)
 
       assert_equal "parsed", result.status
-      assert_equal 2, result.players.size
+      assert_equal 3, result.players.size
     end
 
     test "flags trivial games as empty" do
@@ -161,7 +164,7 @@ module Stats
       alice = result.players["alice"][:half_stats]
       assert_equal({ "Sold" => 600 }, alice["1"]["class_seconds"])
       assert_equal({ "Demo" => 600 }, alice["2"]["class_seconds"])
-      assert_equal 2, alice["1"]["kills"]
+      assert_equal 3, alice["1"]["kills"]
       assert_equal 1, alice["1"]["flag_caps"]
       assert_equal 45, alice["1"]["flag_carry_seconds"]
       assert_equal 1, alice["1"]["suicides"]
@@ -176,12 +179,12 @@ module Stats
     test "aggregates damage received and deaths by weapon" do
       events = [
         { type: "gameStart", map: "2fort5r", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },
-        { type: "damageTaken", kind: "enemy", attacker: "alice", attackerClass: 3, attackerTeam: 1,
-          player: "bob", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", damage: 90, time: 10 },
-        { type: "damageTaken", kind: "enemy", attacker: "world", attackerClass: 0, attackerTeam: 0,
-          player: "bob", playerClass: 1, playerTeam: 2, inflictor: "worldspawn", damage: 25, time: 20 },
-        { type: "death", kind: "enemy", attacker: "alice", attackerClass: 3, attackerTeam: 1,
-          player: "bob", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", time: 30 },
+        { type: "damageDone", kind: "enemy", player: "alice", playerClass: 3, playerTeam: 1,
+          target: "bob", targetClass: 1, targetTeam: 2, inflictor: "proj_rocket", damage: 90, time: 10 },
+        { type: "damageDone", kind: "enemy", player: "world", playerClass: 0, playerTeam: 0,
+          target: "bob", targetClass: 1, targetTeam: 2, inflictor: "worldspawn", damage: 25, time: 20 },
+        { type: "kill", kind: "enemy", player: "alice", playerClass: 3, playerTeam: 1,
+          target: "bob", targetClass: 1, targetTeam: 2, inflictor: "proj_rocket", time: 30 },
         { type: "teamScores", team1Score: 10, team2Score: 0, team1Name: "blue", team2Name: "red", winningTeam: 1, time: 700 },
         { type: "gameEnd", time: 700 }
       ]
@@ -197,7 +200,7 @@ module Stats
       alice = EventLogParser.parse(raw_log).players["alice"]
 
       # all of alice's rl action happens in the first half
-      assert_equal({ "rl" => { "shots" => 2, "hits" => 1, "damage" => 90, "kills" => 2 } },
+      assert_equal({ "rl" => { "shots" => 2, "hits" => 1, "damage" => 90, "kills" => 3 } },
                    alice[:half_stats]["1"]["weapon_stats"])
       assert_empty alice[:half_stats]["2"]["weapon_stats"]
     end
@@ -205,7 +208,7 @@ module Stats
     test "builds a kill matrix between real players only" do
       result = EventLogParser.parse(raw_log)
 
-      assert_equal({ "alice" => { "bob" => { "kills" => 1, "damage" => 90 } } }, result.kill_matrix)
+      assert_equal({ "alice" => { "bob" => { "kills" => 2, "damage" => 90 } } }, result.kill_matrix)
     end
 
     test "does not flag a symmetric match as attack defence" do
