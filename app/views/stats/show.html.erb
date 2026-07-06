@@ -29,7 +29,7 @@
           </br>
           <% @players.select { |player| player.team == team && !player.unteamed? }.each do |player| %>
             <span style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem;">
-              <%= stats_class_icon(player.dominant_class, StatsHelper::TEAM_COLOURS[team], height: 44) %>
+              <%= stats_main_class_icons(player, height: 44) %>
               <% if player.player_id %>
                 <%= link_to(stats_display_name(player.name), player_path(player.player_id)) %>
               <% else %>
