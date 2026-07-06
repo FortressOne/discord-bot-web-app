@@ -40,7 +40,7 @@ module StatsHelper
       # match the weighted components shift it, so show both.
       weighted = player.kd_ratio
       raw = player.respond_to?(:actual) ? player.actual.kd_ratio : weighted
-      return weighted == raw ? tag.td(raw) : tag.td("#{weighted} (#{raw})", data: { sort: weighted })
+      return weighted == raw ? tag.td(raw) : tag.td(weighted_pair_display(weighted, raw), data: { sort: weighted })
     end
 
     stat = column == :flag_carry ? :flag_carry_seconds : column
@@ -64,7 +64,7 @@ module StatsHelper
 
   def weighted_pair_display(weighted, raw, clock: false)
     formatter = ->(value) { clock ? format("%d:%02d", value / 60, value % 60) : value.to_s }
-    "#{formatter.call(weighted)} (#{formatter.call(raw)})"
+    safe_join([formatter.call(weighted), " ", tag.small("(#{formatter.call(raw)})")])
   end
 
   # class_seconds keys are short class names ("Sold"); Playerclass is keyed
@@ -180,7 +180,7 @@ module StatsHelper
 
   def weighted_stat_display(weighted, raw, weight, clock: false)
     formatter = ->(value) { clock ? format("%d:%02d", value / 60, value % 60) : value.to_s }
-    weight > 1.01 ? "#{formatter.call(weighted)} (#{formatter.call(raw)})" : formatter.call(raw)
+    weight > 1.01 ? weighted_pair_display(weighted, raw, clock: clock) : formatter.call(raw)
   end
 
   # The margin of victory for one head-to-head row, coloured by the
@@ -241,6 +241,14 @@ module StatsHelper
     size = [1, 2].map { |team| (sizes[team] || []).size }.join("v")
     size += " +#{all_time_attackers.size > 1 ? "#{all_time_attackers.size} " : ""}ATA" if all_time_attackers.any?
     [match_stat.result_description, size, match_stat.map_name].compact.join(DELIMITER)
+  end
+
+  # Award values arrive as plain strings ("19 (17) teamkills"); shrink the
+  # numeric actual without touching parenthesised units like K/(D+TK).
+  def stats_actual_small(text)
+    ERB::Util.html_escape(text.to_s)
+            .gsub(/\((\d[\d.,:]*)\)/) { "<small>(#{Regexp.last_match(1)})</small>" }
+            .html_safe
   end
 
   # Login-era logs append the Player id to the name ("bent#35") — pure

@@ -109,7 +109,7 @@
               <td><%= award.emoji %> <strong><%= award.title %></strong></td>
               <td><small><%= award.description %></small></td>
               <td><%= safe_join(award.players.map { |name| winner = @players.find { |player| player.name == name }; winner ? stats_player_link(winner) : stats_display_name(name) }, ", ") %></td>
-              <td><%= award.value %></td>
+              <td><%= stats_actual_small(award.value) %></td>
             </tr>
           <% end %>
         </tbody>
