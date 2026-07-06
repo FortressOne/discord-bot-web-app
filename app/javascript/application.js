@@ -20,8 +20,10 @@ function boldColumnMaxima(table) {
 	const columns = table.tHead.rows[0].cells.length;
 	for (let col = 1; col < columns; col++) {
 		const cells = rows.map(row => row.cells[col]);
-		// Only bold plain-text cells; name/class cells contain markup.
-		if (cells.some(cell => !cell || cell.children.length > 0)) continue;
+		// Only bold value cells: plain text, or markup that carries a
+		// data-sort value (weighted pairs with <small> actuals). Name and
+		// class cells have markup and no data-sort.
+		if (cells.some(cell => !cell || (cell.children.length > 0 && cell.getAttribute("data-sort") === null))) continue;
 		const values = cells.map(cell => {
 			const sortValue = cell.getAttribute("data-sort");
 			return statValue(sortValue !== null ? sortValue : cell.textContent);
