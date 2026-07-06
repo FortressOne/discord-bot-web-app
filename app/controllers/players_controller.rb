@@ -5,11 +5,9 @@ class PlayersController < ApplicationController
   before_action :authorize_player, only: [:update, :rotate_token]
 
   def index
-    @players = Player
-      .joins(:teams)
-      .includes(:teams)
-      .sort_by(&:last_match_date)
-      .reverse
+    scope = Player.joins(:teams).includes(:teams)
+    scope = scope.where("players.name ILIKE ?", "%#{Player.sanitize_sql_like(params[:name])}%") if params[:name].present?
+    @players = scope.sort_by(&:last_match_date).reverse
 
     add_breadcrumb "Players"
   end

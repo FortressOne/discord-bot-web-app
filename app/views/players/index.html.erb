@@ -2,6 +2,16 @@
   <%= render_breadcrumbs %>
   <h2>Players</h2>
 
+  <%= form_with url: players_path, method: :get do |form| %>
+    <div style="display: flex; gap: 0.5rem; max-width: 30rem;">
+      <%= form.text_field :name, value: params[:name], placeholder: "Player name" %>
+      <%= form.submit "Search" %>
+    </div>
+  <% end %>
+  <% if params[:name].present? %>
+    <p><%= link_to "Clear search", players_path %></p>
+  <% end %>
+
   <figure>
     <table id="players_table" style="white-space: nowrap;" role="grid">
       <thead>
