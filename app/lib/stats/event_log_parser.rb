@@ -32,7 +32,10 @@ module Stats
       "incendiary" => "incen", "pyro_rocket" => "incen", "incendiarylauncher" => "incen",
       "sniperrifle" => "sniper", "autorifle" => "auto",
       "railgun" => "rail", "railslug" => "rail",
-      "normalgrenade" => "hgren", "grentimer" => "hgren",
+      "normalgrenade" => "hgren", "grentimer" => "hgren", "primetimer" => "hgren",
+      "concussiongrenade" => "conc", "nailgrenade" => "ngren",
+      "burstgrenade" => "burst", "flaregrenade" => "flare",
+      "caltropgrenade" => "calt",
       "mirvgrenade" => "mirv", "mirvsinglegrenade" => "mirv",
       "flashgrenade" => "flash", "shockgrenade" => "shock",
       "empgrenade" => "emp", "napalmgrenade" => "napalm",
@@ -80,6 +83,7 @@ module Stats
       @half_players = {}
       @half_teams = Hash.new { |hash, key| hash[key] = Hash.new(0) }
       @kill_matrix = {}
+      @all_time = {}
       @flag_took_at = {}
       @last_class_change = {}
       @previous_death = nil
@@ -125,7 +129,9 @@ module Stats
     def process(event)
       case event["type"]
       when "gameStart" then process_game_start(event)
-      when "playerStart" then @last_class_change[event["player"]] = event["time"].to_i
+      when "playerStart"
+        @last_class_change[event["player"]] = event["time"].to_i
+        note_all_time(event["player"], event["allTime"]) if event.key?("allTime")
       when "changeClass" then process_change_class(event)
       when "attack" then process_attack(event)
       when "damageDone" then process_damage(event)
@@ -136,6 +142,7 @@ module Stats
       when "fumble" then process_fumble(event)
       when "goal" then process_goal(event)
       when "teamScores" then process_team_scores(event)
+      when "allTime" then note_all_time(event["player"], event["mode"])
       when "gameEnd" then @result.duration_seconds = event["time"].to_i
       end
       @previous_death = nil unless event["type"] == "death"
@@ -151,6 +158,14 @@ module Stats
       # Some logs have corrupt timestamps ("2021-10-01Tcabo:59:44.053Z");
       # the importer falls back to the timestamp in the S3 key.
       @result.played_at = nil
+    end
+
+    # Explicit all-time attack/defence election (new logs); playerStart
+    # also carries the mode.
+    def note_all_time(name, mode)
+      return if name.blank?
+
+      @all_time[name] = %w[attack defence].include?(mode) ? mode : nil
     end
 
     def process_change_class(event)
@@ -518,6 +533,7 @@ module Stats
         player[:team] = @teams_seen[name].max_by { |_, count| count }.first
         player[:class_seconds] = player[:class_seconds].to_h
         player[:half_stats] = half_stats_for(name, player[:team])
+        player[:all_time] = @all_time[name]
         player
       end
 

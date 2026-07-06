@@ -345,6 +345,26 @@ module Stats
       assert_equal({ "alice" => { "kills" => 1, "damage" => 0 } }, result.kill_matrix["eng"])
     end
 
+    test "explicit allTime elections mark the player" do
+      events = [
+        { type: "gameStart", map: "rs_zzr", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },
+        { type: "playerStart", player: "newbie", classtime: 0, time: 0, allTime: "attack" },
+        { type: "playerStart", player: "vet", classtime: 0, time: 0, allTime: "none" },
+        { type: "kill", kind: "enemy", player: "vet", playerClass: 3, playerTeam: 1,
+          target: "newbie", targetClass: 1, targetTeam: 2, inflictor: "proj_rocket", time: 10 },
+        { type: "death", kind: "enemy", attacker: "vet", attackerClass: 3, attackerTeam: 1,
+          player: "newbie", playerClass: 1, playerTeam: 2, inflictor: "proj_rocket", time: 10 },
+        { type: "allTime", player: "vet", mode: "defence", time: 400 },
+        { type: "teamScores", team1Score: 10, team2Score: 0, team1Name: "blue", team2Name: "red", winningTeam: 1, time: 700 },
+        { type: "gameEnd", time: 700 }
+      ]
+
+      result = EventLogParser.parse(events.map { |event| "#{event.to_json}," }.join("\n"))
+
+      assert_equal "attack", result.players["newbie"][:all_time]
+      assert_equal "defence", result.players["vet"][:all_time]
+    end
+
     test "map entities with class 0 are not players" do
       events = [
         { type: "gameStart", map: "rs_zzr", numPlayers: 2, numTeams: 2, time: 0, gameTimeStamp: "2022-01-01T00:00:00.000Z" },

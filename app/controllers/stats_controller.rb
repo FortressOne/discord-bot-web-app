@@ -98,6 +98,7 @@ class StatsController < ApplicationController
       player_id: player.player_id,
       team: player.team,
       unteamed: player.unteamed?,
+      all_time: player.all_time,
       kills: player.kills,
       deaths: player.deaths,
       kd_display: player.kd_ratio.to_s,
