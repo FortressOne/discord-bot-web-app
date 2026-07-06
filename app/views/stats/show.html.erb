@@ -185,7 +185,7 @@
                     </span>
                   </th>
                   <% [matchup.left, matchup.right].each do |side| %>
-                    <th style="color: <%= team_colour_code(side.team) %>;" title="<%= stats_display_name(side.name) %>"><%= stats_display_name(side.name) %></th>
+                    <th style="color: <%= team_colour_code(side.team) %>;<%= " background-color: rgba(255, 179, 0, 0.10);" if stats_own_row?(side) %>" title="<%= stats_display_name(side.name) %>"><%= stats_display_name(side.name) %></th>
                   <% end %>
                   <th></th>
                 </tr>
@@ -215,7 +215,7 @@
   <h3>Player Stats</h3>
   <% @players.each do |player| %>
     <details>
-      <summary>
+      <summary <% if stats_own_row?(player) %>style="background-color: rgba(255, 179, 0, 0.10);"<% end %>>
         <span style="color: <%= player.unteamed? ? '#FFFFFF' : team_colour_code(player.team) %>;"><strong><%= stats_display_name(player.name) %></strong></span>
         <small><%= player.class_breakdown %></small>
       </summary>
@@ -281,7 +281,7 @@
         </thead>
         <tbody>
           <% matrix_players.each_with_index do |killer, index| %>
-            <tr>
+            <tr <% if stats_own_row?(killer) %>style="background-color: rgba(255, 179, 0, 0.10);"<% end %>>
               <td><strong style="color: <%= killer.unteamed? ? '#FFFFFF' : team_colour_code(killer.team) %>;"><%= index + 1 %>. <%= stats_display_name(killer.name) %></strong></td>
               <% row = @match_stat.kill_matrix[killer.name] || {} %>
               <% matrix_players.each do |victim| %>
