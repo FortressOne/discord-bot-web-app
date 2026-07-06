@@ -66,7 +66,7 @@ module Stats
       :map_name, :played_at, :demo_filename, :duration_seconds,
       :team1_name, :team2_name, :team1_score, :team2_score, :winning_team,
       :player_count, :players, :status, :error_message,
-      :kill_matrix, :attack_defence, :half_boundary,
+      :kill_matrix, :attack_defence, :half_boundary, :cap_timeline,
       keyword_init: true
     )
 
@@ -85,6 +85,7 @@ module Stats
       @kill_matrix = {}
       @all_time = {}
       @tfl_ids = {}
+      @cap_timeline = []
       @flag_took_at = {}
       @last_class_change = {}
       @previous_death = nil
@@ -369,6 +370,7 @@ module Stats
       note_team(name, event["team"], event["time"])
       @players[name][:flag_caps] += 1
       bump_half(name, event["time"], "flag_caps")
+      @cap_timeline << { "t" => event["time"].to_i, "player" => name }
       carried = carry_duration(name, event["time"]).to_i
       @players[name][:flag_carry_seconds] += carried
       bump_half(name, event["time"], "flag_carry_seconds", carried)
@@ -553,6 +555,11 @@ module Stats
                                         .reject { |_, victims| victims.empty? }
       @result.attack_defence = @attack_defence
       @result.half_boundary = @half_boundary
+      @result.cap_timeline = @cap_timeline.map do |cap|
+        team = @result.players.dig(cap["player"], :half_stats, half_of(cap["t"]).to_s, "team") ||
+               @result.players.dig(cap["player"], :team)
+        cap.merge("team" => team)
+      end
 
       if @result.map_name.blank?
         @result.status = "error"

@@ -99,6 +99,31 @@
     </table>
   </figure>
 
+  <% if @match_stat.cap_timeline.present? %>
+    <h3>Timeline</h3>
+    <%
+      duration = @match_stat.duration_seconds.to_i
+      series = { 1 => { 0 => 0 }, 2 => { 0 => 0 } }
+      counts = { 1 => 0, 2 => 0 }
+      @match_stat.cap_timeline.each do |cap|
+        team = cap["team"].to_i
+        next unless series.key?(team)
+
+        counts[team] += 1
+        series[team][(cap["t"].to_i / 60.0).round(2)] = counts[team]
+      end
+      series.each_value { |data| data[(duration / 60.0).round(2)] = data.values.last }
+    %>
+    <div style="max-width: 60rem;">
+      <%= line_chart [
+            { name: (@match_stat.team1_name.presence || "Blue").capitalize, data: series[1], color: "#01A2E8" },
+            { name: (@match_stat.team2_name.presence || "Red").capitalize, data: series[2], color: "#EC1D24" }
+          ],
+          height: "180px", xtitle: "Minutes", ytitle: "Caps", curve: false,
+          library: { scales: { y: { ticks: { stepSize: 1 } } }, elements: { line: { stepped: true } } } %>
+    </div>
+  <% end %>
+
   <% if @awards.any? %>
     <h3>Awards</h3>
     <figure>
@@ -117,14 +142,16 @@
     </figure>
   <% end %>
 
-  <h3>Overall</h3>
-  <%= render "players_table", rows: @weighted_players, class_icons: :main %>
-
   <% @breakdown.tables.each do |role, rows| %>
     <% next if rows.empty? %>
     <h3><%= { attack: "Attack", defence: "Defence", first_half: "First half", second_half: "Second half" }[role] %></h3>
     <%= render "players_table", rows: rows, columns: StatsHelper::ROLE_COLUMNS[role] %>
   <% end %>
+
+  <details <%= "open" unless @breakdown.any? %>>
+    <summary><h3 style="display: inline;">Overall</h3></summary>
+    <%= render "players_table", rows: @weighted_players, class_icons: :main %>
+  </details>
 
   <% grouped_matchups = @breakdown.matchups.group_by(&:role) %>
   <% if grouped_matchups.any? %>
@@ -231,7 +258,7 @@
   <% if @match_stat.kill_matrix.present? %>
     <h3>Kill Matrix</h3>
     <figure>
-      <table class="stats-table">
+      <table class="stats-table kill-matrix">
         <thead>
           <tr>
             <th>Killer \\ Victim</th>
@@ -247,7 +274,8 @@
               <td><strong style="color: <%= killer.unteamed? ? '#FFFFFF' : team_colour_code(killer.team) %>;"><%= index + 1 %>. <%= stats_display_name(killer.name) %></strong></td>
               <% row = @match_stat.kill_matrix[killer.name] || {} %>
               <% matrix_players.each do |victim| %>
-                <td><%= row.dig(victim.name, "kills").to_i.nonzero? %></td>
+                <% kills = row.dig(victim.name, "kills").to_i %>
+                <td title="<%= stats_display_name(killer.name) %> killed <%= stats_display_name(victim.name) %> <%= kills %> times"><%= kills.nonzero? %></td>
               <% end %>
               <td><strong><%= row.sum { |_, cell| cell["kills"].to_i } %></strong></td>
             </tr>

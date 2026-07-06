@@ -48,6 +48,7 @@ module Stats
           kill_matrix: result.kill_matrix || {},
           attack_defence: result.attack_defence || false,
           half_boundary_seconds: result.half_boundary,
+          cap_timeline: result.cap_timeline || [],
           match: linked_match(result)
         )
         match_stat.save!

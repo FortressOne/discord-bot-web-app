@@ -14,7 +14,7 @@
     </thead>
     <tbody>
       <% rows.each do |player| %>
-        <tr>
+        <tr <% if stats_own_row?(player) %>style="background-color: rgba(255, 179, 0, 0.10);"<% end %>>
           <td><strong><%= stats_player_link(player) %></strong></td>
           <td><%= class_icons == :main ? stats_main_class_icons(player) : stats_class_icons(player) %></td>
           <% columns.each do |column| %>

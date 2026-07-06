@@ -198,6 +198,11 @@ module StatsHelper
     tag.strong(display, style: "color: #{team_colour_code(left_wins ? left_team : right_team)};")
   end
 
+  # The signed-in player's rows glow softly in every stats table.
+  def stats_own_row?(player)
+    current_player && player.respond_to?(:player_id) && player.player_id == current_player.id
+  end
+
   def stats_class_icon(class_name, colour, height: 24)
     number = CLASS_NUMBERS[class_name]
     return "" unless number&.positive?
