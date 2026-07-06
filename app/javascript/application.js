@@ -44,6 +44,23 @@ document.addEventListener("turbo:load", function() {
 		new Tablesort(table, { descending: true });
 	});
 	document.querySelectorAll('table[data-bold-max]').forEach(boldColumnMaxima);
+	document.querySelectorAll('table.kill-matrix').forEach(function(table) {
+		table.addEventListener('mouseover', function(event) {
+			const cell = event.target.closest('td, th');
+			if (!cell) return;
+			table.querySelectorAll('.km-col').forEach(el => el.classList.remove('km-col'));
+			const index = cell.cellIndex;
+			if (index > 0) {
+				table.querySelectorAll('tr').forEach(row => {
+					const target = row.cells[index];
+					if (target) target.classList.add('km-col');
+				});
+			}
+		});
+		table.addEventListener('mouseleave', function() {
+			table.querySelectorAll('.km-col').forEach(el => el.classList.remove('km-col'));
+		});
+	});
 })
 
 import "chartkick"
