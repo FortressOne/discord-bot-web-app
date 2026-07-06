@@ -8,7 +8,7 @@
         <tr>
           <th style="width: 1.5rem;"></th>
           <th>Name</th>
-          <% if current_player&.admin? || current_player&.public_ratings? %>
+          <% if true %>
             <th>Tier</th>
             <th data-sort-method='number'>CSE</th>
             <th data-sort-method='number'>Rank</th>
@@ -30,8 +30,8 @@
               <% end %>
             </td>
             <td><%= link_to(dcp.player.name, dcp.player) %></td>
-            <% if current_player&.admin? || current_player&.public_ratings? %>
-              <% if current_player&.admin? || dcp&.public_ratings? %>
+            <% if true %>
+              <% if true %>
                 <td><%= dcp.tier %></td>
                 <td><%= number_with_precision(dcp.trueskill_rating.conservative_skill_estimate, precision: 2) %></td>
                 <td><%= dcp.rank %>/<%= dcp.discord_channel.discord_channel_players_count %></td>

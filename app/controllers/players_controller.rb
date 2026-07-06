@@ -28,6 +28,17 @@ class PlayersController < ApplicationController
 
     add_breadcrumb "Players", players_path
     add_breadcrumb @player.name
+
+    career = PlayerMatchStat.where(player_id: @player.id)
+    @career_totals = career.pick(
+      Arel.sql("COUNT(*), SUM(kills), SUM(deaths), SUM(teamkills), SUM(damage_given), " \
+               "SUM(flag_touches), SUM(flag_caps), SUM(flag_stops), SUM(flag_carry_seconds), " \
+               "SUM(sentries_destroyed)")
+    )
+    @career_classes = Hash.new(0)
+    career.pluck(:class_seconds).each do |classes|
+      (classes || {}).each { |name, seconds| @career_classes[name] += seconds.to_i }
+    end
   end
 
   def update

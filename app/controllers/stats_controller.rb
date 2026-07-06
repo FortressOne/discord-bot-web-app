@@ -12,6 +12,7 @@ class StatsController < ApplicationController
     scope = scope.for_region(params[:region]) if params[:region].present?
     scope = scope.for_game_mode(params[:mode]) if params[:mode].present?
     scope = scope.for_player(params[:player]) if params[:player].present?
+    scope = scope.for_player_id(params[:player_id]) if params[:player_id].present?
 
     @pagy, @match_stats = pagy(scope.includes(:player_match_stats), items: PAGE_ITEMS)
 

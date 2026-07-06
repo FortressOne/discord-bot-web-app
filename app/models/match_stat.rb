@@ -13,6 +13,7 @@ class MatchStat < ApplicationRecord
   scope :for_region, ->(region) { where(region: region) }
   scope :for_game_mode, ->(game_mode) { where(game_mode: game_mode) }
   scope :for_player, ->(name) { where(id: PlayerMatchStat.where(name: name).select(:match_stat_id)) }
+  scope :for_player_id, ->(player_id) { where(id: PlayerMatchStat.where(player_id: player_id).select(:match_stat_id)) }
 
   def drawn?
     winning_team.to_i.zero?
