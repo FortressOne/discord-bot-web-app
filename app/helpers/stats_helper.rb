@@ -57,13 +57,15 @@ module StatsHelper
     if weighted != raw || clock
       display = weighted == raw ? (clock ? player.flag_carry_display : raw) : weighted_pair_display(weighted, raw, clock: clock)
       tag.td(display, data: { sort: weighted })
+    elsif raw.is_a?(Numeric)
+      tag.td(number_with_delimiter(raw), data: { sort: raw })
     else
       tag.td(raw)
     end
   end
 
   def weighted_pair_display(weighted, raw, clock: false)
-    formatter = ->(value) { clock ? format("%d:%02d", value / 60, value % 60) : value.to_s }
+    formatter = ->(value) { clock ? format("%d:%02d", value / 60, value % 60) : number_with_delimiter(value) }
     safe_join([formatter.call(weighted), " ", tag.small("(#{formatter.call(raw)})")])
   end
 
@@ -179,7 +181,7 @@ module StatsHelper
   end
 
   def weighted_stat_display(weighted, raw, weight, clock: false)
-    formatter = ->(value) { clock ? format("%d:%02d", value / 60, value % 60) : value.to_s }
+    formatter = ->(value) { clock ? format("%d:%02d", value / 60, value % 60) : number_with_delimiter(value) }
     weight > 1.01 ? weighted_pair_display(weighted, raw, clock: clock) : formatter.call(raw)
   end
 
@@ -194,7 +196,7 @@ module StatsHelper
     # On lower-wins stats (deaths, damage taken) the winner has LESS, so
     # the margin reads negative.
     sign = lower_wins ? "-" : "+"
-    display = clock ? format("#{sign}%d:%02d", margin / 60, margin % 60) : "#{sign}#{margin}"
+    display = clock ? format("#{sign}%d:%02d", margin / 60, margin % 60) : "#{sign}#{number_with_delimiter(margin)}"
     tag.strong(display, style: "color: #{team_colour_code(left_wins ? left_team : right_team)};")
   end
 
@@ -223,7 +225,7 @@ module StatsHelper
     display = if weighted != raw
       weighted_pair_display(weighted, raw, clock: clock)
     else
-      clock ? format("%d:%02d", raw / 60, raw % 60) : raw
+      clock ? format("%d:%02d", raw / 60, raw % 60) : number_with_delimiter(raw)
     end
     tag.td(display, data: { sort: weighted })
   end

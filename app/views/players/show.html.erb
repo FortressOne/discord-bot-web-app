@@ -24,54 +24,7 @@
 
   <% end %>
 
-  <% matches, kills, deaths, teamkills, damage, takes, caps, stops, carry, sentries = @career_totals %>
-  <% if matches.to_i.positive? %>
-    <h3>Career stats</h3>
-    <figure>
-      <table role="grid" style="white-space: nowrap;">
-        <thead>
-          <tr>
-            <th>Matches</th>
-            <th>Kills</th>
-            <th>Deaths</th>
-            <th>K/(D+TK)</th>
-            <th>Team Kills</th>
-            <th>Damage</th>
-            <th>Takes</th>
-            <th>Caps</th>
-            <th>Stops</th>
-            <th>Carry</th>
-            <th title="Sentries destroyed">Sentries</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><%= link_to matches, stats_path(player_id: @player.id) %></td>
-            <td><%= kills %></td>
-            <td><%= deaths %></td>
-            <td><%= (deaths.to_i + teamkills.to_i).zero? ? kills.to_f : (kills.to_f / (deaths.to_i + teamkills.to_i)).round(2) %></td>
-            <td><%= teamkills %></td>
-            <td><%= damage %></td>
-            <td><%= takes %></td>
-            <td><%= caps %></td>
-            <td><%= stops %></td>
-            <td><%= format("%d:%02d:%02d", carry.to_i / 3600, carry.to_i % 3600 / 60, carry.to_i % 60) %></td>
-            <td><%= sentries %></td>
-          </tr>
-        </tbody>
-      </table>
-    </figure>
-
-    <% if @career_classes.any? %>
-      <div style="max-width: 24rem;">
-        <%= pie_chart @career_classes.sort_by { |_, seconds| -seconds }
-                                     .map { |name, seconds| [name, (seconds / 3600.0).round(1)] },
-                      height: "220px", donut: true, legend: "right",
-                      suffix: "h" %>
-      </div>
-    <% end %>
-  <% end %>
-
+  <h3>Career stats</h3>
   <figure>
     <table id="player_table" style="white-space: nowrap; max-width: 200px;" role="grid">
       <thead>
@@ -92,6 +45,53 @@
       </tbody>
     </table>
   </figure>
+
+  <% matches, kills, deaths, teamkills, damage, takes, caps, stops, carry, sentries = @career_totals %>
+  <% if matches.to_i.positive? %>
+    <figure>
+      <table role="grid" style="white-space: nowrap;">
+        <thead>
+          <tr>
+            <th>Matches</th>
+            <th>Kills</th>
+            <th>Deaths</th>
+            <th>K/(D+TK)</th>
+            <th>Team Kills</th>
+            <th>Damage</th>
+            <th>Takes</th>
+            <th>Caps</th>
+            <th>Stops</th>
+            <th>Carry</th>
+            <th title="Sentries destroyed">Sentries</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= link_to number_with_delimiter(matches), stats_path(player_id: @player.id) %></td>
+            <td><%= number_with_delimiter(kills) %></td>
+            <td><%= number_with_delimiter(deaths) %></td>
+            <td><%= (deaths.to_i + teamkills.to_i).zero? ? kills.to_f : (kills.to_f / (deaths.to_i + teamkills.to_i)).round(2) %></td>
+            <td><%= number_with_delimiter(teamkills) %></td>
+            <td><%= number_with_delimiter(damage) %></td>
+            <td><%= number_with_delimiter(takes) %></td>
+            <td><%= number_with_delimiter(caps) %></td>
+            <td><%= number_with_delimiter(stops) %></td>
+            <td><%= format("%d:%02d:%02d", carry.to_i / 3600, carry.to_i % 3600 / 60, carry.to_i % 60) %></td>
+            <td><%= number_with_delimiter(sentries) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </figure>
+
+    <% if @career_classes.any? %>
+      <div style="max-width: 34rem;">
+        <%= bar_chart @career_classes.sort_by { |_, seconds| -seconds }
+                                     .map { |name, seconds| [name, (seconds / 3600.0).round(1)] },
+                      height: "260px", suffix: "h", colors: ["#ffb300"], xtitle: "Hours" %>
+      </div>
+    <% end %>
+  <% end %>
+
 
 
   <% @player.discord_channel_players_with_matches_played.each do |dcp| %>

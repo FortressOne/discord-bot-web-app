@@ -7,7 +7,7 @@ LocalTime.start()
 
 // "0:51" carry times and "87%" accuracies still compare as numbers.
 function statValue(text) {
-	text = (text || "").trim();
+	text = (text || "").trim().replace(/,/g, "");
 	const clock = text.match(/^(\d+):(\d{2})$/);
 	if (clock) return parseInt(clock[1], 10) * 60 + parseInt(clock[2], 10);
 	if (/^-?\d+(\.\d+)?%?$/.test(text)) return parseFloat(text);

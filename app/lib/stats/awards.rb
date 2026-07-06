@@ -84,7 +84,7 @@ module Stats
 
     # "19 (17) teamkills" — weighted first, actual in parentheses, unit last.
     def self.value_display(value, actual, unit:, number: nil)
-      number ||= ->(v) { v.to_s }
+      number ||= ->(v) { ActiveSupport::NumberHelper.number_to_delimited(v) }
       text = number.call(value)
       text += " (#{number.call(actual)})" if actual && actual != value
       [text, unit].reject { |part| part.to_s.empty? }.join(" ")
