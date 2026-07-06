@@ -13,7 +13,6 @@ module StatsHelper
     kills: ["Kills", "Kills"],
     deaths: ["Deaths", "Deaths"],
     kd: ["K/(D+TK)", "Kills per (deaths + teamkills)"],
-    dmg_per_min: ["Damage/min", "Damage per minute"],
     teamkills: ["Team Kills", "Team kills"],
     damage_given: ["Damage", "Damage given"],
     damage_taken: ["Dmg T", "Damage taken"],
@@ -23,9 +22,9 @@ module StatsHelper
 
   FULL_COLUMNS = %i[kills deaths kd teamkills damage_given team_damage
                     flag_touches flag_caps flag_throws flag_stops flag_carry].freeze
-  ATTACK_COLUMNS = %i[flag_caps flag_carry kills damage_given dmg_per_min flag_touches
+  ATTACK_COLUMNS = %i[flag_caps flag_carry kills damage_given flag_touches
                       flag_throws teamkills team_damage].freeze
-  DEFENCE_COLUMNS = %i[kills damage_given dmg_per_min flag_stops deaths teamkills kd
+  DEFENCE_COLUMNS = %i[kills damage_given flag_stops deaths teamkills kd
                        team_damage].freeze
 
   ROLE_COLUMNS = {
@@ -43,7 +42,6 @@ module StatsHelper
       raw = player.respond_to?(:actual) ? player.actual.kd_ratio : weighted
       return weighted == raw ? tag.td(raw) : tag.td("#{weighted} (#{raw})", data: { sort: weighted })
     end
-    return tag.td(player.damage_per_minute) if column == :dmg_per_min
 
     stat = column == :flag_carry ? :flag_carry_seconds : column
     clock = column == :flag_carry
