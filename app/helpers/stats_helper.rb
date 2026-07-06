@@ -217,11 +217,12 @@ module StatsHelper
   def stats_totals_cell(members, stat, clock: false)
     weighted = members.sum { |player| player.public_send(stat) }
     raw = members.sum { |player| (player.respond_to?(:actual) ? player.actual : player).public_send(stat) }
-    if weighted != raw
-      tag.td(weighted_pair_display(weighted, raw, clock: clock))
+    display = if weighted != raw
+      weighted_pair_display(weighted, raw, clock: clock)
     else
-      tag.td(clock ? format("%d:%02d", raw / 60, raw % 60) : raw)
+      clock ? format("%d:%02d", raw / 60, raw % 60) : raw
     end
+    tag.td(display, data: { sort: weighted })
   end
 
   # Role blocks for a player's card: [label, half_data, team] — one per

@@ -66,7 +66,7 @@
 
   <h3>Teams</h3>
   <figure>
-    <table class="stats-table">
+    <table class="stats-table" data-bold-max>
       <thead>
         <tr>
           <th>Team</th>
@@ -86,7 +86,7 @@
           <% members = @weighted_players.select { |player| player.team.to_i == team && !player.unteamed? } %>
           <tr>
             <td><strong style="color: <%= team_colour_code(team) %>;"><%= ((team == 1 ? @match_stat.team1_name : @match_stat.team2_name).presence || Team::COLOUR[team]).capitalize %></strong></td>
-            <td><strong><%= weighted_scores[team] == team_scores[team] ? team_scores[team] : weighted_pair_display(weighted_scores[team], team_scores[team]) %></strong></td>
+            <td data-sort="<%= weighted_scores[team] %>"><%= weighted_scores[team] == team_scores[team] ? team_scores[team] : weighted_pair_display(weighted_scores[team], team_scores[team]) %></td>
             <%= stats_totals_cell(members, :flag_caps) %>
             <%= stats_totals_cell(members, :kills) %>
             <%= stats_totals_cell(members, :deaths) %>
