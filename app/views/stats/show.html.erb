@@ -102,24 +102,35 @@
   <% if @match_stat.cap_timeline.present? %>
     <h3>Timeline</h3>
     <%
+      # Both attacking runs overlay on one clock: each cap plots at its
+      # time INTO the half, and each team's line ends at their own half
+      # length (an early red win ends their line short).
       duration = @match_stat.duration_seconds.to_i
+      boundary = @match_stat.half_boundary_seconds || duration / 2
+      overlay = @match_stat.attack_defence && boundary.positive?
+      half_lengths = { 1 => boundary, 2 => duration - boundary }
       series = { 1 => { 0 => 0 }, 2 => { 0 => 0 } }
       counts = { 1 => 0, 2 => 0 }
       @match_stat.cap_timeline.each do |cap|
         team = cap["team"].to_i
         next unless series.key?(team)
 
+        time = cap["t"].to_i
+        time -= boundary if overlay && time > boundary
         counts[team] += 1
-        series[team][(cap["t"].to_i / 60.0).round(2)] = counts[team]
+        series[team][(time / 60.0).round(2)] = counts[team]
       end
-      series.each_value { |data| data[(duration / 60.0).round(2)] = data.values.last }
+      series.each do |team, data|
+        line_end = overlay ? half_lengths[team] : duration
+        data[(line_end / 60.0).round(2)] = data.values.last
+      end
     %>
     <div style="max-width: 60rem;">
       <%= line_chart [
             { name: (@match_stat.team1_name.presence || "Blue").capitalize, data: series[1], color: "#01A2E8" },
             { name: (@match_stat.team2_name.presence || "Red").capitalize, data: series[2], color: "#EC1D24" }
           ],
-          height: "180px", xtitle: "Minutes", ytitle: "Caps", curve: false,
+          height: "180px", xtitle: overlay ? "Minutes into the half" : "Minutes", ytitle: "Caps", curve: false,
           library: { scales: { y: { ticks: { stepSize: 1 } } }, elements: { line: { stepped: true } } } %>
     </div>
   <% end %>
