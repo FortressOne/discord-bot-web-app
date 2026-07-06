@@ -214,8 +214,8 @@
 
   <h3>Player Stats</h3>
   <% @players.each do |player| %>
-    <details>
-      <summary <% if stats_own_row?(player) %>style="background-color: rgba(255, 179, 0, 0.10);"<% end %>>
+    <details <% if stats_own_row?(player) %>style="background-color: rgba(255, 179, 0, 0.10); border-radius: 0.25rem;"<% end %>>
+      <summary>
         <span style="color: <%= player.unteamed? ? '#FFFFFF' : team_colour_code(player.team) %>;"><strong><%= stats_display_name(player.name) %></strong></span>
         <small><%= player.class_breakdown %></small>
       </summary>
