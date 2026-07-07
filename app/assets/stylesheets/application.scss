@@ -19,16 +19,44 @@ html body main.container nav ul li form.button_to {
   margin-bottom: 0px;
 }
 
-#banner {
+/* The storm banner tops every page, fading into the flat background. */
+body {
+  position: relative;
+}
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 576px;
-  margin-bottom: -576px;
+  z-index: -1;
   background: linear-gradient(
-  to bottom,
-  transparent,
-  #11191f
+    to bottom,
+    rgba(22, 21, 28, 0),
+    rgba(22, 21, 28, 0.4) 55%,
+    #16151c
   ), url(asset_path("banner.webp"));
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: top center;
+  background-size: cover;
+}
+
+/* Impact-style display face, as in the game's intro (Anton = free twin). */
+@font-face {
+  font-family: "Anton";
+  font-style: normal;
+  font-weight: 400;
+  src: url(asset_path("anton-latin.woff2")) format("woff2");
+}
+h1, hgroup h1 {
+  font-family: Impact, Haettenschweiler, "Anton", "Arial Narrow Bold", sans-serif;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+h1 .one {
+  color: var(--primary);
 }
 
 .video-container {
@@ -65,7 +93,7 @@ html body main.container nav ul li form.button_to {
 .container-stats {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 var(--spacing);
+  padding: 0 1rem;
 }
 
 .stats-table td {

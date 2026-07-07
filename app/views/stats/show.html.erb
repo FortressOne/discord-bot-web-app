@@ -127,8 +127,8 @@
     %>
     <div style="max-width: 60rem;">
       <%= line_chart [
-            { name: (@match_stat.team1_name.presence || "Blue").capitalize, data: series[1], color: "#01A2E8" },
-            { name: (@match_stat.team2_name.presence || "Red").capitalize, data: series[2], color: "#EC1D24" }
+            { name: (@match_stat.team1_name.presence || "Blue").capitalize, data: series[1], color: "#3FA3F5" },
+            { name: (@match_stat.team2_name.presence || "Red").capitalize, data: series[2], color: "#D24435" }
           ],
           height: "180px", xtitle: overlay ? "Minutes into the half" : "Minutes", ytitle: "Caps", curve: false,
           library: { scales: { y: { ticks: { stepSize: 1 } } }, elements: { line: { stepped: true } } } %>
@@ -185,7 +185,7 @@
                     </span>
                   </th>
                   <% [matchup.left, matchup.right].each do |side| %>
-                    <th style="color: <%= team_colour_code(side.team) %>;<%= " background-color: rgba(255, 179, 0, 0.10);" if stats_own_row?(side) %>" title="<%= stats_display_name(side.name) %>"><%= stats_display_name(side.name) %></th>
+                    <th style="color: <%= team_colour_code(side.team) %>;<%= " background-color: rgba(242, 209, 60, 0.10);" if stats_own_row?(side) %>" title="<%= stats_display_name(side.name) %>"><%= stats_display_name(side.name) %></th>
                   <% end %>
                   <th></th>
                 </tr>
@@ -214,7 +214,7 @@
 
   <h3>Player Stats</h3>
   <% @players.each do |player| %>
-    <details <% if stats_own_row?(player) %>style="background-color: rgba(255, 179, 0, 0.10); border-radius: 0.25rem;"<% end %>>
+    <details <% if stats_own_row?(player) %>style="background-color: rgba(242, 209, 60, 0.10); border-radius: 0.25rem;"<% end %>>
       <summary>
         <span style="color: <%= player.unteamed? ? '#FFFFFF' : team_colour_code(player.team) %>;"><strong><%= stats_display_name(player.name) %></strong></span>
         <small><%= player.class_breakdown %></small>
@@ -281,7 +281,7 @@
         </thead>
         <tbody>
           <% matrix_players.each_with_index do |killer, index| %>
-            <tr <% if stats_own_row?(killer) %>style="background-color: rgba(255, 179, 0, 0.10);"<% end %>>
+            <tr <% if stats_own_row?(killer) %>style="background-color: rgba(242, 209, 60, 0.10);"<% end %>>
               <td><strong style="color: <%= killer.unteamed? ? '#FFFFFF' : team_colour_code(killer.team) %>;"><%= index + 1 %>. <%= stats_display_name(killer.name) %></strong></td>
               <% row = @match_stat.kill_matrix[killer.name] || {} %>
               <% matrix_players.each do |victim| %>

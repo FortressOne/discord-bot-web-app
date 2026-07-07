@@ -87,7 +87,7 @@
       <div style="max-width: 34rem;">
         <%= bar_chart @career_classes.sort_by { |_, seconds| -seconds }
                                      .map { |name, seconds| [name, (seconds / 3600.0).round(1)] },
-                      height: "260px", suffix: "h", colors: ["#ffb300"], xtitle: "Hours" %>
+                      height: "260px", suffix: "h", colors: ["#f2d13c"], xtitle: "Hours" %>
       </div>
     <% end %>
   <% end %>

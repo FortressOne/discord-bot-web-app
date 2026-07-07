@@ -74,7 +74,7 @@ module StatsHelper
   CLASS_NUMBERS = Stats::EventLogParser::CLASS_NAMES.each_with_index.to_h.freeze
 
   def team_colour_code(team)
-    { 1 => "#01A2E8", 2 => "#EC1D24" }[team.to_i] || "#AAAAAA"
+    { 1 => "#3FA3F5", 2 => "#D24435" }[team.to_i] || "#AAAAAA"
   end
 
   # Classes used, most-played first, minor dabbles (<5% of playing time)

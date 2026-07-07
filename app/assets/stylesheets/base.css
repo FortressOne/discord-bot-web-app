@@ -3,19 +3,19 @@
  * everywhere. Covers only the primitives the app actually uses. */
 
 :root {
-  --bg: #11191f;
-  --bg-panel: #141e26;
-  --bg-panel-2: #18232c;
-  --bg-inset: #0d141a;
-  --line: #2a3947;
-  --text: #c8d3dc;
-  --text-dim: #73879a;
-  --heading: #edf1f4;
-  --primary: #ffb300;
-  --primary-hover: #ffc733;
-  --primary-contrast: #151004;
-  --blue: #01a2e8;
-  --red: #ec1d24;
+  --bg: #16151c;
+  --bg-panel: #1f1e28;
+  --bg-panel-2: #242332;
+  --bg-inset: #12111a;
+  --line: #3a3749;
+  --text: #c9c6d4;
+  --text-dim: #8b879c;
+  --heading: #f2f0f7;
+  --primary: #f2d13c;
+  --primary-hover: #ffe45e;
+  --primary-contrast: #1c1604;
+  --blue: #3fa3f5;
+  --red: #d24435;
   --radius: 6px;
   --pad-x: 0.65rem;
   --pad-y: 0.4rem;
@@ -61,7 +61,8 @@ hgroup h3 { color: var(--text-dim); font-weight: 400; font-size: 0.95rem; }
 ul, ol { margin: 0 0 0.8rem; padding-left: 1.2rem; }
 code { background: var(--bg-inset); border: 1px solid var(--line); border-radius: 4px; padding: 0.1rem 0.35rem; font-size: 0.85em; color: var(--primary); }
 
-a { color: var(--primary); }
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
 a:hover { color: var(--primary-hover); }
 
 /* ---------- nav ---------- */
@@ -105,7 +106,7 @@ thead th, thead td {
   border-bottom: 1px solid var(--line);
   white-space: nowrap;
 }
-tbody th, tbody td { border-bottom: 1px solid #1d2933; }
+tbody th, tbody td { border-bottom: 1px solid #282634; }
 table[role="grid"] tbody tr:nth-child(odd) { background: #ffffff05; }
 table[role="grid"] tbody tr:hover { background: #ffffff09; }
 
@@ -118,7 +119,7 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]), select, t
   padding: 0.45rem 0.65rem;
   font: inherit;
 }
-input:focus, select:focus, textarea:focus { outline: 2px solid #ffb30055; border-color: var(--primary); }
+input:focus, select:focus, textarea:focus { outline: 2px solid #f2d13c55; border-color: var(--primary); }
 label { display: block; margin-bottom: 0.3rem; }
 fieldset { border: 1px solid var(--line); border-radius: var(--radius); padding: 0.7rem 0.9rem; margin: 0 0 0.9rem; }
 ::placeholder { color: var(--text-dim); }
