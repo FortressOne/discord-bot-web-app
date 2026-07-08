@@ -1,0 +1,53 @@
+<%# The one result card. Both the pug results (Match) and the parsed stats
+    (MatchStat) render through this; build the `card` hash with
+    result_card_for_match / result_card_for_match_stat. %>
+<article <% if card[:fit] %>style="width: fit-content; min-width: min(48rem, 100%); max-width: 100%; margin: 0 0 1rem;"<% end %>>
+  <header>
+    <p>
+      <span style="float: right; margin-left: 2rem;">
+        <%= card[:id] %><% if card[:timestamp] %><%= DELIMITER %><%= local_time(card[:timestamp]) %><small> (<%= local_time_ago(card[:timestamp]) %>)</small><% end %>
+      </span>
+      <% card[:meta].each do |label, text, url| %>
+        <%= label %>: <%= link_to(text, url, style: "text-align: left;") %></br>
+      <% end %>
+      <h4><%= card[:summary] %></h4>
+    </p>
+
+    <progress style='--progress-color: <%= card[:progress][:colour] %>;' value=<%= card[:progress][:value] %> max="<%= card[:progress][:max] %>"></progress>
+  </header>
+  <div class="result-teams">
+    <% card[:teams].each_with_index do |team, index| %>
+      <div class="result-team">
+        <span style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 1.3rem;">
+          <%= image_tag(team[:flag][:url], alt: team[:flag][:alt], style: "height: 44px;") %>
+          <strong><%= team[:name] %></strong>
+        </span>
+        </br>
+        <% team[:players].each do |row| %>
+          <span class="roster-row" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 1.3rem;">
+            <span class="who" style="display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap;">
+              <%= row[:icons] %>
+              <%= link_to(row[:name], row[:url]) %>
+            </span>
+            <% if row[:medals].present? %>
+              <span class="medals">
+                <% row[:medals].each do |medal| %>
+                  <span title="<%= medal[:title] %>"><%= medal[:emoji] %></span>
+                <% end %>
+              </span>
+            <% end %>
+          </span>
+          </br>
+        <% end %>
+      </div>
+      <% if index.zero? %>
+        <div class="result-score">
+          <h1><%= card[:score] %></h1>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <footer>
+    <%= safe_join(card[:links].map { |label, url| link_to(label, url) }, DELIMITER) %>
+  </footer>
+</article>

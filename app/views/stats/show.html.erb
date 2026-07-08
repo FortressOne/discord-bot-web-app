@@ -1,70 +1,7 @@
 <div class="container-stats">
   <p><%= link_to "← Match stats", stats_path %></p>
 
-  <article style="width: fit-content; min-width: min(48rem, 100%); max-width: 100%; margin: 0 0 var(--spacing);">
-    <header>
-      <p>
-        <span style="float: right; margin-left: 2rem;"><%= @match_stat.id %><%= DELIMITER %><% if @match_stat.played_at %><%= local_time(@match_stat.played_at) %><% end %></span>
-        <% if @match_stat.match&.server %>
-          Server: <%= link_to(@match_stat.match.server.name, "qw://#{@match_stat.match.server.address}", style: "text-align: left;") %></br>
-        <% end %>
-        <% if @match_stat.match&.discord_channel %>
-          Discord: <%= link_to(@match_stat.match.discord_channel.name, @match_stat.match.discord_channel, style: "text-align: left;") %></br>
-        <% end %>
-        <% unless @match_stat.match %>
-          Region: <%= stats_filter_link(@match_stat.region, :region, @match_stat.region) %></br>
-          Mode: <%= stats_filter_link(@match_stat.game_mode, :mode, @match_stat.game_mode) %></br>
-        <% end %>
-        <h4><%= stats_match_summary(@match_stat, @players) %></h4>
-      </p>
-
-      <progress style='--progress-color: <%= @match_stat.result_colour %>;' value=<%= @match_stat.progress_value %> max="<%= @match_stat.progress_max %>"></progress>
-    </header>
-    <div class="result-teams">
-      <% [1, 2].each_with_index do |team, index| %>
-        <div class="result-team">
-          <% flag = Team::FLAGS.fetch(team, Team::DEFAULT_FLAG) %>
-          <span style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 1.3rem;">
-            <%= image_tag(flag[:url], alt: flag[:alt], style: "height: 44px;") %>
-            <strong><%= "#{((team == 1 ? @match_stat.team1_name : @match_stat.team2_name).presence || Team::COLOUR[team]).capitalize} Team" %></strong>
-          </span>
-          </br>
-          <% @players.select { |player| player.team == team && !player.unteamed? }.each do |player| %>
-            <span class="roster-row" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 1.3rem;">
-              <span class="who" style="display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap;">
-                <%= stats_main_class_icons(player, height: 44) %>
-                <% if player.player_id %>
-                  <%= link_to(stats_display_name(player.name), player_path(player.player_id)) %>
-                <% else %>
-                  <%= link_to(stats_display_name(player.name), stats_path(player: player.name)) %>
-                <% end %>
-              </span>
-              <span class="medals">
-                <% @awards.select { |award| award.players.include?(player.name) }.each do |award| %>
-                  <span title="<%= award.title %> (<%= award.description %>)"><%= award.emoji %></span>
-                <% end %>
-              </span>
-            </span>
-            </br>
-          <% end %>
-        </div>
-        <% if index.zero? %>
-          <div class="result-score">
-            <h1><%= @match_stat.team1_score %> &mdash; <%= @match_stat.team2_score %></h1>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
-    <footer>
-      <%= link_to "Raw event log", @match_stat.json_url %>
-      <% if @match_stat.match %>
-        <%= DELIMITER %><%= link_to "PUG result", @match_stat.match %>
-      <% end %>
-      <% if @match_stat.demo_filename.present? && @match_stat.match&.demo_uri.present? %>
-        <%= DELIMITER %><%= link_to "Demo", @match_stat.match.demo_uri %>
-      <% end %>
-    </footer>
-  </article>
+  <%= render "shared/result_card", card: result_card_for_match_stat(@match_stat, players: @players, awards: @awards) %>
 
   <% if @breakdown.weighted? %>
     <p><small>⚖️ The match ended <%= @breakdown.ended_early_display %> early, so shortened-half values are scaled up by <%= @breakdown.weight_percent %>% — shown as <strong>weighted (actual)</strong>.</small></p>
