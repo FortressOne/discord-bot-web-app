@@ -31,12 +31,14 @@
           </br>
           <% @players.select { |player| player.team == team && !player.unteamed? }.each do |player| %>
             <span class="roster-row" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 1.3rem;">
-              <%= stats_main_class_icons(player, height: 44) %>
-              <% if player.player_id %>
-                <%= link_to(stats_display_name(player.name), player_path(player.player_id)) %>
-              <% else %>
-                <%= link_to(stats_display_name(player.name), stats_path(player: player.name)) %>
-              <% end %>
+              <span class="who" style="display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap;">
+                <%= stats_main_class_icons(player, height: 44) %>
+                <% if player.player_id %>
+                  <%= link_to(stats_display_name(player.name), player_path(player.player_id)) %>
+                <% else %>
+                  <%= link_to(stats_display_name(player.name), stats_path(player: player.name)) %>
+                <% end %>
+              </span>
               <span class="medals">
                 <% @awards.select { |award| award.players.include?(player.name) }.each do |award| %>
                   <span title="<%= award.title %> (<%= award.description %>)"><%= award.emoji %></span>
