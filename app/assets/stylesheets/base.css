@@ -71,7 +71,7 @@ p, ul, ol, dl, figure, blockquote, pre, table, .grid { margin: 0 0 1rem; }
 small { font-size: 0.84em; color: var(--text-dim); }
 hgroup { margin: 0 0 1rem; }
 hgroup > * { margin: 0; }
-hgroup :is(h2, h3, h4) {
+hgroup > :not(:first-child) {
   color: var(--text-dim);
   font-weight: 400;
   font-size: 1rem;
