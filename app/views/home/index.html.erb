@@ -242,8 +242,16 @@
               </div>
               <% if playerclass[:attributes].any? %>
                 <div class="mini">
-                  <h4>Attributes</h4>
-                  <p><%= playerclass[:attributes].join(" · ") %></p>
+                  <h4>Abilities</h4>
+                  <% if playerclass[:attributes].many? %>
+                    <ul class="abilities">
+                      <% playerclass[:attributes].each do |ability| %>
+                        <li><%= ability %></li>
+                      <% end %>
+                    </ul>
+                  <% else %>
+                    <p><%= playerclass[:attributes].first %></p>
+                  <% end %>
                 </div>
               <% end %>
             </div>
