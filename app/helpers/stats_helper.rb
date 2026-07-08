@@ -101,7 +101,7 @@ module StatsHelper
     "Sniper Rifle" => "sniper", "Assault Rifle" => "auto", "Pipe Launcher" => "pipe",
     "Assault Cannon" => "cann", "Flamethrower" => "flame", "Incendiary Cannon" => "incen",
     "Tranq Gun" => "tranq", "Railgun" => "rail", "Spanner" => "spann",
-    "Medi" => "bio", "Bio Weapon" => "bio", "Axe" => "axe", "Knife" => "knife",
+    "Medi/Bio Weapon" => "bio", "Axe" => "axe", "Knife" => "knife",
     "Frag" => "hgren", "Concussion" => "conc", "Nail" => "ngren", "MIRV" => "mirv",
     "Flash" => "flash", "Caltrops" => "calt", "Flare" => "flare", "Shock" => "shock",
     "Blast" => "burst", "Napalm" => "napalm", "Hallucinogenic Gas" => "gas", "EMP" => "emp"
@@ -113,7 +113,7 @@ module StatsHelper
     return "-" if name.blank?
 
     # Each "/"-separated choice keeps its own icon: "<icon> Shock / <icon> Nail".
-    parts = name.split("/").map do |part|
+    parts = name.split(" / ").map do |part|
       label = part.strip
       code = WEAPON_NAME_CODES[label]
       if code && WEAPON_ICONS.include?(code)
