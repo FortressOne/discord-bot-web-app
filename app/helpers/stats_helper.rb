@@ -76,7 +76,7 @@ module StatsHelper
   # Weapon HUD icons we ship (app/assets/images/weapons). Codes without an
   # icon fall back to their text label. See WEAPON_NAMES in the parser.
   WEAPON_ICONS = %w[hgren conc ngren mirv flash gas emp napalm calt flare
-                    burst sniper sent disp bio].freeze
+                    burst sniper sent disp bio sg ssg ng sng rl gl].freeze
 
   WEAPON_LABELS = {
     "sg" => "Shotgun", "ssg" => "Super Shotgun", "ng" => "Nailgun",
