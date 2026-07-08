@@ -109,6 +109,8 @@ module StatsHelper
   # Icon(s) for a human weapon/grenade name, followed by the name text. Used
   # on the class cards where the descriptive name should stay visible.
   def weapon_label_icons(name, size: 22)
+    return "-" if name.blank?
+
     codes = name.split("/").map { |part| WEAPON_NAME_CODES[part.strip] }
                 .compact.select { |code| WEAPON_ICONS.include?(code) }.uniq
     icons = codes.map do |code|
