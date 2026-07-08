@@ -14,40 +14,31 @@
 
       <progress style='--progress-color: <%= match.result_colour %>;' value=<%= match.progress_value %> max="1200"></progress>
     </header>
-    <div class="grid">
-      <div style="margin: auto;">
-        <% team1 = match.team(1) %>
-        <% if team1 %>
-          <%= image_tag(team1.flag[:url], alt: team1.flag[:alt], style: "height: 44px;") %>
-          <strong><%= team1.description %></strong>
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem 3rem; align-items: center;">
+      <% [match.team(1), match.team(2)].each_with_index do |team, index| %>
+        <% next unless team %>
+        <div style="flex: 0 0 auto;">
+          <span style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 1.3rem;">
+            <%= image_tag(team.flag[:url], alt: team.flag[:alt], style: "height: 44px;") %>
+            <strong><%= team.description %></strong>
+          </span>
           </br>
-          <% team1.discord_channel_player_teams.each do |dcpt| %>
-            <% dcpt.images.each do |pc| %>
-              <%= image_tag(pc[:url], alt: pc[:alt], style: "height: 44px;") %>
-            <% end %>
-            <%= link_to(dcpt.name, dcpt.player) %>
+          <% team.discord_channel_player_teams.each do |dcpt| %>
+            <span style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 1.3rem;">
+              <% dcpt.images.each do |pc| %>
+                <%= image_tag(pc[:url], alt: pc[:alt], style: "height: 44px;") %>
+              <% end %>
+              <%= link_to(dcpt.name, dcpt.player) %>
+            </span>
             </br>
           <% end %>
+        </div>
+        <% if index.zero? %>
+          <div style="flex: 1 0 auto; text-align: center; min-width: 10rem;">
+            <h1><%= match.score %></h1>
+          </div>
         <% end %>
-      </div>
-      <div style="margin: auto;">
-        <h1><%= match.score %></h1>
-      </div>
-      <div style="margin: auto;">
-        <% team2 = match.team(2) %>
-        <% if team2 %>
-          <%= image_tag(team2.flag[:url], alt: team2.flag[:alt], style: "height: 44px;") %>
-          <strong><%= team2.description %></strong>
-          </br>
-          <% team2.discord_channel_player_teams.each do |dcpt| %>
-            <% dcpt.images.each do |pc| %>
-              <%= image_tag(pc[:url], alt: pc[:alt], style: "height: 44px;") %>
-            <% end %>
-            <%= link_to(dcpt.name, dcpt.player) %>
-            </br>
-          <% end %>
-        <% end %>
-      </div>
+      <% end %>
     </div>
     <footer>
       <%= link_to("Stats", match.match_stat ? stat_path(match.match_stat) : match.stats_uri) %>

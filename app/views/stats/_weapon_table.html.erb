@@ -6,7 +6,7 @@
     <tbody>
       <% weapon_stats.sort_by { |_, stats| -stats["damage"].to_i }.each do |weapon, stats| %>
         <tr>
-          <td><%= weapon %></td>
+          <td><%= weapon_icon(weapon) %></td>
           <td><%= stats["shots"].to_i.nonzero? %></td>
           <td><%= stats["hits"].to_i.nonzero? %></td>
           <td><%= stats["shots"].to_i.positive? ? "#{(100.0 * stats["hits"].to_i / stats["shots"].to_i).round}%" : "" %></td>

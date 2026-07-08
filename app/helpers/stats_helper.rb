@@ -73,6 +73,36 @@ module StatsHelper
   # by class number.
   CLASS_NUMBERS = Stats::EventLogParser::CLASS_NAMES.each_with_index.to_h.freeze
 
+  # Weapon HUD icons we ship (app/assets/images/weapons). Codes without an
+  # icon fall back to their text label. See WEAPON_NAMES in the parser.
+  WEAPON_ICONS = %w[hgren conc ngren mirv flash gas emp napalm calt flare
+                    burst sniper sent disp bio].freeze
+
+  WEAPON_LABELS = {
+    "sg" => "Shotgun", "ssg" => "Super Shotgun", "ng" => "Nailgun",
+    "sng" => "Super Nailgun", "rl" => "Rocket Launcher", "gl" => "Grenade Launcher",
+    "pipe" => "Pipe Launcher", "cann" => "Assault Cannon", "flame" => "Flamethrower",
+    "incen" => "Incendiary Cannon", "sniper" => "Sniper Rifle", "auto" => "Auto Rifle",
+    "rail" => "Railgun", "hgren" => "Frag Grenade", "conc" => "Concussion Grenade",
+    "ngren" => "Nail Grenade", "burst" => "Burst Grenade", "flare" => "Flare Grenade",
+    "calt" => "Caltrops", "mirv" => "MIRV Grenade", "flash" => "Flash Grenade",
+    "shock" => "Shock Grenade", "emp" => "EMP Grenade", "napalm" => "Napalm Grenade",
+    "gas" => "Gas Grenade", "bio" => "Medikit", "spann" => "Spanner",
+    "tranq" => "Tranquiliser", "detp" => "Detpack", "sent" => "Sentry Gun",
+    "disp" => "Dispenser", "laser" => "Laser", "env" => "Environment"
+  }.freeze
+
+  # An icon for the weapon code where we have art, else its text label.
+  def weapon_icon(code, size: 26)
+    label = WEAPON_LABELS[code] || code
+    if WEAPON_ICONS.include?(code)
+      image_tag("weapons/#{code}.webp", alt: label, title: label,
+                style: "height: #{size}px; vertical-align: middle;")
+    else
+      tag.span(label, title: label)
+    end
+  end
+
   def team_colour_code(team)
     { 1 => "#3FA3F5", 2 => "#D24435" }[team.to_i] || "#AAAAAA"
   end
