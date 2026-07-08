@@ -265,7 +265,7 @@
               <dd>
                 <ol>
                   <% playerclass[:weapons].each do |weapon| %>
-                    <li><%= weapon %></li>
+                    <li><%= weapon_label_icons(weapon) %></li>
                   <% end %>
                 </ol>
               </dd>
@@ -275,7 +275,7 @@
               <dd>
                 <ol>
                   <% playerclass[:grenades].each do |grenade| %>
-                    <li><%= grenade %></li>
+                    <li><%= weapon_label_icons(grenade) %></li>
                   <% end %>
                 </ol>
               </dd>

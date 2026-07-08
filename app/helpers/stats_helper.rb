@@ -92,6 +92,32 @@ module StatsHelper
     "disp" => "Dispenser", "laser" => "Laser", "env" => "Environment"
   }.freeze
 
+  # Human weapon/grenade names (as on the homepage class cards) to icon codes.
+  # Compound names like "Flash / Caltrops" split on "/" into their parts.
+  WEAPON_NAME_CODES = {
+    "Nailgun" => "ng", "Shotgun" => "sg", "Super Shotgun" => "ssg",
+    "Super Nailgun" => "sng", "Rocket Launcher" => "rl", "Grenade Launcher" => "gl",
+    "Sniper Rifle" => "sniper", "Assault Rifle" => "auto", "Pipe Launcher" => "pipe",
+    "Assault Cannon" => "cann", "Flamethrower" => "flame", "Incendiary Cannon" => "incen",
+    "Tranq Gun" => "tranq", "Railgun" => "rail", "Spanner" => "spann",
+    "Medi" => "bio", "Bio Weapon" => "bio", "Axe" => nil, "Knife" => nil,
+    "Frag" => "hgren", "Concussion" => "conc", "Nail" => "ngren", "MIRV" => "mirv",
+    "Flash" => "flash", "Caltrops" => "calt", "Flare" => "flare", "Shock" => "shock",
+    "Blast" => "burst", "Napalm" => "napalm", "Hallucinogenic Gas" => "gas", "EMP" => "emp"
+  }.freeze
+
+  # Icon(s) for a human weapon/grenade name, followed by the name text. Used
+  # on the class cards where the descriptive name should stay visible.
+  def weapon_label_icons(name, size: 22)
+    codes = name.split("/").map { |part| WEAPON_NAME_CODES[part.strip] }
+                .compact.select { |code| WEAPON_ICONS.include?(code) }.uniq
+    icons = codes.map do |code|
+      image_tag("weapons/#{code}.webp", alt: "",
+                style: "height: #{size}px; vertical-align: middle; margin-right: 0.3rem;")
+    end
+    safe_join(icons + [name])
+  end
+
   # An icon for the weapon code where we have art, else its text label.
   def weapon_icon(code, size: 26)
     label = WEAPON_LABELS[code] || code
