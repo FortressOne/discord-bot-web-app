@@ -43,6 +43,10 @@ body {
 /* .container-stats keeps its width in application.scss */
 
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(0%, 1fr)); gap: 0.9rem; }
+/* Pico parity: grids collapse to a single column on small screens. */
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+}
 
 figure { overflow-x: auto; }
 
