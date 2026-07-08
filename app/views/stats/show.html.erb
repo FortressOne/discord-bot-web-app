@@ -223,33 +223,37 @@
       </summary>
       <% blocks = @breakdown.attack_defence? ? stats_role_blocks(player) : [] %>
       <% if blocks.any? %>
-        <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">
-          <% blocks.each do |role, data, team| %>
-            <div style="flex: 0 1 auto; min-width: 300px;">
-              <h5 style="color: <%= team_colour_code(team) %>;"><%= role %></h5>
-              <p>
-                <small>
-                  <%= stats_class_breakdown(data["class_seconds"] || {}) %><br>
-                  Kills / Deaths / Team Kills: <%= data["kills"].to_i %> / <%= data["deaths"].to_i %> / <%= data["teamkills"].to_i %>
-                  <% if role == "Attack" %>
-                    &middot; Takes / Caps: <%= data["flag_touches"].to_i %> / <%= data["flag_caps"].to_i %>
-                    &middot; Carry: <%= format("%d:%02d", data["flag_carry_seconds"].to_i / 60, data["flag_carry_seconds"].to_i % 60) %>
-                  <% else %>
-                    &middot; Stops: <%= data["flag_stops"].to_i %>
-                  <% end %>
-                </small>
-              </p>
+        <% blocks.each do |role, data, team| %>
+          <div style="margin-bottom: 1.25rem;">
+            <h5 style="color: <%= team_colour_code(team) %>;"><%= role %></h5>
+            <p>
+              <small>
+                <%= stats_class_breakdown(data["class_seconds"] || {}) %><br>
+                Kills / Deaths / Team Kills: <%= data["kills"].to_i %> / <%= data["deaths"].to_i %> / <%= data["teamkills"].to_i %>
+                <% if role == "Attack" %>
+                  &middot; Takes / Caps: <%= data["flag_touches"].to_i %> / <%= data["flag_caps"].to_i %>
+                  &middot; Carry: <%= format("%d:%02d", data["flag_carry_seconds"].to_i / 60, data["flag_carry_seconds"].to_i % 60) %>
+                <% else %>
+                  &middot; Stops: <%= data["flag_stops"].to_i %>
+                <% end %>
+              </small>
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">
               <% if data["weapon_stats"].present? %>
-                <h6>Weapon Stats</h6>
-                <%= render "weapon_table", weapon_stats: data["weapon_stats"] %>
+                <div style="flex: 0 1 auto; min-width: 300px;">
+                  <h6>Weapon Stats</h6>
+                  <%= render "weapon_table", weapon_stats: data["weapon_stats"] %>
+                </div>
               <% end %>
               <% if data["damage_received"].present? %>
-                <h6>Damage Received</h6>
-                <%= render "damage_received_table", damage_received: data["damage_received"] %>
+                <div style="flex: 0 1 auto; min-width: 300px;">
+                  <h6>Damage Received</h6>
+                  <%= render "damage_received_table", damage_received: data["damage_received"] %>
+                </div>
               <% end %>
             </div>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
       <% else %>
         <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">
           <div style="flex: 0 1 auto; min-width: 300px;">
