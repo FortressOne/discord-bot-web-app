@@ -20,9 +20,9 @@
 
       <progress style='--progress-color: <%= @match_stat.result_colour %>;' value=<%= @match_stat.progress_value %> max="<%= @match_stat.progress_max %>"></progress>
     </header>
-    <div style="display: flex; flex-wrap: wrap; gap: 1rem 3rem; align-items: center;">
+    <div class="result-teams">
       <% [1, 2].each_with_index do |team, index| %>
-        <div style="flex: 0 0 auto;">
+        <div class="result-team">
           <% flag = Team::FLAGS.fetch(team, Team::DEFAULT_FLAG) %>
           <span style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 1.3rem;">
             <%= image_tag(flag[:url], alt: flag[:alt], style: "height: 44px;") %>
@@ -45,7 +45,7 @@
           <% end %>
         </div>
         <% if index.zero? %>
-          <div style="flex: 1 0 auto; text-align: center; min-width: 10rem;">
+          <div class="result-score">
             <h1><%= @match_stat.team1_score %> &mdash; <%= @match_stat.team2_score %></h1>
           </div>
         <% end %>

@@ -14,10 +14,10 @@
 
       <progress style='--progress-color: <%= match.result_colour %>;' value=<%= match.progress_value %> max="1200"></progress>
     </header>
-    <div style="display: flex; flex-wrap: wrap; gap: 1rem 3rem; align-items: center;">
+    <div class="result-teams">
       <% [match.team(1), match.team(2)].each_with_index do |team, index| %>
         <% next unless team %>
-        <div style="flex: 0 0 auto;">
+        <div class="result-team">
           <span style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 1.3rem;">
             <%= image_tag(team.flag[:url], alt: team.flag[:alt], style: "height: 44px;") %>
             <strong><%= team.description %></strong>
@@ -34,7 +34,7 @@
           <% end %>
         </div>
         <% if index.zero? %>
-          <div style="flex: 1 0 auto; text-align: center; min-width: 10rem;">
+          <div class="result-score">
             <h1><%= match.score %></h1>
           </div>
         <% end %>

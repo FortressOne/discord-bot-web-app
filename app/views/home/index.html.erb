@@ -218,72 +218,57 @@
     <h3>The low-down on each</h3>
     </hgroup>
 
-    <% Playerclass.all.each do |playerclass_id, playerclass| %>
-      <article>
-        <div style="display: flex;">
-          <div style="flex: 33%">
-            <h3><%= "#{playerclass_id}. #{playerclass[:name]}" %></h3>
+    <div class="class-cards">
+      <% Playerclass.all.each do |playerclass_id, playerclass| %>
+        <article class="class-card">
+          <header>
             <% playerclass[:images].each do |_colour, image| %>
               <%= image_tag(image[:url], alt: image[:alt]) %>
             <% end %>
-          </div>
-          <div style="flex: 33%">
-            <dl>
-              <dt>Speed</dt>
-              <dd><%= playerclass[:speed] %> unit/s</dd>
-            </dl>
-            <dl>
-              <dt>Armour</dt>
-              <dd><%= playerclass[:armour] %></dd>
-            </dl>
-            <dl>
-              <dt>Specials</dt>
-              <dd>
-                <ol>
-                  <% playerclass[:specials].each do |special| %>
-                    <li><%= special %></li>
+            <span class="num"><%= playerclass_id %></span>
+            <h3><%= playerclass[:name] %></h3>
+          </header>
+          <div class="class-card-body">
+            <div>
+              <div class="kv"><span>Speed</span><b><%= playerclass[:speed] %> <em>u/s</em></b></div>
+              <div class="kv"><span>Armour</span><b><%= playerclass[:armour] %></b></div>
+              <div class="mini">
+                <h4>Specials</h4>
+                <ul class="slots">
+                  <% playerclass[:specials].each_with_index do |special, index| %>
+                    <li><span class="slot"><%= index + 1 %></span><%= special %></li>
                   <% end %>
-                </ol>
-              </dd>
-            </dl>
-            <% if playerclass[:attributes].any? %>
-              <dl>
-                <dt>Attributes</dt>
-                <dd>
-                  <ul>
-                    <% playerclass[:attributes].each do |weapon| %>
-                      <li><%= weapon.presence || "-" %></li>
-                    <% end %>
-                  </ul>
-                </dd>
-              </dl>
-            <% end %>
-          </div>
-          <div style="flex: 33%">
-            <dl>
-              <dt>Weapons</dt>
-              <dd>
-                <ol>
-                  <% playerclass[:weapons].each do |weapon| %>
-                    <li><%= weapon_label_icons(weapon) %></li>
+                </ul>
+              </div>
+              <% if playerclass[:attributes].any? %>
+                <div class="mini">
+                  <h4>Attributes</h4>
+                  <p><%= playerclass[:attributes].join(" · ") %></p>
+                </div>
+              <% end %>
+            </div>
+            <div>
+              <div class="mini">
+                <h4>Weapons</h4>
+                <ul class="slots">
+                  <% playerclass[:weapons].each_with_index do |weapon, index| %>
+                    <li><span class="slot"><%= index + 1 %></span><%= weapon.present? ? weapon_label_icons(weapon) : tag.span("&mdash;".html_safe, style: "color: var(--text-dim);") %></li>
                   <% end %>
-                </ol>
-              </dd>
-            </dl>
-            <dl>
-              <dt>Grenades</dt>
-              <dd>
-                <ol>
-                  <% playerclass[:grenades].each do |grenade| %>
-                    <li><%= weapon_label_icons(grenade) %></li>
+                </ul>
+              </div>
+              <div class="mini">
+                <h4>Grenades</h4>
+                <ul class="slots">
+                  <% playerclass[:grenades].each_with_index do |grenade, index| %>
+                    <li><span class="slot"><%= index + 1 %></span><%= weapon_label_icons(grenade) %></li>
                   <% end %>
-                </ol>
-              </dd>
-            </dl>
+                </ul>
+              </div>
+            </div>
           </div>
-        </div>
-      </article>
-    <% end %>
+        </article>
+      <% end %>
+    </div>
   </section>
 
   <section id="controls">
