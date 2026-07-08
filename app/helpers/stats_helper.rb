@@ -75,8 +75,9 @@ module StatsHelper
 
   # Weapon HUD icons we ship (app/assets/images/weapons). Codes without an
   # icon fall back to their text label. See WEAPON_NAMES in the parser.
-  WEAPON_ICONS = %w[hgren conc ngren mirv flash gas emp napalm calt flare
-                    burst sniper sent disp bio sg ssg ng sng rl gl].freeze
+  WEAPON_ICONS = %w[hgren conc ngren mirv flash gas emp napalm calt flare burst
+                    sniper sent disp bio sg ssg ng sng rl gl cann rail pipe flame
+                    incen tranq spann auto detp shock axe knife].freeze
 
   WEAPON_LABELS = {
     "sg" => "Shotgun", "ssg" => "Super Shotgun", "ng" => "Nailgun",
@@ -100,7 +101,7 @@ module StatsHelper
     "Sniper Rifle" => "sniper", "Assault Rifle" => "auto", "Pipe Launcher" => "pipe",
     "Assault Cannon" => "cann", "Flamethrower" => "flame", "Incendiary Cannon" => "incen",
     "Tranq Gun" => "tranq", "Railgun" => "rail", "Spanner" => "spann",
-    "Medi" => "bio", "Bio Weapon" => "bio", "Axe" => nil, "Knife" => nil,
+    "Medi" => "bio", "Bio Weapon" => "bio", "Axe" => "axe", "Knife" => "knife",
     "Frag" => "hgren", "Concussion" => "conc", "Nail" => "ngren", "MIRV" => "mirv",
     "Flash" => "flash", "Caltrops" => "calt", "Flare" => "flare", "Shock" => "shock",
     "Blast" => "burst", "Napalm" => "napalm", "Hallucinogenic Gas" => "gas", "EMP" => "emp"
