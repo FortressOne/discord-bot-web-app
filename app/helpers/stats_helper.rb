@@ -112,13 +112,19 @@ module StatsHelper
   def weapon_label_icons(name, size: 22)
     return "-" if name.blank?
 
-    codes = name.split("/").map { |part| WEAPON_NAME_CODES[part.strip] }
-                .compact.select { |code| WEAPON_ICONS.include?(code) }.uniq
-    icons = codes.map do |code|
-      image_tag("weapons/#{code}.webp", alt: "",
-                style: "height: #{size}px; vertical-align: middle; margin-right: 0.3rem;")
+    # Each "/"-separated choice keeps its own icon: "<icon> Shock / <icon> Nail".
+    parts = name.split("/").map do |part|
+      label = part.strip
+      code = WEAPON_NAME_CODES[label]
+      if code && WEAPON_ICONS.include?(code)
+        safe_join([image_tag("weapons/#{code}.webp", alt: "",
+                             style: "height: #{size}px; vertical-align: middle; margin-right: 0.3rem;"),
+                   label])
+      else
+        label
+      end
     end
-    safe_join(icons + [name])
+    safe_join(parts, " / ")
   end
 
   # An icon for the weapon code where we have art, else its text label.
