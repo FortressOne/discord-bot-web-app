@@ -2,7 +2,7 @@ class MatchesController < ApplicationController
   before_action :set_match, only: %i[ show ]
 
   def index
-    @pagy, @matches = pagy(Match.completed)
+    @pagy, @matches = pagy(Match.completed.includes(:match_stat))
   end
 
   def show

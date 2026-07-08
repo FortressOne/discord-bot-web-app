@@ -50,7 +50,7 @@
       </div>
     </div>
     <footer>
-      <%= link_to("Stats", match.stats_uri) %>
+      <%= link_to("Stats", match.match_stat ? stat_path(match.match_stat) : match.stats_uri) %>
       <%= DELIMITER %>
       <%= link_to("Demo", match.demo_uri) %>
     </footer>
