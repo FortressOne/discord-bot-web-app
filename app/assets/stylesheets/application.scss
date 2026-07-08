@@ -197,6 +197,8 @@ h1 .one {
   text-transform: uppercase;
 }
 .class-card .mini { margin: 14px 0 0; }
+/* Both columns start at the same height. */
+.class-card-body > div > .mini:first-child { margin-top: 0; }
 .class-card .mini p { margin: 0; }
 .class-card .kv {
   display: flex;
