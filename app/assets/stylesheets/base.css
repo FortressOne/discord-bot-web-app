@@ -48,6 +48,7 @@ figure { overflow-x: auto; }
 
 /* Media never escapes its container (Pico parity). */
 img, embed, object, video, iframe { max-width: 100%; }
+iframe, video { border: 0; }
 img { height: auto; }
 
 blockquote {
@@ -81,10 +82,9 @@ hgroup > :not(:first-child) {
 }
 ul, ol { padding-left: 1.2rem; }
 
-/* Sections are the page's paragraphs: a full breath apart, ruled off. */
+/* Sections are the page's paragraphs: a full breath apart. */
 section { margin: 0 0 3rem; }
 section > :last-child { margin-bottom: 0; }
-main > section + section { border-top: 1px solid var(--line); padding-top: 2rem; }
 code { background: var(--bg-inset); border: 1px solid var(--line); border-radius: 4px; padding: 0.1rem 0.35rem; font-size: 0.85em; color: var(--primary); }
 
 a { color: var(--primary); text-decoration: none; }
