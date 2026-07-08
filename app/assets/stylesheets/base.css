@@ -44,7 +44,7 @@ body {
 
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(0%, 1fr)); gap: 0.9rem; }
 
-figure { margin: 0 0 1rem; overflow-x: auto; }
+figure { overflow-x: auto; }
 
 /* Media never escapes its container (Pico parity). */
 img, embed, object, video, iframe { max-width: 100%; }
@@ -57,19 +57,34 @@ blockquote {
 }
 blockquote footer, blockquote cite { color: var(--text-dim); font-size: 0.9em; }
 
-/* ---------- typography ---------- */
-h1, h2, h3, h4, h5, h6 { color: var(--heading); line-height: 1.25; margin: 0 0 0.5rem; }
-h1 { font-size: 1.7rem; }
-h2 { font-size: 1.35rem; margin-top: 1.4rem; }
-h3 { font-size: 1.15rem; margin-top: 1.3rem; }
-h4 { font-size: 1.02rem; }
-h5, h6 { font-size: 0.92rem; }
-p { margin: 0 0 0.8rem; }
+/* ---------- typography & vertical rhythm ----------
+   One scale for every gap: 1rem between siblings, 0.6rem under a
+   heading, 2.25rem above a heading that starts a new block, 3rem
+   between page sections. Nothing sets its own bespoke margin. */
+h1, h2, h3, h4, h5, h6 { color: var(--heading); line-height: 1.25; }
+h1 { font-size: 1.7rem; margin: 1.5rem 0 0.6rem; }
+h2 { font-size: 1.35rem; margin: 2.25rem 0 0.6rem; }
+h3 { font-size: 1.15rem; margin: 1.75rem 0 0.6rem; }
+h4, h5, h6 { font-size: 1rem; margin: 1.25rem 0 0.6rem; }
+:is(h1, h2, h3, h4, h5, h6):first-child { margin-top: 0; }
+p, ul, ol, dl, figure, blockquote, pre, table, .grid { margin: 0 0 1rem; }
 small { font-size: 0.84em; color: var(--text-dim); }
-hgroup { margin-bottom: 0.8rem; }
+hgroup { margin: 0 0 1rem; }
 hgroup > * { margin: 0; }
-hgroup h3 { color: var(--text-dim); font-weight: 400; font-size: 0.95rem; }
-ul, ol { margin: 0 0 0.8rem; padding-left: 1.2rem; }
+hgroup :is(h2, h3, h4) {
+  color: var(--text-dim);
+  font-weight: 400;
+  font-size: 1rem;
+  font-family: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+}
+ul, ol { padding-left: 1.2rem; }
+
+/* Sections are the page's paragraphs: a full breath apart, ruled off. */
+section { margin: 0 0 3rem; }
+section > :last-child { margin-bottom: 0; }
+main > section + section { border-top: 1px solid var(--line); padding-top: 2rem; }
 code { background: var(--bg-inset); border: 1px solid var(--line); border-radius: 4px; padding: 0.1rem 0.35rem; font-size: 0.85em; color: var(--primary); }
 
 a { color: var(--primary); text-decoration: none; }
