@@ -169,7 +169,7 @@
           <div style="margin-bottom: 1.25rem;">
             <h5 style="color: <%= team_colour_code(team) %>;"><%= role %></h5>
             <p>
-              <%= stats_class_seconds_icons(data["class_seconds"] || {}, TEAM_COLOURS[team] || :blue, height: 22) %>
+              <%= stats_class_seconds_icons(data["class_seconds"] || {}, StatsHelper::TEAM_COLOURS[team.to_i] || :blue, height: 22) %>
             </p>
             <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">
               <% if data["weapon_stats"].present? %>
