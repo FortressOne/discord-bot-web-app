@@ -2,7 +2,9 @@ class Players::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   include Devise::Controllers::Rememberable
 
   # See https://github.com/omniauth/omniauth/wiki/FAQ#rails-session-is-clobbered-after-callback-on-developer-strategy
-  skip_before_action :verify_authenticity_token, only: :discord
+  # failure only redirects home; it must not re-verify the same stale token
+  # that routed the request here in the first place.
+  skip_before_action :verify_authenticity_token, only: [:discord, :failure]
 
   def discord
     @player = Player.from_omniauth(request.env["omniauth.auth"])
