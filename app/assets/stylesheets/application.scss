@@ -262,15 +262,15 @@ ul.slots li img { margin-right: 6px; }
   .result-score h1 { margin: 0; }
   .result-team span { font-size: 1.05rem !important; }
   .result-team img { height: 32px !important; }
-  /* Rows wrap in two phases, decided per row by JS measurement
-     (layoutRosterRows): first the awards drop below (small); if the
-     icons + name still overflow, the icons drop too and the name
-     leads. Unwrapped rows stay on one line. */
-  .roster-row { display: flex !important; flex-wrap: nowrap !important; overflow: hidden; row-gap: 0 !important; margin-bottom: 0.45rem; }
-  .roster-row > * { flex-shrink: 0; }
-  .roster-row.wrap-awards { flex-wrap: wrap !important; }
-  .roster-row.wrap-awards .medals { flex-basis: 100%; font-size: 0.75em !important; line-height: 1.2; }
-  .roster-row.wrap-icons > a { order: -1; flex-basis: 100%; }
-  .roster-row.wrap-icons .cls img { height: 20px !important; }
-  .roster-row.wrap-icons .medals { flex-basis: auto; }
+  /* Awards shrink and wrap below only when they don't fit inline.
+     Wrapped rows get breathing room from the next player. */
+  .roster-row { flex-wrap: wrap !important; row-gap: 0 !important; margin-bottom: 0.45rem; }
+  .roster-row .medals { font-size: 0.75em !important; line-height: 1.2; }
+}
+/* Layout 3 (narrow phones): name first, little class icons and awards
+   together on the line below. */
+@media (max-width: 640px) {
+  .roster-row > a { order: -1; flex-basis: 100%; }
+  .roster-row .cls img { height: 20px !important; }
+  .roster-row .medals { flex-basis: auto; }
 }

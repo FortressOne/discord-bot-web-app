@@ -65,22 +65,3 @@ document.addEventListener("turbo:load", function() {
 
 import "chartkick"
 import "Chart.bundle"
-
-// Roster rows wrap in phases: inline -> awards below -> icons below too.
-// Measured per row, so short rows stay inline at any width.
-function layoutRosterRows() {
-	document.querySelectorAll(".roster-row").forEach((row) => {
-		row.classList.remove("wrap-awards", "wrap-icons");
-		if (window.innerWidth > 900) return;
-		if (row.scrollWidth <= row.clientWidth + 1) return;
-		row.classList.add("wrap-awards");
-		const cls = row.querySelector(".cls");
-		const name = row.querySelector("a");
-		const needed = (cls ? cls.offsetWidth : 0) + (name ? name.offsetWidth : 0) + 10;
-		if (needed > row.clientWidth) row.classList.add("wrap-icons");
-	});
-}
-["turbo:load", "DOMContentLoaded", "resize"].forEach((eventName) => {
-	const target = eventName === "resize" ? window : document;
-	target.addEventListener(eventName, layoutRosterRows);
-});
