@@ -44,9 +44,9 @@ module ApplicationHelper
         stats = halves[half] || {}
         if stats["team"].to_i == team
           main = (stats["class_seconds"] || {}).max_by { |_, seconds| seconds }&.first
-          main ? stats_class_icon(main, StatsHelper::TEAM_COLOURS[team] || :blue, height: 44) : placeholder_class_icon
+          main ? stats_class_icon(main, StatsHelper::TEAM_COLOURS[team] || :blue, height: 44) : placeholder_class_icon(team)
         else
-          placeholder_class_icon
+          placeholder_class_icon(team)
         end
       end
       url = player.player_id ? player_path(player.player_id) : stats_path(player: player.name)
@@ -55,8 +55,10 @@ module ApplicationHelper
     end
   end
 
-  def placeholder_class_icon
-    image_tag("home/classes/ghost.webp", alt: "Did not play this half",
+  # Ghosts come in both facings — blue sprites face right, red face left.
+  def placeholder_class_icon(team)
+    colour = StatsHelper::TEAM_COLOURS[team] || :blue
+    image_tag("home/classes/ghost_#{colour}.webp", alt: "Did not play this half",
               title: "Did not play this half", style: "height: 44px;")
   end
 
