@@ -231,15 +231,6 @@ ul.slots { list-style: none; margin: 0; padding: 0; }
 ul.slots li { display: flex; align-items: center; padding: 4px 0; color: var(--heading); }
 ul.slots li img { margin-right: 6px; }
 
-/* All-time attackers sit under both teams, centred, first-half class
-   on the left of the name and second-half class on the right. */
-.result-ata {
-  flex-basis: 100%;
-  grid-column: 1 / -1;
-  text-align: center;
-  margin-top: 0.4rem;
-}
-
 /* ---- Result cards: teams flank the score; on mobile the score tops
    two team columns ---- */
 .result-teams {

@@ -32,6 +32,34 @@ module ApplicationHelper
     }
   end
 
+  # All-time attackers/defenders appear at the bottom of BOTH team lists:
+  # their class icon in the half they played for that team, a faded
+  # placeholder for the half they didn't, and a greyed asterisked name.
+  def all_time_rows(players, team)
+    players.select(&:unteamed?).filter_map do |player|
+      halves = player.respond_to?(:half_stats) ? (player.half_stats || {}) : {}
+      next unless %w[1 2].any? { |half| (halves[half] || {})["team"].to_i == team }
+
+      icons = %w[1 2].map do |half|
+        stats = halves[half] || {}
+        if stats["team"].to_i == team
+          main = (stats["class_seconds"] || {}).max_by { |_, seconds| seconds }&.first
+          main ? stats_class_icon(main, StatsHelper::TEAM_COLOURS[team] || :blue, height: 44) : placeholder_class_icon
+        else
+          placeholder_class_icon
+        end
+      end
+      url = player.player_id ? player_path(player.player_id) : stats_path(player: player.name)
+      { icons: tag.span(safe_join(icons), style: "white-space: nowrap; display: inline-flex; align-items: center; gap: 0.2rem;"),
+        name: "#{stats_display_name(player.name)}*", url: url, medals: [], ata: true }
+    end
+  end
+
+  def placeholder_class_icon
+    image_tag("home/classes/none.webp", alt: "Did not play this half",
+              title: "Did not play this half", style: "height: 44px; opacity: 0.3;")
+  end
+
   # Data for shared/_result_card from a parsed MatchStat.
   def result_card_for_match_stat(match_stat, players:, awards:)
     teams = [1, 2].map do |team|
@@ -44,7 +72,7 @@ module ApplicationHelper
                          .map { |award| { emoji: award.emoji, title: "#{award.title} (#{award.description})" } }
           { icons: stats_main_class_icons(player, height: 44),
             name: stats_display_name(player.name), url: url, medals: medals }
-        end
+        end + all_time_rows(players, team)
       }
     end
     meta = []
@@ -60,20 +88,8 @@ module ApplicationHelper
     if match_stat.demo_filename.present? && match_stat.match&.demo_uri.present?
       links << ["Demo", match_stat.match.demo_uri]
     end
-    all_time = players.select(&:unteamed?).map do |player|
-      halves = player.respond_to?(:half_stats) ? (player.half_stats || {}) : {}
-      first_icon, second_icon = %w[1 2].map do |half|
-        stats = halves[half] || {}
-        main = (stats["class_seconds"] || {}).max_by { |_, seconds| seconds }&.first
-        colour = StatsHelper::TEAM_COLOURS[stats["team"].to_i] || :blue
-        main ? stats_class_icon(main, colour, height: 32) : "".html_safe
-      end
-      url = player.player_id ? player_path(player.player_id) : stats_path(player: player.name)
-      { name: stats_display_name(player.name), url: url,
-        first_icon: first_icon, second_icon: second_icon }
-    end
     {
-      id: match_stat.id, timestamp: match_stat.played_at, fit: true, all_time: all_time,
+      id: match_stat.id, timestamp: match_stat.played_at, fit: true,
       meta: meta, summary: stats_match_summary(match_stat, players),
       progress: { colour: match_stat.result_colour, value: match_stat.progress_value, max: match_stat.progress_max },
       teams: teams, score: "#{match_stat.team1_score} — #{match_stat.team2_score}",

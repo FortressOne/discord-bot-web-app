@@ -27,7 +27,9 @@
           <span class="roster-row" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 1.3rem;">
             <span class="who" style="display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap;">
               <span class="cls" style="display: inline-flex; align-items: center; gap: 0.3rem;"><%= row[:icons] %></span>
-              <%= link_to(row[:name], row[:url]) %>
+              <%= link_to(row[:name], row[:url],
+                          style: row[:ata] ? "color: var(--text-dim);" : nil,
+                          title: row[:ata] ? "All-time attacker/defender — swapped sides at the half" : nil) %>
             </span>
             <% if row[:medals].present? %>
               <span class="medals">
@@ -45,15 +47,6 @@
           <h1><%= card[:score] %></h1>
         </div>
       <% end %>
-    <% end %>
-    <% Array(card[:all_time]).each do |row| %>
-      <div class="result-ata">
-        <span class="roster-row" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 1.3rem;">
-          <%= row[:first_icon] %>
-          <%= link_to(row[:name], row[:url], title: "All-time attacker") %>
-          <%= row[:second_icon] %>
-        </span>
-      </div>
     <% end %>
   </div>
   <footer>
