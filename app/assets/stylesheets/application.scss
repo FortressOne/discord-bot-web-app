@@ -255,10 +255,13 @@ ul.slots li img { margin-right: 6px; }
   }
   .result-teams {
     display: grid;
-    grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 1fr);
-    gap: 0.5rem 1.5rem;
+    /* Columns are exactly as wide as their content — they can never
+       overlap or squish; the container scrolls instead. */
+    grid-template-columns: max-content max-content;
+    gap: 0.5rem 2rem;
     align-items: start;
     overflow-x: auto;
+    padding-bottom: 0.25rem;
   }
   .result-score { grid-column: 1 / -1; order: -1; min-width: 0; }
   .result-score h1 { margin: 0; }
