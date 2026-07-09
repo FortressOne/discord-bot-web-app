@@ -50,7 +50,7 @@
       <div class="result-ata">
         <span class="roster-row" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 1.3rem;">
           <%= row[:first_icon] %>
-          <span style="color: #FFFFFF;" title="All-time attacker"><strong><%= link_to(row[:name], row[:url], style: "color: #FFFFFF;") %></strong></span>
+          <%= link_to(row[:name], row[:url], title: "All-time attacker") %>
           <%= row[:second_icon] %>
         </span>
       </div>
