@@ -255,28 +255,14 @@ ul.slots li img { margin-right: 6px; }
   }
   .result-teams {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem 1rem;
+    grid-template-columns: minmax(min-content, 1fr) minmax(min-content, 1fr);
+    gap: 0.5rem 1.5rem;
     align-items: start;
+    overflow-x: auto;
   }
   .result-score { grid-column: 1 / -1; order: -1; min-width: 0; }
-  /* Anything still too wide scrolls within its team column. */
-  .result-team { min-width: 0; overflow-x: auto; }
   .result-score h1 { margin: 0; }
   .result-team span { font-size: 1.05rem !important; }
   .result-team img { height: 32px !important; }
-  /* Awards shrink and wrap below only when they don't fit inline.
-     Wrapped rows get breathing room from the next player. */
-  .roster-row { flex-wrap: wrap !important; row-gap: 0 !important; margin-bottom: 0.45rem; }
-  .roster-row .medals { font-size: 0.75em !important; line-height: 1.2; }
-  /* When any row's awards wrap, every row's awards wrap (set by
-     syncRosterWrap — rows can't see each other in CSS). */
-  .result-teams.awards-below .roster-row .medals { flex-basis: 100%; }
-}
-/* Layout 3 (narrow phones): name first, little class icons and awards
-   together on the line below. */
-@media (max-width: 640px) {
-  .roster-row > a { order: -1; flex-basis: 100%; }
-  .roster-row .cls img { height: 20px !important; }
-  .roster-row .medals { flex-basis: auto; }
+  .roster-row { margin-bottom: 0.3rem; }
 }
