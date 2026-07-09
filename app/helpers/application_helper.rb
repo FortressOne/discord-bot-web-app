@@ -60,8 +60,20 @@ module ApplicationHelper
     if match_stat.demo_filename.present? && match_stat.match&.demo_uri.present?
       links << ["Demo", match_stat.match.demo_uri]
     end
+    all_time = players.select(&:unteamed?).map do |player|
+      halves = player.respond_to?(:half_stats) ? (player.half_stats || {}) : {}
+      first_icon, second_icon = %w[1 2].map do |half|
+        stats = halves[half] || {}
+        main = (stats["class_seconds"] || {}).max_by { |_, seconds| seconds }&.first
+        colour = StatsHelper::TEAM_COLOURS[stats["team"].to_i] || :blue
+        main ? stats_class_icon(main, colour, height: 32) : "".html_safe
+      end
+      url = player.player_id ? player_path(player.player_id) : stats_path(player: player.name)
+      { name: stats_display_name(player.name), url: url,
+        first_icon: first_icon, second_icon: second_icon }
+    end
     {
-      id: match_stat.id, timestamp: match_stat.played_at, fit: true,
+      id: match_stat.id, timestamp: match_stat.played_at, fit: true, all_time: all_time,
       meta: meta, summary: stats_match_summary(match_stat, players),
       progress: { colour: match_stat.result_colour, value: match_stat.progress_value, max: match_stat.progress_max },
       teams: teams, score: "#{match_stat.team1_score} — #{match_stat.team2_score}",

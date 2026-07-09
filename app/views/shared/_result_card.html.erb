@@ -46,6 +46,15 @@
         </div>
       <% end %>
     <% end %>
+    <% Array(card[:all_time]).each do |row| %>
+      <div class="result-ata">
+        <span class="roster-row" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 1.3rem;">
+          <%= row[:first_icon] %>
+          <span style="color: #FFFFFF;" title="All-time attacker"><strong><%= link_to(row[:name], row[:url], style: "color: #FFFFFF;") %></strong></span>
+          <%= row[:second_icon] %>
+        </span>
+      </div>
+    <% end %>
   </div>
   <footer>
     <%= safe_join(card[:links].map { |label, url| link_to(label, url) }, DELIMITER) %>
