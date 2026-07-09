@@ -136,6 +136,25 @@ thead th, thead td {
   white-space: nowrap;
 }
 tbody th, tbody td { border-bottom: 1px solid #282634; }
+/* Sortable tables: clickable headers show sort direction (tablesort
+   sets aria-sort on the active column). */
+th[role="columnheader"]:not(.no-sort) { cursor: pointer; }
+th[role="columnheader"]:not(.no-sort)::after {
+  content: "";
+  float: right;
+  margin-top: 7px;
+  margin-left: 3px;
+  border-width: 0 4px 4px;
+  border-style: solid;
+  border-color: var(--text-dim) transparent;
+  visibility: hidden;
+}
+th[aria-sort="ascending"]:not(.no-sort)::after {
+  border-width: 4px 4px 0;
+}
+th[aria-sort]:not(.no-sort)::after { visibility: visible; }
+th[role="columnheader"]:not(.no-sort):hover::after { visibility: visible; opacity: 0.4; }
+
 table[role="grid"] tbody tr:nth-child(odd) { background: #ffffff05; }
 table[role="grid"] tbody tr:hover { background: #ffffff09; }
 
