@@ -5,7 +5,7 @@
   <header>
     <p>
       <span style="float: right; margin-left: 2rem;">
-        <%= card[:id] %><% if card[:timestamp] %><%= DELIMITER %><%= local_time(card[:timestamp]) %><small> (<%= local_time_ago(card[:timestamp]) %>)</small><% end %>
+        <%= card[:id] %><% if card[:timestamp] %><%= DELIMITER %><%= local_time(card[:timestamp]) %><% end %>
       </span>
       <% card[:meta].each do |label, text, url| %>
         <%= label %>: <%= link_to(text, url, style: "text-align: left;") %></br>
