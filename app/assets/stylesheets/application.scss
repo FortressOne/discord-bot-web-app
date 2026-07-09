@@ -242,6 +242,14 @@ ul.slots li img { margin-right: 6px; }
 .result-team { flex: 0 0 auto; }
 .result-score { flex: 1 0 auto; text-align: center; min-width: 10rem; }
 @media (max-width: 640px) {
+  /* The id/date stops floating right; wrapped server names were sliding
+     underneath it. It becomes the card's first line, left aligned. */
+  .card-stamp {
+    float: none !important;
+    display: block;
+    margin-left: 0 !important;
+    color: var(--text-dim);
+  }
   .result-teams {
     display: grid;
     grid-template-columns: 1fr 1fr;

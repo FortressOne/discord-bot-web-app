@@ -4,7 +4,7 @@
 <article <% if card[:fit] %>style="width: fit-content; min-width: min(48rem, 100%); max-width: 100%; margin: 0 0 1rem;"<% end %>>
   <header>
     <p>
-      <span style="float: right; margin-left: 2rem;">
+      <span class="card-stamp" style="float: right; margin-left: 2rem;">
         <%= card[:id] %><% if card[:timestamp] %><%= DELIMITER %><%= local_time(card[:timestamp]) %><% end %>
       </span>
       <% card[:meta].each do |label, text, url| %>
