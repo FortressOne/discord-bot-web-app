@@ -25,10 +25,8 @@
         </br>
         <% team[:players].each do |row| %>
           <span class="roster-row" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 1.3rem;">
-            <span class="who" style="display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap;">
-              <%= row[:icons] %>
-              <%= link_to(row[:name], row[:url]) %>
-            </span>
+            <span class="cls" style="display: inline-flex; align-items: center; gap: 0.3rem;"><%= row[:icons] %></span>
+            <%= link_to(row[:name], row[:url]) %>
             <% if row[:medals].present? %>
               <span class="medals">
                 <% row[:medals].each do |medal| %>
