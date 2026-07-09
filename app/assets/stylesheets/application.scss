@@ -255,9 +255,10 @@ ul.slots li img { margin-right: 6px; }
   }
   .result-teams {
     display: grid;
-    /* Columns are exactly as wide as their content — they can never
-       overlap or squish; the container scrolls instead. */
-    grid-template-columns: max-content max-content;
+    /* Each column is at least its content width (never overlaps or
+       squishes — the container scrolls instead) and grows to half the
+       card when there's room, so the columns split it equally. */
+    grid-template-columns: repeat(2, unquote("max(calc((100% - 2rem) / 2), max-content)"));
     gap: 0.5rem 2rem;
     align-items: start;
     overflow-x: auto;
