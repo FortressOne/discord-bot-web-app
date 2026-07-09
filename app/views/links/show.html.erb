@@ -9,9 +9,10 @@
       <%= form_with url: link_path, method: :post, data: { turbo: false } do |f| %>
         <%= f.text_field :code, value: @code, placeholder: "ABCD-1234", autofocus: @code.blank?,
                          autocomplete: "off",
-                         style: "text-transform: uppercase; text-align: center; " \
-                                "font-family: monospace; font-size: 1.4rem; letter-spacing: 0.12em;" %>
-        <%= f.submit "Approve this game client" %>
+                         style: "text-transform: uppercase; text-align: center; width: 100%; " \
+                                "font-family: monospace; font-size: 1.4rem; letter-spacing: 0.12em; " \
+                                "margin-bottom: 0.75rem;" %>
+        <%= f.submit "Approve this game client", style: "width: 100%; margin-bottom: 0.75rem;" %>
       <% end %>
       <p style="text-align: center; margin-bottom: 0;">
         <small>Your game will be signed in as <strong><%= current_player.name %></strong>.</small>

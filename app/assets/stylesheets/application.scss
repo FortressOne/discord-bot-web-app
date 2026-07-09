@@ -280,3 +280,14 @@ ul.slots li img { margin-right: 6px; }
   .result-team img { height: 32px !important; }
   .roster-row { margin-bottom: 0.3rem; }
 }
+
+/* Player-stats attack/defence blocks sit side by side when they fit. */
+.role-blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 0.5rem 2rem;
+  align-items: start;
+}
+@media (max-width: 480px) {
+  .role-blocks { grid-template-columns: 1fr; }
+}
