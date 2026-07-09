@@ -241,7 +241,10 @@ ul.slots li img { margin-right: 6px; }
 }
 .result-team { flex: 0 0 auto; }
 .result-score { flex: 1 0 auto; text-align: center; min-width: 10rem; }
-@media (max-width: 640px) {
+/* Below ~900px the teams | score | teams row can't fit three across,
+   so the card switches to the mobile layout: score on top, two team
+   columns, compact rosters. */
+@media (max-width: 900px) {
   /* The id/date stops floating right; wrapped server names were sliding
      underneath it. It becomes the card's first line, left aligned. */
   .card-stamp {
