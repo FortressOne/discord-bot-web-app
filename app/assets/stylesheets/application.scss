@@ -255,15 +255,16 @@ ul.slots li img { margin-right: 6px; }
   }
   .result-teams {
     display: grid;
-    /* Each column is at least its content width (never overlaps or
-       squishes — the container scrolls instead) and grows to half the
-       card when there's room, so the columns split it equally. */
-    grid-template-columns: unquote("repeat(2, max(calc((100% - 2rem) / 2), max-content))");
+    /* Equal columns that never shrink below their content: the tracks
+       split the card 50/50, and min-width on the teams stops them
+       squishing — the container scrolls instead. */
+    grid-template-columns: 1fr 1fr;
     gap: 0.5rem 2rem;
     align-items: start;
     overflow-x: auto;
     padding-bottom: 0.25rem;
   }
+  .result-team { min-width: max-content; }
   .result-score { grid-column: 1 / -1; order: -1; min-width: 0; }
   .result-score h1 { margin: 0; }
   .result-team span { font-size: 1.05rem !important; }
