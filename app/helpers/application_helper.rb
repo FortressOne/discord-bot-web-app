@@ -56,8 +56,10 @@ module ApplicationHelper
   end
 
   def placeholder_class_icon
-    image_tag("home/classes/none.webp", alt: "Did not play this half",
-              title: "Did not play this half", style: "height: 44px; opacity: 0.3;")
+    tag.span("–", title: "Did not play this half",
+             style: "display: inline-flex; align-items: center; justify-content: center; " \
+                    "width: 30px; height: 44px; border: 1px dashed var(--line); " \
+                    "border-radius: 4px; color: var(--text-dim);")
   end
 
   # Data for shared/_result_card from a parsed MatchStat.
