@@ -45,10 +45,12 @@
       </ul>
       <ul>
         <% if player_signed_in? %>
-          <li>Signed in as <%= link_to(current_player.name, current_player) %></li>
-
           <% if current_player.image %>
-            <li><%= image_tag current_player.image, style: "max-height: 3rem; border-radius: 50%;" %></li>
+            <li>
+              <%= link_to(current_player, title: current_player.name) do %>
+                <%= image_tag current_player.image, alt: current_player.name, style: "max-height: 3rem; border-radius: 50%;" %>
+              <% end %>
+            </li>
           <% end %>
 
           <li>
