@@ -262,9 +262,15 @@ ul.slots li img { margin-right: 6px; }
   .result-score h1 { margin: 0; }
   .result-team span { font-size: 1.05rem !important; }
   .result-team img { height: 32px !important; }
-  /* Name first; class icons and awards subscripted on the line below. */
-  .roster-row { flex-wrap: wrap !important; row-gap: 0 !important; }
+  /* Layout 2: icons + name inline, little awards on the line below.
+     Wrapped rows get breathing room from the next player. */
+  .roster-row { flex-wrap: wrap !important; row-gap: 0 !important; margin-bottom: 0.45rem; }
+  .roster-row .medals { flex-basis: 100%; font-size: 0.7em !important; line-height: 1.2; }
+}
+/* Layout 3 (narrow phones): name first, little class icons and awards
+   together on the line below. */
+@media (max-width: 640px) {
   .roster-row > a { order: -1; flex-basis: 100%; }
   .roster-row .cls img { height: 20px !important; }
-  .roster-row .medals { font-size: 0.7em !important; line-height: 1; }
+  .roster-row .medals { flex-basis: auto; }
 }
