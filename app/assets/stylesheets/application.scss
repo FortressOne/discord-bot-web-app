@@ -259,6 +259,8 @@ ul.slots li img { margin-right: 6px; }
     gap: 0.5rem 1rem;
   }
   .result-score { grid-column: 1 / -1; order: -1; min-width: 0; }
+  /* Anything still too wide scrolls within its team column. */
+  .result-team { min-width: 0; overflow-x: auto; }
   .result-score h1 { margin: 0; }
   .result-team span { font-size: 1.05rem !important; }
   .result-team img { height: 32px !important; }
