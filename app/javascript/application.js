@@ -66,19 +66,3 @@ document.addEventListener("turbo:load", function() {
 import "chartkick"
 import "Chart.bundle"
 
-// If any roster row's awards wrapped below the name, wrap them all —
-// mixed inline/wrapped rows in one card read as a mistake.
-function syncRosterWrap() {
-	document.querySelectorAll(".result-teams").forEach((card) => {
-		card.classList.remove("awards-below");
-		if (window.innerWidth > 900) return;
-		const wrapped = Array.from(card.querySelectorAll(".roster-row")).some((row) => {
-			const who = row.querySelector(".who");
-			const medals = row.querySelector(".medals");
-			return who && medals && medals.offsetTop > who.offsetTop + 10;
-		});
-		if (wrapped) card.classList.add("awards-below");
-	});
-}
-["turbo:load", "DOMContentLoaded"].forEach((eventName) => document.addEventListener(eventName, syncRosterWrap));
-window.addEventListener("resize", syncRosterWrap);
