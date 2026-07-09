@@ -189,11 +189,11 @@ progress {
   height: 8px;
   border: 0;
   border-radius: 99px;
-  background: var(--bg-inset);
+  background: var(--line);
   overflow: hidden;
   display: block;
   margin: 0.4rem 0;
 }
-progress::-webkit-progress-bar { background: var(--bg-inset); }
+progress::-webkit-progress-bar { background: var(--line); }
 progress::-webkit-progress-value { background: var(--progress-color, var(--primary)); }
 progress::-moz-progress-bar { background: var(--progress-color, var(--primary)); }
