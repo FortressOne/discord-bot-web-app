@@ -178,12 +178,6 @@
                   <%= render "weapon_table", weapon_stats: data["weapon_stats"] %>
                 </div>
               <% end %>
-              <% if data["damage_received"].present? %>
-                <div style="flex: 0 1 auto; min-width: 300px;">
-                  <h6>Damage Received</h6>
-                  <%= render "damage_received_table", damage_received: data["damage_received"] %>
-                </div>
-              <% end %>
             </div>
           </div>
         <% end %>
@@ -193,12 +187,6 @@
             <h6>Weapon Stats</h6>
             <%= render "weapon_table", weapon_stats: player.weapon_stats %>
           </div>
-          <% if player.damage_received.present? %>
-            <div style="flex: 0 1 auto; min-width: 300px;">
-              <h6>Damage Received</h6>
-              <%= render "damage_received_table", damage_received: player.damage_received %>
-            </div>
-          <% end %>
         </div>
       <% end %>
     </details>

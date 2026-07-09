@@ -258,7 +258,7 @@ ul.slots li img { margin-right: 6px; }
     /* Each column is at least its content width (never overlaps or
        squishes — the container scrolls instead) and grows to half the
        card when there's room, so the columns split it equally. */
-    grid-template-columns: repeat(2, unquote("max(calc((100% - 2rem) / 2), max-content)"));
+    grid-template-columns: unquote("repeat(2, max(calc((100% - 2rem) / 2), max-content))");
     gap: 0.5rem 2rem;
     align-items: start;
     overflow-x: auto;
