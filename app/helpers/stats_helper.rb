@@ -77,7 +77,7 @@ module StatsHelper
   # icon fall back to their text label. See WEAPON_NAMES in the parser.
   WEAPON_ICONS = %w[hgren conc ngren mirv flash gas emp napalm calt flare burst
                     sniper sent disp bio sg ssg ng sng rl gl cann rail pipe flame
-                    incen tranq spann auto detp shock axe knife].freeze
+                    incen tranq spann auto detp shock axe knife fire].freeze
 
   WEAPON_LABELS = {
     "sg" => "Shotgun", "ssg" => "Super Shotgun", "ng" => "Nailgun",
@@ -88,7 +88,7 @@ module StatsHelper
     "ngren" => "Nail Grenade", "burst" => "Burst Grenade", "flare" => "Flare Grenade",
     "calt" => "Caltrops", "mirv" => "MIRV Grenade", "flash" => "Flash Grenade",
     "shock" => "Shock Grenade", "emp" => "EMP Grenade", "napalm" => "Napalm Grenade",
-    "gas" => "Gas Grenade", "bio" => "Medikit", "spann" => "Spanner",
+    "gas" => "Gas Grenade", "bio" => "Medikit", "spann" => "Spanner", "fire" => "Fire",
     "tranq" => "Tranquiliser", "detp" => "Detpack", "sent" => "Sentry Gun",
     "disp" => "Dispenser", "laser" => "Laser", "env" => "Environment"
   }.freeze
@@ -144,22 +144,28 @@ module StatsHelper
 
   # Classes used, most-played first, minor dabbles (<5% of playing time)
   # hidden. The share lives in the tooltip.
-  def stats_class_icons(player, height: 28)
-    total = player.class_seconds.values.sum
+  def stats_class_icons(player, height: 28, min_share: 3)
+    colour = TEAM_COLOURS[player.team.to_i] || :blue
+    stats_class_seconds_icons(player.class_seconds, colour, height: height, min_share: min_share)
+  end
+
+  # Class icons for a class_seconds hash, dabbles at or under min_share
+  # percent hidden. The share lives in the tooltip.
+  def stats_class_seconds_icons(class_seconds, colour, height: 28, min_share: 3)
+    total = class_seconds.values.sum
     return "" if total.zero?
 
-    colour = TEAM_COLOURS[player.team.to_i] || :blue
-    icons = player.class_seconds.sort_by { |_, seconds| -seconds }.filter_map { |name, seconds|
+    icons = class_seconds.sort_by { |_, seconds| -seconds }.filter_map { |name, seconds|
       share = 100.0 * seconds / total
-      next if share < 5
+      next if share <= min_share
 
       number = CLASS_NUMBERS[name]
       next if number.nil? || number.zero?
 
       image = Playerclass.new(number).image(colour)
-      image_tag(image[:url], alt: image[:alt], title: "#{name} #{share.round}%", style: "height: #{height}px;")
+      image_tag(image[:url], alt: image[:alt], title: "#{stats_class_full_name(name)} #{share.round}%", style: "height: #{height}px;")
     }
-    tag.span(safe_join(icons), style: "white-space: nowrap; display: inline-flex; align-items: center; gap: 0.2rem;")
+    tag.span(safe_join(icons), style: "white-space: nowrap; display: inline-flex; align-items: center; gap: 0.2rem; vertical-align: middle;")
   end
 
   # The main class of each half (first then second), coloured by the team

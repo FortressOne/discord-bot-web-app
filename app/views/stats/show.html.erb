@@ -158,10 +158,10 @@
 
   <h3>Player Stats</h3>
   <% @players.each do |player| %>
-    <details <% if stats_own_row?(player) %>style="background-color: rgba(242, 209, 60, 0.10); border-radius: 0.25rem;"<% end %>>
-      <summary>
+    <details>
+      <summary <% if stats_own_row?(player) %>style="background-color: rgba(242, 209, 60, 0.10); border-radius: 0.25rem;"<% end %>>
         <span style="color: <%= player.unteamed? ? '#FFFFFF' : team_colour_code(player.team) %>;"><strong><%= stats_display_name(player.name) %></strong></span>
-        <small><%= player.class_breakdown %></small>
+        <%= stats_class_icons(player, height: 22) %>
       </summary>
       <% blocks = @breakdown.attack_defence? ? stats_role_blocks(player) : [] %>
       <% if blocks.any? %>
@@ -169,7 +169,7 @@
           <div style="margin-bottom: 1.25rem;">
             <h5 style="color: <%= team_colour_code(team) %>;"><%= role %></h5>
             <p>
-              <small><%= stats_class_breakdown(data["class_seconds"] || {}) %></small>
+              <%= stats_class_seconds_icons(data["class_seconds"] || {}, TEAM_COLOURS[team] || :blue, height: 22) %>
             </p>
             <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">
               <% if data["weapon_stats"].present? %>
