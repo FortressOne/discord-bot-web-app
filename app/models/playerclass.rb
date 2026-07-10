@@ -128,7 +128,7 @@ class Playerclass
       weapons: ["Railgun", "Super Shotgun", "Shotgun", "Spanner"],
       grenades: ["Frag", "EMP"],
       specials: ["Dispenser", "Sentry Gun"],
-      attributes: ["Dismantle enemy Buildings"],
+      attributes: ["Build Dispenser and Sentry Gun", "Dismantle enemy buildings"],
     },
   }
 
