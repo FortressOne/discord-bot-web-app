@@ -311,3 +311,34 @@ ul.slots li img { margin-right: 6px; }
   letter-spacing: 1.2px;
 }
 .site-metrics .metric span a { color: var(--text-dim); }
+
+/* Lineage chains: ancestor chips joined by arrows. */
+.lineage { display: flex; flex-direction: column; gap: 1.1rem; }
+.lineage h4 {
+  margin: 0 0 6px;
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.lineage ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.5rem; }
+.lineage li {
+  background: var(--bg-inset);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.45rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+}
+.lineage li small { color: var(--text-dim); }
+.lineage li:not(:last-child)::after { content: none; }
+.lineage li + li { position: relative; margin-left: 1.4rem; }
+.lineage li + li::before {
+  content: "\2192";
+  position: absolute;
+  left: -1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+}
