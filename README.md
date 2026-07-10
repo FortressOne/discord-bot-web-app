@@ -54,3 +54,12 @@ europe = DiscordChannel.find_by(channel_id: 513699536846323712)
 eu_bvr = DiscordChannelPlayer.find_by(player: bvr, discord_channel: europe)
 eu_bvr.trueskill_rating.update(mean: 24.03761382208332)
 ```
+
+## License
+
+Copyright (C) 2018-2026 Sheldon Johnson
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version. See [LICENSE](LICENSE) for the full text.
