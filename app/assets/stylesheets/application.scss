@@ -58,6 +58,10 @@ h1, hgroup h1 {
 h1 .one {
   color: var(--primary);
 }
+/* The page title outranks the metric numbers below it. */
+hgroup > h1 {
+  font-size: 2.6rem;
+}
 
 .video-container {
   position: relative;
