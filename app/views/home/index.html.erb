@@ -10,6 +10,13 @@
     </hgroup>
 
     <p>Free and open source fork of the original 1996 QuakeWorld mod Team Fortress. Fast-paced, class based, arena first person shooter remastered with refined graphics, new mechanics and evolved gameplay.</p>
+
+    <div class="site-metrics">
+      <div class="metric"><b><%= number_with_delimiter(@metrics[:matches]) %></b><span><%= link_to "Matches", stats_path %></span></div>
+      <div class="metric"><b><%= number_with_delimiter(@metrics[:players]) %></b><span><%= link_to "Players", players_path %></span></div>
+      <div class="metric"><b><%= number_with_delimiter(@metrics[:caps]) %></b><span>Flag captures</span></div>
+      <div class="metric"><b><%= number_with_delimiter(@metrics[:frags]) %></b><span>Frags</span></div>
+    </div>
   </section>
 
   <section>

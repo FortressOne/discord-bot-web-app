@@ -282,3 +282,26 @@ ul.slots li img { margin-right: 6px; }
 @media (max-width: 480px) {
   .role-blocks { grid-template-columns: 1fr; }
 }
+
+/* Homepage totals strip. */
+.site-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 2.8rem;
+  margin: 1.4rem 0 0.5rem;
+}
+.site-metrics .metric b {
+  display: block;
+  color: var(--primary);
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.site-metrics .metric span {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+.site-metrics .metric span a { color: var(--text-dim); }
