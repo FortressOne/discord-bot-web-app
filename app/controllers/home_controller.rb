@@ -14,6 +14,7 @@ class HomeController < ApplicationController
         caps: caps.to_i
       }
     end
+    @code_metrics = Stats::Codebase.metrics
   end
 
   private

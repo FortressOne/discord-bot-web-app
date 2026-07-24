@@ -16,6 +16,10 @@
       <div class="metric"><b><%= number_with_delimiter(@metrics[:players]) %></b><span><%= link_to "Players", players_path %></span></div>
       <div class="metric"><b><%= number_with_delimiter(@metrics[:caps]) %></b><span>Flag captures</span></div>
       <div class="metric"><b><%= number_with_delimiter(@metrics[:frags]) %></b><span>Frags</span></div>
+      <% if @code_metrics %>
+      <div class="metric"><b><%= number_with_delimiter(@code_metrics[:commits]) %></b><span><a href="https://github.com/FortressOne/server-qwprogs/commits">Commits</a></span></div>
+      <div class="metric"><b><%= number_with_delimiter(@code_metrics[:contributors]) %></b><span><a href="https://github.com/FortressOne/server-qwprogs/graphs/contributors">Contributors</a></span></div>
+      <% end %>
     </div>
   </section>
 
