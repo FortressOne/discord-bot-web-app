@@ -44,7 +44,9 @@ module Stats
     private
 
     def match_log_key?(key, size)
-      key.present? && key.end_with?(".json") && size > 100
+      # Match logs always live under <region>/<game_mode>/; top-level objects
+      # (demo-counts.json, index.html) are bucket housekeeping.
+      key.present? && key.include?("/") && key.end_with?(".json") && size > 100
     end
 
     def get(path, params = nil)
