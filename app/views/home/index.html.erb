@@ -2,14 +2,34 @@
   <div id="banner"></div>
 <% end %>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "FortressOne",
+  "alternateName": ["QWTF", "QuakeWorld Team Fortress", "Quake Team Fortress"],
+  "url": "https://www.fortressone.org/",
+  "description": "Free, open source revival of QuakeWorld Team Fortress (QWTF), the original 1996 Quake mod.",
+  "genre": ["First-person shooter", "Capture the flag"],
+  "gamePlatform": ["Windows", "Linux"],
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "sameAs": [
+    "https://github.com/FortressOne",
+    "https://www.moddb.com/games/fortressone",
+    "https://drzel.itch.io/fortressone",
+    "https://www.igdb.com/games/fortressone"
+  ]
+}
+</script>
+
 <main class="container">
   <section>
     <hgroup>
     <h1>Fortress<span class="one">One</span></h1>
-    <h2>Quake Team Fortress Remastered</h2>
+    <h2>QuakeWorld Team Fortress (QWTF) Remastered</h2>
     </hgroup>
 
-    <p>Free and open source fork of the original 1996 QuakeWorld mod Team Fortress. Fast-paced, class based, arena first person shooter remastered with refined graphics, new mechanics and evolved gameplay.</p>
+    <p>Free and open source fork of QuakeWorld Team Fortress (QWTF), the original 1996 Quake mod. Fast-paced, class based, arena first person shooter remastered with refined graphics, new mechanics and evolved gameplay.</p>
 
     <div class="site-metrics">
       <div class="metric"><b><%= number_with_delimiter(@metrics[:matches]) %></b><span><%= link_to "Matches", stats_path %></span></div>
@@ -307,7 +327,7 @@
       <div class="chain">
         <h4>Mod</h4>
         <ol>
-          <li><a href="https://en.wikipedia.org/wiki/Team_Fortress_(video_game)">Team Fortress 2.9</a><small>the original 1996 Quake mod</small></li>
+          <li><a href="https://en.wikipedia.org/wiki/Team_Fortress_(video_game)">Team Fortress 2.9</a><small>the original 1996 QuakeWorld mod, aka QWTF</small></li>
           <li><a href="https://github.com/Classic-Fortress">Classic Fortress</a><small>community modernisation</small></li>
           <li><strong>FortressOne</strong><small>you are here</small></li>
         </ol>
