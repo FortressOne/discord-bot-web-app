@@ -1,4 +1,6 @@
 <% content_for :container_class, "container-stats" %>
+<% content_for :title, stats_page_title(@match_stat) %>
+<% content_for :description, stats_page_description(@match_stat, @players) %>
 <div class="container-stats">
   <p><%= link_to "← Match stats", stats_path %></p>
 

@@ -1,4 +1,12 @@
 <% content_for :container_class, "container-stats" %>
+<%
+  title = if params[:player].present? then "#{params[:player]} — QWTF match log"
+          elsif params[:map].present? then "#{params[:map]} — QWTF matches"
+          else "QWTF match stats archive"
+          end
+  title += " — page #{params[:page]}" if params[:page].to_i > 1
+  content_for :title, title
+%>
 <div class="container-stats">
   <h1>Match Stats</h1>
 

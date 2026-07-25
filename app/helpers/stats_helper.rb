@@ -335,6 +335,24 @@ module StatsHelper
     name.to_s.sub(Stats::PlayerLinker::ID_SUFFIX, "")
   end
 
+  # SEO title/description for a match page: map and score up front where
+  # searchers can see them, the id for uniqueness.
+  def stats_page_title(match_stat)
+    score = "#{match_stat.team1_score.to_i}-#{match_stat.team2_score.to_i}"
+    [match_stat.map_name.presence, score, "QWTF pick-up match ##{match_stat.id}"].compact.join(" — ")
+  end
+
+  def stats_page_description(match_stat, players)
+    date = (match_stat.played_at || match_stat.created_at)&.strftime("%-d %b %Y")
+    names = players.reject(&:unteamed?).map { |p| stats_display_name(p.name) }.uniq.first(8)
+    desc = +"QuakeWorld Team Fortress match"
+    desc << " on #{match_stat.map_name}" if match_stat.map_name.present?
+    desc << ", #{date}" if date
+    desc << ": #{names.join(', ')}." if names.any?
+    desc << " Full per-player stats, kill matrix and awards."
+    desc
+  end
+
   def stats_class_breakdown(class_seconds)
     total = class_seconds.values.sum
     return "" if total.zero?

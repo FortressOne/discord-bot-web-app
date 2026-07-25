@@ -1,6 +1,22 @@
 module ApplicationHelper
   include Pagy::Frontend
 
+  SITE_TITLE = "FortressOne - QuakeWorld Team Fortress (QWTF) Remastered".freeze
+  SITE_DESCRIPTION = "Free, open source revival of QuakeWorld Team Fortress (QWTF), " \
+    "the original 1996 Quake mod. Fast-paced, class based, arena first person shooter " \
+    "remastered with refined graphics, new mechanics and evolved gameplay. " \
+    "Pick-up games every night.".freeze
+
+  # Pages set their own title/description with content_for; everything else
+  # falls back to the site-wide pair.
+  def page_title
+    content_for?(:title) ? "#{content_for(:title)} - FortressOne" : SITE_TITLE
+  end
+
+  def page_description
+    content_for?(:description) ? content_for(:description) : SITE_DESCRIPTION
+  end
+
   def result(int)
     { 1 => "Win", 0 => "Draw", -1 => "Lose" }[int]
   end
