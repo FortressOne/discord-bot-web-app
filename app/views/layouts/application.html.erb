@@ -20,6 +20,14 @@
     <meta name="description" content="<%= page_description %>" />
     <link rel="canonical" href="<%= canonical_url %>" />
 
+    <meta property="og:site_name" content="FortressOne" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="<%= page_title %>" />
+    <meta property="og:description" content="<%= page_description %>" />
+    <meta property="og:url" content="<%= canonical_url %>" />
+    <meta property="og:image" content="<%= "#{ApplicationHelper::CANONICAL_HOST}/images/favicons/android-chrome-512x512.png" %>" />
+    <meta name="twitter:card" content="summary" />
+
     <%= stylesheet_link_tag 'application', 'data-turbo-track': 'reload' %>
 
     <%= javascript_include_tag "https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js" %>
