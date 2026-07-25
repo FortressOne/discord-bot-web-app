@@ -17,6 +17,19 @@ module ApplicationHelper
     content_for?(:description) ? content_for(:description) : SITE_DESCRIPTION
   end
 
+  CANONICAL_HOST = "https://www.fortressone.org".freeze
+
+  # One canonical URL per page: fixed host, no trailing slash, and of the
+  # query parameters only the page number survives — filtered listing views
+  # (?map=, ?player=, ...) all canonicalise to their unfiltered listing.
+  def canonical_url
+    path = request.path.chomp("/")
+    page = request.query_parameters["page"].presence
+    url = "#{CANONICAL_HOST}#{path.presence || '/'}"
+    url += "?page=#{page}" if page && page != "1"
+    url
+  end
+
   def result(int)
     { 1 => "Win", 0 => "Draw", -1 => "Lose" }[int]
   end
