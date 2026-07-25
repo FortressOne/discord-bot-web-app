@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   end
 
   root to: 'home#index'
+  get 'sitemap.xml', to: 'sitemaps#show', defaults: { format: :xml }
   get 'live_player/show'
   get 'code-of-conduct', to: 'static_pages#code_of_conduct'
 

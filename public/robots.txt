@@ -1,1 +1,17 @@
 # See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+
+Sitemap: https://www.fortressone.org/sitemap.xml
+
+User-agent: *
+# Faceted stats filters render the same matches thousands of ways; the
+# canonical listing plus the sitemap cover the real content.
+Disallow: /stats?*map=
+Disallow: /stats?*player=
+Disallow: /stats?*region=
+Disallow: /stats?*mode=
+# Utility endpoints with nothing to index.
+Disallow: /api/
+Disallow: /link
+Disallow: /join/
+Disallow: /spectate/
+Disallow: /sign_out
