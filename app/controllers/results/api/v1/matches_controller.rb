@@ -3,6 +3,10 @@ require 'saulabs/trueskill'
 class Results::Api::V1::MatchesController < ActionController::API
   include Saulabs::TrueSkill
   include ResultConstants
+  include BotAuthentication
+
+  # Only the pickup bot reports matches.
+  before_action :require_bot_token
 
   FINAL_ROUND = 1
   PENULTIMATE_ROUND = 2

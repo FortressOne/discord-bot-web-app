@@ -1,6 +1,8 @@
 class Results::Api::V1::FoLoginsController < ActionController::API
   def create
-    @player = Player.find_by(fo_login_params)
+    token = fo_login_params[:auth_token]
+    # A blank token must never match: find_by({}) returns the first player.
+    @player = Player.find_by(auth_token: token) if token.is_a?(String) && token.present?
 
     if @player
       render plain: "#{@player.name}##{@player.id}", status: :ok

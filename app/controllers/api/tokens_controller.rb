@@ -2,6 +2,8 @@
 # /token command. Authenticated with a shared bearer token so only the bot can
 # mint tokens for arbitrary Discord ids.
 class Api::TokensController < ActionController::API
+  include BotAuthentication
+
   def create
     return head :unauthorized unless bot_authorized?
     return head :bad_request if params[:discord_id].blank?
@@ -15,15 +17,5 @@ class Api::TokensController < ActionController::API
     end
 
     render json: { token: TflToken.mint(player), name: player.name }
-  end
-
-  private
-
-  def bot_authorized?
-    expected = ENV["BOT_API_TOKEN"]
-    supplied = request.headers["Authorization"].to_s.delete_prefix("Bearer ")
-
-    expected.present? &&
-      ActiveSupport::SecurityUtils.secure_compare(supplied, expected)
   end
 end
