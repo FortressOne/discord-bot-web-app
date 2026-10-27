@@ -116,6 +116,15 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, JSON.parse(response.body)["count"]
   end
 
+  test "index ignores nested filter values on json instead of erroring" do
+    create_match_stat
+
+    get "/stats.json?map[x]=1&player[]=alice"
+
+    assert_response :success
+    assert_equal 1, JSON.parse(response.body)["count"]
+  end
+
   test "filter links carry only known filters and are nofollow" do
     create_match_stat
 

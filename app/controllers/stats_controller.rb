@@ -17,12 +17,13 @@ class StatsController < ApplicationController
   before_action :redirect_to_canonical_index, only: :index
 
   def index
+    filters = self.class.filter_query(request.query_parameters)
     scope = MatchStat.browsable
-    scope = scope.for_map(params[:map]) if params[:map].present?
-    scope = scope.for_region(params[:region]) if params[:region].present?
-    scope = scope.for_game_mode(params[:mode]) if params[:mode].present?
-    scope = scope.for_player(params[:player]) if params[:player].present?
-    scope = scope.for_player_id(params[:player_id]) if params[:player_id].present?
+    scope = scope.for_map(filters["map"]) if filters["map"]
+    scope = scope.for_region(filters["region"]) if filters["region"]
+    scope = scope.for_game_mode(filters["mode"]) if filters["mode"]
+    scope = scope.for_player(filters["player"]) if filters["player"]
+    scope = scope.for_player_id(filters["player_id"]) if filters["player_id"]
 
     @pagy, @match_stats = pagy(
       scope.includes(:player_match_stats),
