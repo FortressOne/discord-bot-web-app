@@ -10,6 +10,7 @@ class MapSuggestion < ApplicationRecord
     discord_channel = DiscordChannel.find_by(
       channel_id: channel_id
     )
+    return CONSIDERED_TEAMSIZES.to_h { |teamsize| [teamsize, []] } unless discord_channel
 
     CONSIDERED_TEAMSIZES.each_with_object({}) do |teamsize, h|
       maps = discord_channel
