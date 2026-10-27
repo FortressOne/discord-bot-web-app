@@ -34,7 +34,7 @@ class DeviceCode < ApplicationRecord
 
   def self.generate_code
     loop do
-      code = Array.new(2) { Array.new(4) { ALPHABET.sample }.join }.join("-")
+      code = Array.new(2) { Array.new(4) { ALPHABET.sample(random: SecureRandom) }.join }.join("-")
       break code unless exists?(code: code)
     end
   end

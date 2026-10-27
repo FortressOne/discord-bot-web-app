@@ -6,7 +6,8 @@ class JoinsController < ApplicationController
 
   def show
     @address = params[:address].to_s
-    head :bad_request unless @address.match?(ADDRESS_RE)
+    return head :bad_request unless @address.match?(ADDRESS_RE)
+
     @spectate = request.path.start_with?("/spectate")
   end
 end

@@ -16,5 +16,6 @@ class JoinsControllerTest < ActionDispatch::IntegrationTest
   test "garbage address rejected" do
     get "/join/%3Cscript%3E"
     assert_response :bad_request
+    assert_empty response.body
   end
 end
