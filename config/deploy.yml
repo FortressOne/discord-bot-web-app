@@ -118,7 +118,7 @@ accessories:
     image: postgres:16.8
     host: home.sheldonjohnson.net
     # Change to 5432 to expose port to the world instead of just local network.
-    port: "0.0.0.0:5432:5432"
+    port: "127.0.0.1:5432:5432"
     env:
       clear:
         POSTGRES_DB: discord_bot_web_app_production
