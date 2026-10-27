@@ -92,6 +92,19 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to "/stats?map=2fort5r&page=2"
   end
 
+  test "index 301s junk params when the client accepts anything" do
+    get "/stats?map=2fort5r&amp;player=alice", headers: { "Accept" => "*/*" }
+
+    assert_response :moved_permanently
+    assert_redirected_to "/stats?map=2fort5r"
+  end
+
+  test "index ignores junk params on JSON requests" do
+    get "/stats.json?map=2fort5r&amp;player=alice"
+
+    assert_response :success
+  end
+
   test "index 301s nested param values" do
     get "/stats?map[]=2fort5r&region=sydney"
 

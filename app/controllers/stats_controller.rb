@@ -94,7 +94,8 @@ class StatsController < ApplicationController
   # array values) to the same listing without them, so every listing has
   # exactly one URL. JSON clients just have unknown params ignored.
   def redirect_to_canonical_index
-    return unless request.format.html?
+    # Not format.html?: many crawlers send "Accept: */*" and still get the HTML page.
+    return if request.format.json?
 
     query = request.query_parameters
     canonical = query.slice(*INDEX_PARAMS).select { |_, value| value.is_a?(String) }
