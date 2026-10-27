@@ -49,7 +49,7 @@ class PlayersController < ApplicationController
 
   def rotate_token
     current_player.regenerate_auth_token
-    redirect_to player_path(@player), notice: "Token has been rotated."
+    redirect_to player_path(@player), notice: "Token has been rotated.", status: :see_other
   end
 
   private

@@ -24,7 +24,7 @@
       at the console.
     </p>
     <p>
-      <%= link_to("Rotate token", rotate_token_player_path, data: {turbo: false}) %>
+      <%= button_to("Rotate token", rotate_token_player_path(@player), form: { data: { turbo: false } }) %>
     </p>
 
   <% end %>

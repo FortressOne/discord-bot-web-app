@@ -14,7 +14,9 @@ Rails.application.routes.draw do
   get 'code-of-conduct', to: 'static_pages#code_of_conduct'
 
   resources :players, only: [:index, :show, :update] do
-    get 'rotate_token', on: :member
+    # State-changing: POST only (a GET could be triggered cross-site by an
+    # <img> or link prefetch).
+    post 'rotate_token', on: :member
   end
 
   # Browser half of the in-game Discord sign-in (device-pairing) flow.
