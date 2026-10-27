@@ -41,4 +41,48 @@ class Api::ReportsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
   end
+
+  test "rejects an oversized body before parsing it" do
+    big = REPORT.merge(teams: [{ score: 1, players: [{ username: "x" * 70_000 }] }])
+
+    assert_no_difference "MatchReport.count" do
+      post api_report_url, params: big, as: :json
+    end
+
+    assert_response :content_too_large
+  end
+
+  test "rejects a body that is not a JSON object" do
+    assert_no_difference "MatchReport.count" do
+      post api_report_url, params: "[1, 2]", headers: { "Content-Type" => "application/json" }
+    end
+
+    assert_response :bad_request
+  end
+
+  test "rejects an unknown report_type" do
+    assert_no_difference "MatchReport.count" do
+      post api_report_url, params: REPORT.merge(report_type: "pwned"), as: :json
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test "rejects non-string or oversized fields" do
+    assert_no_difference "MatchReport.count" do
+      post api_report_url, params: REPORT.merge(map: { a: 1 }), as: :json
+      assert_response :unprocessable_entity
+
+      post api_report_url, params: REPORT.merge(server_name: "x" * 256), as: :json
+      assert_response :unprocessable_entity
+    end
+  end
+
+  test "accepts a report with optional fields missing" do
+    assert_difference "MatchReport.count", 1 do
+      post api_report_url, params: REPORT.except(:map, :server_name, :server_address), as: :json
+    end
+
+    assert_response :success
+  end
 end

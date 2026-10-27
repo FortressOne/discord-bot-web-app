@@ -1,5 +1,6 @@
 require_relative "boot"
 require_relative "middleware/redirect_to_www"
+require_relative "middleware/api_body_limit"
 
 require "rails/all"
 
@@ -25,5 +26,6 @@ module DiscordBotWebApp
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     config.middleware.use RedirectToWww
+    config.middleware.insert_before 0, ApiBodyLimit
   end
 end
