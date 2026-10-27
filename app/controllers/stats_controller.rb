@@ -6,6 +6,16 @@
 class StatsController < ApplicationController
   PAGE_ITEMS = 50
 
+  # The only query params the match log understands. Filter links and
+  # pagination carry these and nothing else: copying the whole query string
+  # let crawlers that don't decode "&amp;" in hrefs (they request
+  # ?map=x&amp;player=y, i.e. a param named "amp;player") snowball junk
+  # params into an endless supply of unique URLs.
+  FILTER_PARAMS = %w[map region mode player player_id].freeze
+  INDEX_PARAMS = (FILTER_PARAMS + %w[page]).freeze
+
+  before_action :redirect_to_canonical_index, only: :index
+
   def index
     scope = MatchStat.browsable
     scope = scope.for_map(params[:map]) if params[:map].present?
@@ -14,7 +24,11 @@ class StatsController < ApplicationController
     scope = scope.for_player(params[:player]) if params[:player].present?
     scope = scope.for_player_id(params[:player_id]) if params[:player_id].present?
 
-    @pagy, @match_stats = pagy(scope.includes(:player_match_stats), items: PAGE_ITEMS)
+    @pagy, @match_stats = pagy(
+      scope.includes(:player_match_stats),
+      items: PAGE_ITEMS,
+      params: ->(query) { query.slice(*INDEX_PARAMS).compact_blank }
+    )
 
     respond_to do |format|
       format.html do
@@ -68,7 +82,25 @@ class StatsController < ApplicationController
     end
   end
 
+  # Filters currently applied, for building links that keep them.
+  def self.filter_query(query)
+    query.slice(*FILTER_PARAMS).select { |_, value| value.is_a?(String) && value.present? }
+  end
+
   private
+
+  # 301 any HTML request carrying params we don't understand (or nested /
+  # array values) to the same listing without them, so every listing has
+  # exactly one URL. JSON clients just have unknown params ignored.
+  def redirect_to_canonical_index
+    return unless request.format.html?
+
+    query = request.query_parameters
+    canonical = query.slice(*INDEX_PARAMS).select { |_, value| value.is_a?(String) }
+    return if canonical.size == query.size
+
+    redirect_to stats_path(canonical.compact_blank), status: :moved_permanently
+  end
 
   def index_row(match_stat)
     {

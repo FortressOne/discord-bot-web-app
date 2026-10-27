@@ -16,7 +16,7 @@
       <%= form.select :region, options_for_select(@regions, params[:region]), include_blank: "All regions" %>
       <%= form.select :mode, options_for_select(@game_modes, params[:mode]), include_blank: "All modes" %>
       <%= form.text_field :player, value: params[:player], placeholder: "Player name" %>
-      <%= form.submit "Filter" %>
+      <%= form.submit "Filter", name: nil %>
     </div>
   <% end %>
 

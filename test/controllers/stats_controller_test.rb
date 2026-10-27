@@ -82,4 +82,90 @@ class StatsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "rl", rocket["weapon"]
     assert_equal "40%", rocket["accuracy_display"]
   end
+
+  # Crawlers that don't decode "&amp;" request ?map=x&amp;player=y, which
+  # Rails parses as a param literally named "amp;player".
+  test "index 301s junk params to the canonical listing" do
+    get "/stats?map=2fort5r&amp;player=alice&utm_source=x&page=2"
+
+    assert_response :moved_permanently
+    assert_redirected_to "/stats?map=2fort5r&page=2"
+  end
+
+  test "index 301s nested param values" do
+    get "/stats?map[]=2fort5r&region=sydney"
+
+    assert_response :moved_permanently
+    assert_redirected_to "/stats?region=sydney"
+  end
+
+  test "index does not redirect known params" do
+    create_match_stat
+
+    get "/stats?map=2fort5r&region=&mode=&player="
+
+    assert_response :success
+  end
+
+  test "index ignores unknown params on json" do
+    create_match_stat
+
+    get "/stats.json?map=2fort5r&amp;player=nobody"
+
+    assert_response :success
+    assert_equal 1, JSON.parse(response.body)["count"]
+  end
+
+  test "filter links carry only known filters and are nofollow" do
+    create_match_stat
+
+    get "/stats?mode=pub&region="
+
+    assert_response :success
+    doc = Nokogiri::HTML(response.body)
+    map_link = doc.css("a[href^='/stats?']").find { |a| a.text == "2fort5r" }
+    assert map_link, "expected a map filter link"
+    assert_equal "nofollow", map_link["rel"]
+    assert_equal({ "map" => "2fort5r", "mode" => "pub" }, Rack::Utils.parse_query(URI(map_link["href"]).query))
+    doc.css("a[href^='/stats?']").each do |a|
+      query = Rack::Utils.parse_query(URI(a["href"]).query)
+      assert_empty query.keys - StatsController::FILTER_PARAMS, a["href"]
+      assert query.values.all?(&:present?), a["href"]
+    end
+    # The filter form doesn't submit a "commit" param.
+    assert_nil doc.at_css("form input[type=submit]")["name"]
+  end
+
+  test "pagination links carry only known params" do
+    rows = Array.new(StatsController::PAGE_ITEMS + 1) do |i|
+      { s3_key: "k#{i}", status: "parsed", map_name: "2fort5r", region: "sydney", game_mode: "pub",
+        played_at: Time.utc(2022, 1, 1) + i.minutes, created_at: Time.current, updated_at: Time.current }
+    end
+    MatchStat.insert_all!(rows)
+
+    get "/stats?map=2fort5r&mode="
+
+    assert_response :success
+    page_links = Nokogiri::HTML(response.body).css("nav.pagy-nav a").map { |a| a["href"] }
+    assert_includes page_links, "/stats?map=2fort5r&page=2"
+    assert page_links.all? { |href| Rack::Utils.parse_query(URI(href).query).keys.sort == %w[map page] }
+  end
+
+  test "out of range page is a 404, not a 500" do
+    create_match_stat
+
+    get "/stats?page=999"
+    assert_response :not_found
+
+    get "/stats.json?page=999"
+    assert_response :not_found
+  end
+
+  test "invalid page is a 404, not a 500" do
+    get "/stats?page=0"
+    assert_response :not_found
+
+    get "/stats?page=abc"
+    assert_response :not_found
+  end
 end

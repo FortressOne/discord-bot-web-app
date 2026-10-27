@@ -7,6 +7,7 @@ User-agent: *
 # canonical listing plus the sitemap cover the real content.
 Disallow: /stats?*map=
 Disallow: /stats?*player=
+Disallow: /stats?*player_id=
 Disallow: /stats?*region=
 Disallow: /stats?*mode=
 # Utility endpoints with nothing to index.

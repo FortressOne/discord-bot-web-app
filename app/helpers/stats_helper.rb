@@ -284,8 +284,12 @@ module StatsHelper
     image_tag(image[:url], alt: image[:alt], title: class_name, style: "height: #{height}px;")
   end
 
+  # Adds one filter to those already applied (dropping the page). Only the
+  # known filter params are carried over; nofollow because every filter
+  # combination is just another view of the same matches.
   def stats_filter_link(label, param, value, style: nil)
-    link_to label, stats_path(request.query_parameters.merge(param => value, page: nil)), style: style
+    query = StatsController.filter_query(request.query_parameters).merge(param.to_s => value)
+    link_to label, stats_path(query), style: style, rel: "nofollow"
   end
 
   # A team-total cell: weighted sum with the actual in parentheses when a
