@@ -26,7 +26,7 @@ worktrees:
 
 ## Deploy pipeline (from sheldon-desktop)
 
-- Ruby via `mise exec ruby@3.2.2 --` (system ruby is wrong version).
+- Ruby via `mise exec ruby@3.4.13 --` (system ruby is wrong version).
 - Secrets: `set -a; . ~/.kamal-env; set +a` first.
 - Kamal's classic driver does not push with podman. Full sequence:
   `kamal build push`, then
@@ -38,4 +38,4 @@ worktrees:
 
 ## Tests
 
-`mise exec ruby@3.2.2 -- bin/rails test`
+`mise exec ruby@3.4.13 -- bin/rails test`
